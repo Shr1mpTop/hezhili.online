@@ -22,17 +22,20 @@ def cors_headers(response):
     # 设置允许的源
     if request.headers.get('Origin') == 'https://www.hezhili.online':
         response.headers['Access-Control-Allow-Origin'] = 'https://www.hezhili.online'
+    else:
+        # 开发模式下允许所有来源
+        response.headers['Access-Control-Allow-Origin'] = '*'
     
     # 其他CORS头部
-    response.headers['Access-Control-Allow-Methods'] = 'POST, OPTIONS'
+    response.headers['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS'
     response.headers['Access-Control-Allow-Headers'] = 'Content-Type'
     response.headers['Access-Control-Allow-Credentials'] = 'true'
     response.headers['Access-Control-Max-Age'] = '3600'
     response.headers['Vary'] = 'Origin'
     
     # 确保内容类型正确
-    if request.method == 'POST':
-        response.headers['Content-Type'] = 'text/plain; charset=utf-8'
+    if request.method != 'OPTIONS':
+        response.headers['Content-Type'] = 'application/json; charset=utf-8'
     
     return response
 
@@ -45,6 +48,87 @@ client = OpenAI(
     base_url="https://ark.cn-beijing.volces.com/api/v3",
     api_key=os.environ.get("ARK_API_KEY"),
 )
+
+@app.route('/chat/history', methods=['GET', 'OPTIONS'])
+def chat_history():
+    """获取聊天历史记录"""
+    try:
+        # 获取会话ID和限制数量
+        session_id = request.args.get('session_id')
+        limit = request.args.get('limit', 20, type=int)
+        
+        if not session_id:
+            return jsonify({'error': '需要会话ID'}), 400
+        
+        # 获取用户IP信息
+        visitor_ip = request.remote_addr
+        
+        # 初始化数据库
+        db = ChatDatabase()
+        
+        # 如果是admin页面访问，或者是开发环境，跳过IP验证
+        is_admin = request.args.get('admin') == 'true' or request.referrer and 'admin.html' in request.referrer
+        is_dev = 'localhost' in request.host or '127.0.0.1' in request.host
+        
+        if not (is_admin or is_dev):
+            # 验证会话是否属于当前用户
+            if not db.validate_session(session_id, visitor_ip):
+                return jsonify({'error': '无效的会话ID'}), 403
+        
+        # 获取聊天历史
+        messages = db.get_session_messages(session_id, limit)
+        
+        return jsonify({
+            'session_id': session_id,
+            'messages': messages
+        })
+    except Exception as e:
+        print(f"获取聊天历史错误: {str(e)}")
+        return jsonify({'error': str(e)}), 500
+        
+@app.route('/sessions', methods=['GET', 'OPTIONS'])
+def get_sessions():
+    """获取会话列表，用于管理后台"""
+    try:
+        # 获取日期过滤参数
+        date = request.args.get('date')
+        
+        # 初始化数据库
+        db = ChatDatabase()
+        
+        # 获取会话列表
+        sessions = db.get_sessions(date)
+        
+        return jsonify({
+            'sessions': sessions
+        })
+        
+    except Exception as e:
+        print(f"获取会话列表错误: {str(e)}")
+        return jsonify({'error': str(e)}), 500
+        
+@app.route('/stats', methods=['GET', 'OPTIONS'])
+def get_stats():
+    """获取统计数据，用于管理后台"""
+    try:
+        # 获取日期参数
+        date = request.args.get('date')
+        
+        # 初始化数据库
+        db = ChatDatabase()
+        
+        # 获取统计数据
+        stats = db.get_daily_stats(date)
+        
+        return jsonify(stats)
+        
+    except Exception as e:
+        print(f"获取统计数据错误: {str(e)}")
+        return jsonify({'error': str(e)}), 500
+        
+    except Exception as e:
+        print(f"获取聊天历史错误: {str(e)}")
+        return jsonify({'error': str(e)}), 500
 
 @app.route('/chat', methods=['POST','OPTIONS'])
 def chat():

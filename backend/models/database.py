@@ -281,6 +281,42 @@ class ChatDatabase:
         conn.commit()
         conn.close()
     
+    def get_sessions(self, date: str = None) -> List[Dict]:
+        """获取会话列表，可按日期过滤"""
+        conn = sqlite3.connect(self.db_path)
+        cursor = conn.cursor()
+        
+        query = '''
+            SELECT 
+                id, visitor_ip, user_agent, 
+                start_time, last_activity, message_count, status
+            FROM chat_sessions 
+        '''
+        
+        params = []
+        if date:
+            query += " WHERE DATE(start_time) = ? "
+            params.append(date)
+        
+        query += " ORDER BY last_activity DESC LIMIT 100"
+        
+        cursor.execute(query, params)
+        
+        sessions = []
+        for row in cursor.fetchall():
+            sessions.append({
+                'id': row[0],
+                'visitor_ip': row[1],
+                'user_agent': row[2],
+                'start_time': row[3],
+                'last_activity': row[4],
+                'message_count': row[5],
+                'status': row[6]
+            })
+        
+        conn.close()
+        return sessions
+    
     def cleanup_old_sessions(self, days: int = 30):
         """清理旧的会话数据"""
         conn = sqlite3.connect(self.db_path)

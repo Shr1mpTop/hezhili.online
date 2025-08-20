@@ -14,9 +14,83 @@ const chatForm = document.querySelector('.chat-form');
 const chatInput = document.querySelector('.chat-input');
 const chatMessages = document.querySelector('.chat-messages');
 
+// 加载历史聊天记录
+async function loadChatHistory() {
+    const sessionId = localStorage.getItem('chatSessionId');
+    if (!sessionId) return;
+
+    try {
+        // 构建API URL - 支持本地开发和生产环境
+        const apiUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+            ? `http://localhost:5000/chat/history?session_id=${sessionId}&limit=20`
+            : `https://www.hezhili.online/chat/history?session_id=${sessionId}&limit=20`;
+
+        const response = await fetch(apiUrl);
+
+        if (!response.ok) {
+            console.error('Failed to load chat history');
+            return;
+        }
+
+        const data = await response.json();
+
+        if (data.messages && data.messages.length > 0) {
+            // 清空已有消息
+            chatMessages.innerHTML = '';
+
+            // 显示历史消息
+            data.messages.forEach(msg => {
+                const msgDiv = document.createElement('div');
+
+                if (msg.type === 'user') {
+                    msgDiv.className = 'message user-message';
+                    msgDiv.innerHTML = `<span class="message-sender">您</span>${msg.content}`;
+                } else {
+                    msgDiv.className = 'message assistant-message';
+                    msgDiv.innerHTML = `<span class="message-sender">致力</span>${msg.content}`;
+                }
+
+                chatMessages.appendChild(msgDiv);
+            });
+
+            // 滚动到底部
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+    } catch (err) {
+        console.error('Error loading chat history:', err);
+    }
+}
+
 // 美金钞票雨动画
 window.addEventListener('DOMContentLoaded', function () {
     console.log('DOMContentLoaded event fired');
+
+    // 加载历史聊天记录
+    loadChatHistory();
+
+    // 清除聊天记录功能
+    const clearChatBtn = document.getElementById('clear-chat');
+    if (clearChatBtn) {
+        clearChatBtn.addEventListener('click', function () {
+            if (confirm('确定要清除聊天记录吗？这将开始一个新的会话。')) {
+                // 清除localStorage中的会话ID
+                localStorage.removeItem('chatSessionId');
+
+                // 清空聊天消息区域
+                chatMessages.innerHTML = '';
+
+                // 显示提示
+                const noticeDiv = document.createElement('div');
+                noticeDiv.textContent = '系统：聊天记录已清除';
+                noticeDiv.style.textAlign = 'center';
+                noticeDiv.style.margin = '10px 0';
+                noticeDiv.style.color = '#888';
+                noticeDiv.style.fontStyle = 'italic';
+                chatMessages.appendChild(noticeDiv);
+            }
+        });
+    }
+
     const moneyRainContainer = document.getElementById('money-rain');
     const rainControlBtn = document.getElementById('rain-control');
     console.log('Money rain container:', moneyRainContainer);
@@ -182,29 +256,36 @@ if (chatForm) {
         if (msg) {
             // 显示用户消息
             const userDiv = document.createElement('div');
-            userDiv.textContent = '您：' + msg;
-            userDiv.style.textAlign = 'right';
-            userDiv.style.margin = '6px 0';
-            userDiv.style.color = '#075004';
+            userDiv.className = 'message user-message';
+            userDiv.innerHTML = `<span class="message-sender">您</span>${msg}`;
             chatMessages.appendChild(userDiv);
             chatInput.value = '';
             chatMessages.scrollTop = chatMessages.scrollHeight;
 
             // 显示AI回复等待提示
             const aiDiv = document.createElement('div');
-            aiDiv.textContent = '致力：让我想想...';
-            aiDiv.style.textAlign = 'left';
-            aiDiv.style.margin = '6px 0';
-            aiDiv.style.color = '#888';
+            aiDiv.className = 'message assistant-message';
+            aiDiv.innerHTML = `<span class="message-sender">致力</span><span class="typing-indicator">思考中</span>`;
             chatMessages.appendChild(aiDiv);
             chatMessages.scrollTop = chatMessages.scrollHeight;
 
             // 请求后端API（非流式）
             try {
-                const response = await fetch('/chat', {
+                // 从localStorage获取会话ID
+                const sessionId = localStorage.getItem('chatSessionId');
+
+                // 构建API URL - 支持本地开发和生产环境
+                const apiUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+                    ? 'http://localhost:5000/chat'
+                    : 'https://www.hezhili.online/chat';
+
+                const response = await fetch(apiUrl, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ text: msg })
+                    body: JSON.stringify({
+                        text: msg,
+                        session_id: sessionId
+                    })
                 });
 
                 if (!response.ok) {
@@ -212,8 +293,15 @@ if (chatForm) {
                     return;
                 }
 
-                const data = await response.text();
-                aiDiv.textContent = '致力：' + data;
+                const data = await response.json();
+
+                // 保存会话ID到localStorage
+                if (data.session_id) {
+                    localStorage.setItem('chatSessionId', data.session_id);
+                }
+
+                // 显示AI回复
+                aiDiv.innerHTML = `<span class="message-sender">致力</span>${data.content}`;
                 chatMessages.scrollTop = chatMessages.scrollHeight;
             } catch (err) {
                 aiDiv.textContent = '致力：脑壳进水了，检查中';

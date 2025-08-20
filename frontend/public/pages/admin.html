@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>管理后台 - 何致力</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            padding-top: 20px;
+            background-color: #f8f9fa;
+        }
+
+        .header {
+            background-color: #075004;
+            color: white;
+            padding: 15px 0;
+            margin-bottom: 30px;
+            border-radius: 5px;
+        }
+
+        .stats-card {
+            margin-bottom: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+        }
+
+        .stats-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-header {
+            background-color: #e3f2e3;
+            font-weight: bold;
+        }
+
+        .session-item {
+            border-left: 4px solid #075004;
+            padding: 10px;
+            margin-bottom: 10px;
+            background: white;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .user-message {
+            background-color: #e3f2e3;
+            padding: 8px 12px;
+            border-radius: 15px;
+            border-bottom-right-radius: 5px;
+            margin: 5px 0 5px auto;
+            max-width: 80%;
+            text-align: right;
+        }
+
+        .assistant-message {
+            background-color: #f0f0f0;
+            padding: 8px 12px;
+            border-radius: 15px;
+            border-bottom-left-radius: 5px;
+            margin: 5px auto 5px 0;
+            max-width: 80%;
+            text-align: left;
+        }
+
+        .timestamp {
+            font-size: 0.8em;
+            color: #777;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header text-center">
+            <h1>对话记录管理系统</h1>
+            <p>查看和管理与访客的对话历史</p>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <div class="card stats-card">
+                    <div class="card-header">今日访客数</div>
+                    <div class="card-body">
+                        <h3 id="visitor-count">--</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card stats-card">
+                    <div class="card-header">今日消息数</div>
+                    <div class="card-body">
+                        <h3 id="message-count">--</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card stats-card">
+                    <div class="card-header">平均会话时长</div>
+                    <div class="card-body">
+                        <h3 id="avg-duration">--</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span>会话列表</span>
+                            <div>
+                                <input type="date" id="date-filter" class="form-control form-control-sm">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="list-group" id="session-list">
+                            <div class="text-center py-5 text-muted">
+                                <div class="spinner-border spinner-border-sm" role="status"></div>
+                                <p class="mt-2">正在加载会话...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">对话内容</div>
+                    <div class="card-body" id="chat-content">
+                        <div class="text-center py-5 text-muted">
+                            <p>选择左侧会话查看内容</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 获取今日统计数据
+        async function loadStats() {
+            try {
+                // 这里根据实际API调整
+                const apiUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+                    ? 'http://localhost:5000/stats'
+                    : 'https://www.hezhili.online/stats';
+
+                const response = await fetch(apiUrl);
+
+                if (!response.ok) {
+                    console.error('Failed to load statistics');
+                    return;
+                }
+
+                const data = await response.json();
+                document.getElementById('visitor-count').textContent = data.unique_visitors;
+                document.getElementById('message-count').textContent = data.total_messages;
+                document.getElementById('avg-duration').textContent = data.avg_session_duration_minutes + ' 分钟';
+
+            } catch (err) {
+                console.error('Error loading statistics:', err);
+            }
+        }
+
+        // 加载会话列表
+        async function loadSessionList(date = null) {
+            try {
+                const sessionList = document.getElementById('session-list');
+                sessionList.innerHTML = '<div class="text-center py-5 text-muted"><div class="spinner-border spinner-border-sm" role="status"></div><p class="mt-2">正在加载会话...</p></div>';
+
+                let apiUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+                    ? 'http://localhost:5000/sessions'
+                    : 'https://www.hezhili.online/sessions';
+
+                if (date) {
+                    apiUrl += `?date=${date}`;
+                }
+
+                const response = await fetch(apiUrl);
+
+                if (!response.ok) {
+                    sessionList.innerHTML = '<div class="text-center py-5 text-danger"><p>加载失败</p></div>';
+                    return;
+                }
+
+                const data = await response.json();
+
+                if (data.sessions && data.sessions.length > 0) {
+                    sessionList.innerHTML = '';
+                    data.sessions.forEach(session => {
+                        const item = document.createElement('a');
+                        item.className = 'list-group-item list-group-item-action';
+                        item.href = '#';
+
+                        const time = new Date(session.last_activity).toLocaleTimeString();
+
+                        item.innerHTML = `
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span>ID: ${session.id.substring(0, 8)}...</span>
+                                <span class="badge bg-primary rounded-pill">${session.message_count}</span>
+                            </div>
+                            <div class="small text-muted">最后活动: ${time}</div>
+                        `;
+
+                        item.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            loadSessionChat(session.id);
+
+                            // 高亮选中的会话
+                            document.querySelectorAll('.list-group-item').forEach(el => {
+                                el.classList.remove('active');
+                            });
+                            item.classList.add('active');
+                        });
+
+                        sessionList.appendChild(item);
+                    });
+                } else {
+                    sessionList.innerHTML = '<div class="text-center py-5 text-muted"><p>没有找到会话记录</p></div>';
+                }
+
+            } catch (err) {
+                console.error('Error loading session list:', err);
+                document.getElementById('session-list').innerHTML = '<div class="text-center py-5 text-danger"><p>加载失败</p></div>';
+            }
+        }
+
+        // 加载特定会话的聊天内容
+        async function loadSessionChat(sessionId) {
+            try {
+                const chatContent = document.getElementById('chat-content');
+                chatContent.innerHTML = '<div class="text-center py-5 text-muted"><div class="spinner-border spinner-border-sm" role="status"></div><p class="mt-2">正在加载对话...</p></div>';
+
+                const apiUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+                    ? `http://localhost:5000/chat/history?session_id=${sessionId}&limit=100`
+                    : `https://www.hezhili.online/chat/history?session_id=${sessionId}&limit=100`;
+
+                const response = await fetch(apiUrl);
+
+                if (!response.ok) {
+                    chatContent.innerHTML = '<div class="text-center py-5 text-danger"><p>加载失败</p></div>';
+                    return;
+                }
+
+                const data = await response.json();
+
+                if (data.messages && data.messages.length > 0) {
+                    chatContent.innerHTML = `
+                        <div class="mb-3">
+                            <strong>会话ID:</strong> ${data.session_id}
+                        </div>
+                        <div id="messages"></div>
+                    `;
+
+                    const messagesContainer = document.getElementById('messages');
+
+                    data.messages.forEach(msg => {
+                        const msgDiv = document.createElement('div');
+                        const time = new Date(msg.timestamp).toLocaleString();
+
+                        if (msg.type === 'user') {
+                            msgDiv.className = 'user-message';
+                            msgDiv.innerHTML = `
+                                <div>${msg.content}</div>
+                                <div class="timestamp">${time}</div>
+                            `;
+                        } else {
+                            msgDiv.className = 'assistant-message';
+                            msgDiv.innerHTML = `
+                                <div>${msg.content}</div>
+                                <div class="timestamp">${time}</div>
+                            `;
+                        }
+
+                        messagesContainer.appendChild(msgDiv);
+                    });
+                } else {
+                    chatContent.innerHTML = '<div class="text-center py-5 text-muted"><p>该会话没有对话记录</p></div>';
+                }
+
+            } catch (err) {
+                console.error('Error loading chat content:', err);
+                document.getElementById('chat-content').innerHTML = '<div class="text-center py-5 text-danger"><p>加载失败</p></div>';
+            }
+        }
+
+        // 页面加载时执行
+        document.addEventListener('DOMContentLoaded', function () {
+            // 加载统计数据
+            loadStats();
+
+            // 加载今日会话列表
+            loadSessionList();
+
+            // 日期过滤器
+            const dateFilter = document.getElementById('date-filter');
+            dateFilter.valueAsDate = new Date();
+
+            dateFilter.addEventListener('change', function () {
+                loadSessionList(this.value);
+            });
+        });
+    </script>
+</body>
+
+</html>
