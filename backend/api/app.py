@@ -20,11 +20,24 @@ def cors_headers(response):
         response.status_code = 204
     
     # 设置允许的源
-    if request.headers.get('Origin') == 'https://www.hezhili.online':
-        response.headers['Access-Control-Allow-Origin'] = 'https://www.hezhili.online'
+    origin = request.headers.get('Origin')
+    allowed_origins = [
+        'https://hezhili.online',
+        'https://www.hezhili.online',
+        'http://localhost:3000',
+        'http://127.0.0.1:3000',
+        'http://localhost:5500',
+        'http://127.0.0.1:5500'
+    ]
+    
+    if origin in allowed_origins:
+        response.headers['Access-Control-Allow-Origin'] = origin
     else:
-        # 开发模式下允许所有来源
-        response.headers['Access-Control-Allow-Origin'] = '*'
+        # 开发模式下允许本地开发
+        if origin and ('localhost' in origin or '127.0.0.1' in origin):
+            response.headers['Access-Control-Allow-Origin'] = origin
+        else:
+            response.headers['Access-Control-Allow-Origin'] = 'https://hezhili.online'
     
     # 其他CORS头部
     response.headers['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS'

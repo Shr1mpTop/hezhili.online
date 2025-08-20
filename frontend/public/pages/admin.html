@@ -148,7 +148,7 @@
                 // 这里根据实际API调整
                 const apiUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
                     ? 'http://localhost:5000/stats'
-                    : 'https://www.hezhili.online/stats';
+                    : `${window.location.protocol}//${window.location.host}/stats`;
 
                 const response = await fetch(apiUrl);
 
@@ -175,7 +175,7 @@
 
                 let apiUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
                     ? 'http://localhost:5000/sessions'
-                    : 'https://www.hezhili.online/sessions';
+                    : `${window.location.protocol}//${window.location.host}/sessions`;
 
                 if (date) {
                     apiUrl += `?date=${date}`;
@@ -238,7 +238,7 @@
 
                 const apiUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
                     ? `http://localhost:5000/chat/history?session_id=${sessionId}&limit=100`
-                    : `https://www.hezhili.online/chat/history?session_id=${sessionId}&limit=100`;
+                    : `${window.location.protocol}//${window.location.host}/chat/history?session_id=${sessionId}&limit=100`;
 
                 const response = await fetch(apiUrl);
 
