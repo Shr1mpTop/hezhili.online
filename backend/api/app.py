@@ -200,8 +200,11 @@ def chat():
         return response
             
     except Exception as e:
+        import traceback
         error_message = str(e)
+        error_trace = traceback.format_exc()
         print(f"Chat API error: {error_message}")
+        print(f"Error trace: {error_trace}")
         response = jsonify({'error': error_message})
         response.status_code = 500
         return response
