@@ -1,256 +1,34 @@
-# ============================================
-# 何致力网站 Git 忽略文件
-# 防止敏感数据和核心数据上传到 GitHub
-# ============================================
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
 
-# ==================== 数据库文件 ====================
-# SQLite 数据库文件 - 包含用户对话记录
-backend/data/
-*.db
-*.sqlite
-*.sqlite3
-*.db-journal
-*.db-wal
-*.db-shm
+# Logs
+logs/
+*.log
 
-# 数据库备份文件
-backups/
-backup_*.sql
-chat_records_*.db
-*.backup
-
-# ==================== 敏感配置 ====================
-# 环境变量文件 - 包含 API 密钥
-.env
-.env.local
-.env.production
-.env.development
-*.env
-
-# API 密钥和配置文件
-config.ini
-config.json
-settings.json
-secrets.json
-
-# 证书和密钥文件
+# Certificates and keys
 certs/
 *.pem
 *.key
-*.crt
-*.csr
-*.p12
-*.pfx
-ssl/
 
-# 临时配置文件
-backend/config/temp.conf
-backend/config/*.temp
-backend/config/*.local
-
-# ==================== 日志文件 ====================
-# 应用日志
-logs/
-*.log
-*.log.*
-log_*.txt
-
-# 系统日志
-error.log
-access.log
-debug.log
-application.log
-
-# ==================== Python 相关 ====================
-# 字节码文件
-__pycache__/
-*.py[cod]
-*$py.class
-*.so
-
-# 分发/打包
-.Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-
-# PyInstaller
-*.manifest
-*.spec
-
-# 虚拟环境
-venv/
-env/
-ENV/
-env.bak/
-venv.bak/
-.virtualenv
-
-# Jupyter Notebook
-.ipynb_checkpoints
-
-# pyenv
-.python-version
-
-# pipenv
-Pipfile.lock
-
-# ==================== Web 开发 ====================
-# Node.js
+# Node modules
 node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-.npm
-.yarn-integrity
 
-# 前端构建文件
-dist/
-build/
-.cache/
-.parcel-cache/
-
-# ==================== 系统文件 ====================
-# 操作系统生成的文件
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
-
-# Linux
-*~
-
-# Windows
-desktop.ini
-
-# ==================== 编辑器/IDE ====================
-# VS Code
-.vscode/
-.history/
-
-# PyCharm
-.idea/
-*.iws
-*.iml
-*.ipr
-
-# Sublime Text
-*.sublime-project
-*.sublime-workspace
-
-# Vim
-*.swp
-*.swo
-*~
-
-# Emacs
-*~
-\#*\#
-/.emacs.desktop
-/.emacs.desktop.lock
-*.elc
-auto-save-list
-tramp
-.\#*
-
-# ==================== 临时文件 ====================
-# 通用临时文件
+# Temporary files
 *.tmp
-*.temp
-*.bak
-*.backup
-*.orig
-*.rej
+*.swp
 
-# 压缩文件（通常是临时的）
-*.zip
-*.tar.gz
-*.rar
-*.7z
+# VS Code settings
+.vscode/
 
-# ==================== 测试和覆盖率 ====================
-# 测试覆盖率
-htmlcov/
-.tox/
-.coverage
-.coverage.*
-.cache
-nosetests.xml
-coverage.xml
-*.cover
-.hypothesis/
-.pytest_cache/
+# OS generated files
+.DS_Store
+*.db
 
-# ==================== 部署相关 ====================
-# Docker
-.dockerignore
-Dockerfile.prod
-docker-compose.override.yml
+# Ignore environment files
+.env
 
-# 部署脚本中的敏感信息
-deploy_config.sh
-production_setup.sh
-
-# ==================== 项目特定 ====================
-# 运行时进程 ID
-*.pid
-
-# 运行时生成的文件
-run/
-tmp/
-
-# 监控和统计数据
-monitoring/
-metrics/
-analytics/
-
-# 错误报告
-error_reports/
-crash_dumps/
-
-# 个人笔记和文档草稿
-notes.md
-TODO.md
-PRIVATE.md
-draft_*
-
-# ==================== Git 自身 ====================
-# Git hooks（可能包含敏感信息）
-.git/hooks/post-receive
-.git/hooks/pre-receive
-
-# ==================== 其他敏感文件 ====================
-# 包含密码的文件
-passwords.txt
-credentials.txt
-auth_tokens.txt
-
-# 邮件配置
-mail_config.py
-smtp_settings.py
-
-# 第三方服务配置
-*.service
-*.socket
-
-# SSH 密钥
-id_rsa
-id_rsa.pub
-known_hosts
-
-# ==================== 结束 ====================
+# Ignore nginx temp config
+backend/config/temp.conf
