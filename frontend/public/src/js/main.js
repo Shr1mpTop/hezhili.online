@@ -96,14 +96,14 @@ window.addEventListener('DOMContentLoaded', function () {
     // 控制按钮功能
     if (rainControlBtn) {
         // 设置初始图标（暂停图标，因为动画正在播放）
-        rainControlBtn.innerHTML = '<img src="src/assets/pause.svg" style="width: 20px; height: 20px;" alt="暂停">';
+        rainControlBtn.innerHTML = '<img src="../src/assets/pause.svg" style="width: 20px; height: 20px;" alt="暂停">';
         rainControlBtn.title = '暂停钞票雨';
-        
+
         rainControlBtn.addEventListener('click', function () {
             if (isGeneratingNew) {
                 // 暂停生成新钞票，但动画继续
                 isGeneratingNew = false;
-                rainControlBtn.innerHTML = '<img src="src/assets/start.svg" style="width: 20px; height: 20px;" alt="开始">';
+                rainControlBtn.innerHTML = '<img src="../src/assets/start.svg" style="width: 20px; height: 20px;" alt="开始">';
                 rainControlBtn.title = '开始钞票雨';
                 console.log('停止生成新钞票，现有钞票继续下落');
             } else {
@@ -118,7 +118,7 @@ window.addEventListener('DOMContentLoaded', function () {
                         bill.el.style.left = bill.x + 'px';
                     }
                 });
-                rainControlBtn.innerHTML = '<img src="src/assets/pause.svg" style="width: 20px; height: 20px;" alt="暂停">';
+                rainControlBtn.innerHTML = '<img src="../src/assets/pause.svg" style="width: 20px; height: 20px;" alt="暂停">';
                 rainControlBtn.title = '暂停钞票雨';
                 console.log('开始生成新钞票');
             }
@@ -138,6 +138,41 @@ window.addEventListener('DOMContentLoaded', function () {
 
     console.log('Money rain animation started');
     animateBills();
+
+    // 主页按钮功能
+    const homeBtn = document.getElementById('home-btn');
+    if (homeBtn) {
+        homeBtn.addEventListener('click', function (e) {
+            e.preventDefault(); // 阻止默认跳转
+
+            // 创建弹出提示元素
+            const tooltip = document.createElement('div');
+            tooltip.textContent = '这里就是主页！！';
+            tooltip.style.cssText = `
+                position: fixed;
+                left: ${e.clientX}px;
+                top: ${e.clientY}px;
+                background: rgba(0, 0, 0, 0.8);
+                color: white;
+                padding: 8px 12px;
+                border-radius: 4px;
+                font-size: 14px;
+                z-index: 1000;
+                pointer-events: none;
+                animation: floatUp 2s ease-out forwards;
+                white-space: nowrap;
+            `;
+
+            document.body.appendChild(tooltip);
+
+            // 2秒后移除元素
+            setTimeout(() => {
+                if (tooltip.parentNode) {
+                    tooltip.parentNode.removeChild(tooltip);
+                }
+            }, 2000);
+        });
+    }
 });
 // ...existing code...
 if (chatForm) {

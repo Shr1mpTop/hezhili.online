@@ -213,3 +213,16 @@ body {
         font-size: 1em;
     }
 }
+
+/* 主页按钮弹出提示的浮动动画 */
+@keyframes floatUp {
+    0% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+}
