@@ -147,7 +147,7 @@
             try {
                 // 这里根据实际API调整
                 const apiUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-                    ? 'http://localhost:5000/stats'
+                    ? 'http://localhost:5001/stats'
                     : `${window.location.protocol}//${window.location.host}/stats`;
 
                 const response = await fetch(apiUrl);
@@ -174,7 +174,7 @@
                 sessionList.innerHTML = '<div class="text-center py-5 text-muted"><div class="spinner-border spinner-border-sm" role="status"></div><p class="mt-2">正在加载会话...</p></div>';
 
                 let apiUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-                    ? 'http://localhost:5000/sessions'
+                    ? 'http://localhost:5001/sessions'
                     : `${window.location.protocol}//${window.location.host}/sessions`;
 
                 if (date) {
@@ -237,7 +237,7 @@
                 chatContent.innerHTML = '<div class="text-center py-5 text-muted"><div class="spinner-border spinner-border-sm" role="status"></div><p class="mt-2">正在加载对话...</p></div>';
 
                 const apiUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-                    ? `http://localhost:5000/chat/history?session_id=${sessionId}&limit=100`
+                    ? `http://localhost:5001/chat/history?session_id=${sessionId}&limit=100`
                     : `${window.location.protocol}//${window.location.host}/chat/history?session_id=${sessionId}&limit=100`;
 
                 const response = await fetch(apiUrl);

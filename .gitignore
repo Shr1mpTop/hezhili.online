@@ -7,6 +7,13 @@ __pycache__/
 # Logs
 logs/
 *.log
+backend.log
+frontend.log
+
+# 本地开发进程文件
+*.pid
+backend.pid
+frontend.pid
 
 # Certificates and keys
 certs/
@@ -26,9 +33,102 @@ node_modules/
 # OS generated files
 .DS_Store
 *.db
+*.sqlite
+*.sqlite3
 
 # Ignore environment files
 .env
+.env.local
+.env.*
+!.env.example
 
 # Ignore nginx temp config
 backend/config/temp.conf
+
+# 本地测试文件
+test_*.py
+test_*.html
+api_test.html
+test_cors.html
+*_test.html
+*_test.py
+test_server.py
+
+# 本地开发脚本
+start_dev.sh
+stop_dev.sh
+start_local.sh
+start_frontend.py
+README_DEV.md
+
+# 数据库文件
+backend/data/*.db
+backend/data/*.sqlite
+backend/data/*.sqlite3
+
+# 诊断和调试文件
+diagnose.sh
+*_diagnose.*
+
+# IDE和编辑器
+.idea/
+*.swp
+*.swo
+*~
+
+# macOS额外文件
+.AppleDouble
+.LSOverride
+Icon
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Python虚拟环境
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# Python构建和分发
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# 测试覆盖率
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# pyenv
+.python-version
+
+# 备份文件
+*.bak
+*.backup

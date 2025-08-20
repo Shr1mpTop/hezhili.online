@@ -22,7 +22,7 @@ async function loadChatHistory() {
     try {
         // 构建API URL - 支持本地开发和生产环境
         const apiUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-            ? `http://localhost:5000/chat/history?session_id=${sessionId}&limit=20`
+            ? `http://localhost:5001/chat/history?session_id=${sessionId}&limit=20`
             : `${window.location.protocol}//${window.location.host}/chat/history?session_id=${sessionId}&limit=20`;
 
         const response = await fetch(apiUrl);
@@ -276,7 +276,7 @@ if (chatForm) {
 
                 // 构建API URL - 支持本地开发和生产环境
                 const apiUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-                    ? 'http://localhost:5000/chat'
+                    ? 'http://localhost:5001/chat'
                     : `${window.location.protocol}//${window.location.host}/chat`;
 
                 const response = await fetch(apiUrl, {
