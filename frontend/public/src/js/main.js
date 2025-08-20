@@ -1,9 +1,12 @@
 // 示例：点击侧边栏菜单高亮
 const sidebarItems = document.querySelectorAll('.sidebar ul li');
 sidebarItems.forEach(item => {
-    item.addEventListener('click', function () {
-        sidebarItems.forEach(i => i.classList.remove('active'));
-        this.classList.add('active');
+    item.addEventListener('click', function (e) {
+        // 如果点击的是链接，不阻止默认行为
+        if (e.target.tagName !== 'A') {
+            sidebarItems.forEach(i => i.classList.remove('active'));
+            this.classList.add('active');
+        }
     });
 });
 
@@ -15,6 +18,7 @@ const chatMessages = document.querySelector('.chat-messages');
 window.addEventListener('DOMContentLoaded', function () {
     console.log('DOMContentLoaded event fired');
     const moneyRainContainer = document.getElementById('money-rain');
+    const rainControlBtn = document.getElementById('rain-control');
     console.log('Money rain container:', moneyRainContainer);
 
     if (!moneyRainContainer) {
@@ -30,11 +34,13 @@ window.addEventListener('DOMContentLoaded', function () {
     moneyRainContainer.style.height = '100%';
     moneyRainContainer.style.pointerEvents = 'none';
     moneyRainContainer.style.zIndex = '10';
-    moneyRainContainer.style.backgroundColor = 'rgba(255,0,0,0.1)'; // 临时添加红色背景用于调试
     console.log('Container styles set');
 
     const billImages = [];
     const billCount = 20;
+    let isAnimating = true;
+    let isGeneratingNew = true; // 控制是否生成新钞票
+    let animationId = null;
 
     for (let i = 0; i < billCount; i++) {
         const bill = document.createElement('div');
@@ -42,7 +48,7 @@ window.addEventListener('DOMContentLoaded', function () {
         bill.style.position = 'absolute';
         bill.style.top = '-100px';
         bill.style.left = Math.random() * window.innerWidth + 'px';
-        bill.style.fontSize = '40px';
+        bill.style.fontSize = '24px';
         bill.style.opacity = '0.8';
         bill.style.pointerEvents = 'none';
         bill.style.transform = 'rotate(' + (Math.random() * 360) + 'deg)';
@@ -60,6 +66,8 @@ window.addEventListener('DOMContentLoaded', function () {
     console.log('Created', billCount, 'bills');
 
     function animateBills() {
+        if (!isAnimating) return;
+
         billImages.forEach(bill => {
             let top = parseFloat(bill.el.style.top);
             top += bill.speed;
@@ -69,14 +77,63 @@ window.addEventListener('DOMContentLoaded', function () {
             currentRotation += bill.rotation;
             bill.el.style.transform = 'rotate(' + currentRotation + 'deg)';
 
+            // 只有在生成新钞票模式下，钞票才会从顶部重新开始
             if (top > window.innerHeight) {
-                top = -100;
-                bill.x = Math.random() * window.innerWidth;
-                bill.el.style.left = bill.x + 'px';
+                if (isGeneratingNew) {
+                    top = -100;
+                    bill.x = Math.random() * window.innerWidth;
+                    bill.el.style.left = bill.x + 'px';
+                } else {
+                    // 暂停生成新钞票时，让钞票继续下落直到消失
+                    bill.el.style.display = 'none';
+                }
             }
             bill.el.style.top = top + 'px';
         });
-        requestAnimationFrame(animateBills);
+        animationId = requestAnimationFrame(animateBills);
+    }
+
+    // 控制按钮功能
+    if (rainControlBtn) {
+        // 设置初始图标（暂停图标，因为动画正在播放）
+        rainControlBtn.innerHTML = '<img src="src/assets/pause.svg" style="width: 20px; height: 20px;" alt="暂停">';
+        rainControlBtn.title = '暂停钞票雨';
+        
+        rainControlBtn.addEventListener('click', function () {
+            if (isGeneratingNew) {
+                // 暂停生成新钞票，但动画继续
+                isGeneratingNew = false;
+                rainControlBtn.innerHTML = '<img src="src/assets/start.svg" style="width: 20px; height: 20px;" alt="开始">';
+                rainControlBtn.title = '开始钞票雨';
+                console.log('停止生成新钞票，现有钞票继续下落');
+            } else {
+                // 开始生成新钞票，重新显示所有钞票
+                isGeneratingNew = true;
+                // 重新显示所有钞票并重置位置
+                billImages.forEach(bill => {
+                    bill.el.style.display = 'block';
+                    if (parseFloat(bill.el.style.top) > window.innerHeight) {
+                        bill.el.style.top = '-100px';
+                        bill.x = Math.random() * window.innerWidth;
+                        bill.el.style.left = bill.x + 'px';
+                    }
+                });
+                rainControlBtn.innerHTML = '<img src="src/assets/pause.svg" style="width: 20px; height: 20px;" alt="暂停">';
+                rainControlBtn.title = '暂停钞票雨';
+                console.log('开始生成新钞票');
+            }
+        });
+
+        // 添加悬停效果
+        rainControlBtn.addEventListener('mouseenter', function () {
+            this.style.transform = 'scale(1.1)';
+            this.style.background = 'rgba(255,255,255,1)';
+        });
+
+        rainControlBtn.addEventListener('mouseleave', function () {
+            this.style.transform = 'scale(1)';
+            this.style.background = 'rgba(255,255,255,0.9)';
+        });
     }
 
     console.log('Money rain animation started');
