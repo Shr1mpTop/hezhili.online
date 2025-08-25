@@ -20,6 +20,55 @@
             border-radius: 5px;
         }
 
+        .login-container {
+            max-width: 400px;
+            margin: 100px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #075004;
+        }
+
+        .login-form .form-control {
+            margin-bottom: 15px;
+            border-radius: 5px;
+        }
+
+        .login-btn {
+            background-color: #075004;
+            border-color: #075004;
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .login-btn:hover {
+            background-color: #053302;
+            border-color: #053302;
+        }
+
+        .error-message {
+            color: #dc3545;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .success-message {
+            color: #28a745;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .admin-content {
+            display: none;
+        }
+
         .stats-card {
             margin-bottom: 20px;
             border-radius: 10px;
@@ -70,14 +119,56 @@
             font-size: 0.8em;
             color: #777;
         }
+
+        .logout-btn {
+            background-color: #dc3545;
+            border-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 5px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .logout-btn:hover {
+            background-color: #c82333;
+            border-color: #bd2130;
+        }
     </style>
 </head>
 
 <body>
-    <div class="container">
-        <div class="header text-center">
-            <h1>对话记录管理系统</h1>
-            <p>查看和管理与访客的对话历史</p>
+    <!-- 登录界面 -->
+    <div id="login-container" class="login-container">
+        <div class="login-header">
+            <h2>管理员登录</h2>
+            <p>请输入管理员账户信息</p>
+        </div>
+        <form id="login-form" class="login-form">
+            <div class="mb-3">
+                <label for="username" class="form-label">用户名</label>
+                <input type="text" class="form-control" id="username" name="username" required>
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">密码</label>
+                <input type="password" class="form-control" id="password" name="password" required>
+            </div>
+            <button type="submit" class="btn btn-primary login-btn">登录</button>
+        </form>
+        <div id="login-message"></div>
+    </div>
+
+    <!-- 管理后台主界面 -->
+    <div id="admin-content" class="admin-content container">
+        <div class="header text-center d-flex justify-content-between align-items-center">
+            <div></div>
+            <div>
+                <h1>对话记录管理系统</h1>
+                <p>查看和管理与访客的对话历史</p>
+            </div>
+            <div>
+                <button id="logout-btn" class="logout-btn">退出登录</button>
+            </div>
         </div>
 
         <div class="row mb-4">
@@ -142,6 +233,73 @@
     </div>
 
     <script>
+        // 检查是否已登录
+        function checkLogin() {
+            return localStorage.getItem('adminLoggedIn') === 'true';
+        }
+
+        // 显示登录界面
+        function showLogin() {
+            document.getElementById('login-container').style.display = 'block';
+            document.getElementById('admin-content').style.display = 'none';
+        }
+
+        // 显示管理界面
+        function showAdmin() {
+            document.getElementById('login-container').style.display = 'none';
+            document.getElementById('admin-content').style.display = 'block';
+        }
+
+        // 登录处理
+        document.getElementById('login-form').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const messageElement = document.getElementById('login-message');
+
+            try {
+                const apiUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+                    ? 'http://localhost:5001/admin/login'
+                    : `${window.location.protocol}//${window.location.host}/admin/login`;
+
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ username, password }),
+                });
+
+                const result = await response.json();
+
+                if (response.ok && result.success) {
+                    messageElement.innerHTML = '<div class="success-message">' + result.message + '</div>';
+                    localStorage.setItem('adminLoggedIn', 'true');
+                    setTimeout(() => {
+                        showAdmin();
+                        loadStats();
+                        loadSessionList();
+                    }, 1000);
+                } else {
+                    messageElement.innerHTML = '<div class="error-message">' + result.message + '</div>';
+                }
+            } catch (error) {
+                messageElement.innerHTML = '<div class="error-message">网络错误，请稍后重试</div>';
+                console.error('Login error:', error);
+            }
+        });
+
+        // 退出登录
+        document.getElementById('logout-btn').addEventListener('click', function () {
+            localStorage.removeItem('adminLoggedIn');
+            showLogin();
+            // 清空表单
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+            document.getElementById('login-message').innerHTML = '';
+        });
+
         // 获取今日统计数据
         async function loadStats() {
             try {
@@ -291,19 +449,25 @@
 
         // 页面加载时执行
         document.addEventListener('DOMContentLoaded', function () {
-            // 加载统计数据
-            loadStats();
-
-            // 加载今日会话列表
-            loadSessionList();
+            // 检查登录状态
+            if (checkLogin()) {
+                showAdmin();
+                // 加载统计数据
+                loadStats();
+                // 加载今日会话列表
+                loadSessionList();
+            } else {
+                showLogin();
+            }
 
             // 日期过滤器
             const dateFilter = document.getElementById('date-filter');
-            dateFilter.valueAsDate = new Date();
-
-            dateFilter.addEventListener('change', function () {
-                loadSessionList(this.value);
-            });
+            if (dateFilter) {
+                dateFilter.valueAsDate = new Date();
+                dateFilter.addEventListener('change', function () {
+                    loadSessionList(this.value);
+                });
+            }
         });
     </script>
 </body>
