@@ -29,9 +29,9 @@ server {
     ssl_ciphers ECDHE-RSA-AES256-GCM-SHA512:DHE-RSA-AES256-GCM-SHA512:ECDHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES256-GCM-SHA384;
     ssl_prefer_server_ciphers off;
 
-    # API routes - 所有后端 API 代理到 127.0.0.1:5000
+    # API routes - 所有后端 API 代理到 127.0.0.1:5001
     location /chat {
-        proxy_pass http://127.0.0.1:5000/chat;
+        proxy_pass http://127.0.0.1:5001/chat;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -59,7 +59,7 @@ server {
     }
 
     location /stats {
-        proxy_pass http://127.0.0.1:5000/stats;
+        proxy_pass http://127.0.0.1:5001/stats;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -72,7 +72,7 @@ server {
     }
 
     location /sessions {
-        proxy_pass http://127.0.0.1:5000/sessions;
+        proxy_pass http://127.0.0.1:5001/sessions;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -132,6 +132,6 @@ fi
 
 echo ""
 echo "🎉 nginx 配置更新完成！"
-echo "📋 现在所有 API 路由都代理到 127.0.0.1:5000"
+echo "📋 现在所有 API 路由都代理到 127.0.0.1:5001"
 echo "🔗 支持的路由: /chat, /stats, /sessions"
 echo "📝 配置备份位置: /etc/nginx/sites-available/default.backup.*"

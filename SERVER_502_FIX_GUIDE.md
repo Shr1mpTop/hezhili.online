@@ -3,6 +3,8 @@
 ## 🚨 问题描述
 在生产环境中，聊天功能报错 `502 Bad Gateway`，具体位置在 `main.js:282` 的 POST 请求到 `/chat` 端点。
 
+**重要：你的后端服务配置为监听端口 5001，nginx 需要代理到正确的端口。**
+
 ## 🔍 快速诊断步骤
 
 ### 1. 上传并运行诊断脚本
@@ -15,13 +17,19 @@ chmod +x server_diagnose_502.sh
 
 ### 2. 根据诊断结果选择修复方案
 
-#### 方案 A: 快速修复 (推荐先试)
+#### 方案 A: 快速端口修复 (推荐先试)
+```bash
+chmod +x server_fix_port.sh
+./server_fix_port.sh
+```
+
+#### 方案 B: 完整服务重启
 ```bash
 chmod +x server_fix_502.sh
 ./server_fix_502.sh
 ```
 
-#### 方案 B: 更新 nginx 配置 (如果方案A无效)
+#### 方案 C: 完整 nginx 配置更新
 ```bash
 chmod +x server_update_nginx.sh
 ./server_update_nginx.sh
@@ -40,13 +48,13 @@ sudo ss -ltnp | grep -E ':(5000|5001)'
 
 ### 2. 测试本地后端连接
 ```bash
-# 测试 GET 请求
-curl -v http://127.0.0.1:5000/stats
+# 测试 GET 请求 (主要端口)
+curl -v http://127.0.0.1:5001/stats
 
 # 测试 POST 请求 (关键)
 curl -v -H "Content-Type: application/json" \
   -d '{"text":"test","session_id":null}' \
-  http://127.0.0.1:5000/chat
+  http://127.0.0.1:5001/chat
 ```
 
 ### 3. 检查 nginx 日志
@@ -78,9 +86,17 @@ export ARK_API_KEY="6b7a963f-0952-4338-8e3e-29460040f0bf"
 nohup python3 app.py > /var/log/hezhili-backend.log 2>&1 &
 ```
 
-### 问题 2: 端口不匹配
+### 问题 2: 端口不匹配 (最可能的原因)
 **症状**: nginx 代理到 5000，但后端监听 5001
-**解决**: 修改 nginx 配置或后端端口
+**解决**: 
+```bash
+# 快速修复端口配置
+./server_fix_port.sh
+
+# 或手动修改
+sudo sed -i 's/127.0.0.1:5000/127.0.0.1:5001/g' /etc/nginx/sites-available/default
+sudo nginx -t && sudo systemctl reload nginx
+```
 
 ### 问题 3: CORS 问题
 **症状**: OPTIONS 请求失败
@@ -93,9 +109,9 @@ nohup python3 app.py > /var/log/hezhili-backend.log 2>&1 &
 ## 📋 完整修复检查清单
 
 - [ ] 后端服务正在运行
-- [ ] 后端监听正确端口 (5000)
+- [ ] 后端监听正确端口 (5001)
 - [ ] 本地 curl 测试返回 JSON
-- [ ] nginx 配置 proxy_pass 指向正确端口
+- [ ] nginx 配置 proxy_pass 指向正确端口 (127.0.0.1:5001)
 - [ ] nginx 配置包含所有 API 路由 (/chat, /stats, /sessions)
 - [ ] nginx 配置包含 CORS 头部
 - [ ] nginx 配置测试通过 (`nginx -t`)
@@ -136,7 +152,7 @@ sudo systemctl start hezhili-backend
 ```bash
 pip3 install gunicorn
 cd /root/hezhili-website/backend/api
-gunicorn -w 4 -b 127.0.0.1:5000 app:app \
+gunicorn -w 4 -b 127.0.0.1:5001 app:app \
   --access-logfile /var/log/hezhili-access.log \
   --error-logfile /var/log/hezhili-error.log \
   --daemon

@@ -30,13 +30,6 @@ fi
 echo ""
 echo "3️⃣ 检查端口监听状态:"
 echo "----------------------------------------"
-echo "检查 5000 端口:"
-if sudo ss -ltnp | grep ":5000 "; then
-    echo "✅ 5000 端口有进程监听"
-else
-    echo "❌ 5000 端口无进程监听"
-fi
-
 echo "检查 5001 端口:"
 if sudo ss -ltnp | grep ":5001 "; then
     echo "✅ 5001 端口有进程监听" 
@@ -44,22 +37,17 @@ else
     echo "❌ 5001 端口无进程监听"
 fi
 
-echo ""
-echo "4️⃣ 测试本地后端连接:"
-echo "----------------------------------------"
-echo "测试 127.0.0.1:5000/stats:"
-if curl -s -m 5 http://127.0.0.1:5000/stats > /dev/null 2>&1; then
-    echo "✅ 5000 端口可连接"
-    echo "响应内容:"
-    curl -s -m 5 http://127.0.0.1:5000/stats | head -c 200
-    echo ""
+echo "检查 5000 端口:"
+if sudo ss -ltnp | grep ":5000 "; then
+    echo "✅ 5000 端口有进程监听"
 else
-    echo "❌ 5000 端口连接失败"
-    curl -v -m 5 http://127.0.0.1:5000/stats 2>&1 | head -n 10
+    echo "❌ 5000 端口无进程监听"
 fi
 
 echo ""
-echo "测试 127.0.0.1:5001/stats:"
+echo "4️⃣ 测试本地后端连接:"
+echo "----------------------------------------"
+echo "测试 127.0.0.1:5001/stats (主要端口):"
 if curl -s -m 5 http://127.0.0.1:5001/stats > /dev/null 2>&1; then
     echo "✅ 5001 端口可连接"
     echo "响应内容:"
@@ -68,6 +56,18 @@ if curl -s -m 5 http://127.0.0.1:5001/stats > /dev/null 2>&1; then
 else
     echo "❌ 5001 端口连接失败"
     curl -v -m 5 http://127.0.0.1:5001/stats 2>&1 | head -n 10
+fi
+
+echo ""
+echo "测试 127.0.0.1:5000/stats (备用检查):"
+if curl -s -m 5 http://127.0.0.1:5000/stats > /dev/null 2>&1; then
+    echo "✅ 5000 端口可连接"
+    echo "响应内容:"
+    curl -s -m 5 http://127.0.0.1:5000/stats | head -c 200
+    echo ""
+else
+    echo "❌ 5000 端口连接失败"
+    curl -v -m 5 http://127.0.0.1:5000/stats 2>&1 | head -n 10
 fi
 
 echo ""
@@ -93,8 +93,8 @@ fi
 echo ""
 echo "6️⃣ 测试 /chat POST 请求:"
 echo "----------------------------------------"
-echo "测试 127.0.0.1:5000/chat:"
-chat_response=$(curl -s -w "%{http_code}" -H "Content-Type: application/json" -d '{"text":"test","session_id":null}' http://127.0.0.1:5000/chat 2>/dev/null)
+echo "测试 127.0.0.1:5001/chat (主要端口):"
+chat_response=$(curl -s -w "%{http_code}" -H "Content-Type: application/json" -d '{"text":"test","session_id":null}' http://127.0.0.1:5001/chat 2>/dev/null)
 http_code=$(echo "$chat_response" | tail -c 4)
 response_body=$(echo "$chat_response" | head -c -4)
 
@@ -109,8 +109,8 @@ else
 fi
 
 echo ""
-echo "测试 127.0.0.1:5001/chat:"
-chat_response=$(curl -s -w "%{http_code}" -H "Content-Type: application/json" -d '{"text":"test","session_id":null}' http://127.0.0.1:5001/chat 2>/dev/null)
+echo "测试 127.0.0.1:5000/chat (备用检查):"
+chat_response=$(curl -s -w "%{http_code}" -H "Content-Type: application/json" -d '{"text":"test","session_id":null}' http://127.0.0.1:5000/chat 2>/dev/null)
 http_code=$(echo "$chat_response" | tail -c 4)
 response_body=$(echo "$chat_response" | head -c -4)
 
@@ -131,8 +131,8 @@ echo "请检查以上输出，并根据以下情况进行修复:"
 echo ""
 echo "🔧 常见修复方案:"
 echo "1. 如果后端未运行: 启动后端服务"
-echo "2. 如果后端在 5001 但 nginx proxy_pass 指向 5000: 修改 nginx 配置"
-echo "3. 如果后端在 5000 但无法连接: 检查防火墙/权限"
+echo "2. 如果后端在 5001 但 nginx proxy_pass 指向 5000: 修改 nginx 配置指向 5001"
+echo "3. 如果后端在 5000 但应该在 5001: 检查后端配置"
 echo "4. 如果 API 返回非 200: 检查后端日志和 API key 配置"
 echo ""
 echo "📋 下一步操作:"

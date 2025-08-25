@@ -10,21 +10,21 @@ sudo pkill -f "app.py" 2>/dev/null || true
 sudo pkill -f "gunicorn.*hezhili" 2>/dev/null || true
 
 echo ""
-echo "2️⃣ 启动后端服务 (端口 5000)..."
+echo "2️⃣ 启动后端服务 (端口 5001)..."
 cd /root/hezhili-website/backend/api
 
 # 设置环境变量
 export ARK_API_KEY="6b7a963f-0952-4338-8e3e-29460040f0bf"
 export FLASK_ENV=production
 
-# 启动方式 1: 直接用 Flask (开发模式)
-echo "启动 Flask 应用 (端口 5000)..."
+# 启动方式 1: 直接用 Flask (监听 5001 端口)
+echo "启动 Flask 应用 (端口 5001)..."
 nohup python3 -c "
 import sys
 sys.path.append('/root/hezhili-website/backend')
 from api.app import app
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=False)
+    app.run(host='0.0.0.0', port=5001, debug=False)
 " > /var/log/hezhili-backend.log 2>&1 &
 
 backend_pid=$!
@@ -37,10 +37,10 @@ sleep 5
 
 echo ""
 echo "4️⃣ 测试后端连接..."
-if curl -s http://127.0.0.1:5000/stats > /dev/null; then
+if curl -s http://127.0.0.1:5001/stats > /dev/null; then
     echo "✅ 后端服务启动成功"
     echo "测试响应:"
-    curl -s http://127.0.0.1:5000/stats | head -c 200
+    curl -s http://127.0.0.1:5001/stats | head -c 200
     echo ""
 else
     echo "❌ 后端服务启动失败"
@@ -55,6 +55,18 @@ nginx_config="/etc/nginx/sites-available/default"
 if [ -f "$nginx_config" ]; then
     echo "检查当前 nginx 配置中的 proxy_pass..."
     sudo grep -n "proxy_pass.*127.0.0.1" "$nginx_config" || echo "未找到 proxy_pass 配置"
+    
+    # 检查是否指向正确的端口 5001
+    if sudo grep -q "proxy_pass.*127.0.0.1:5001" "$nginx_config"; then
+        echo "✅ nginx 已配置为代理到端口 5001"
+    elif sudo grep -q "proxy_pass.*127.0.0.1:5000" "$nginx_config"; then
+        echo "⚠️ nginx 配置为代理到端口 5000，需要更新为 5001"
+        echo "运行以下命令修复:"
+        echo "sudo sed -i 's/127.0.0.1:5000/127.0.0.1:5001/g' $nginx_config"
+        echo "sudo nginx -t && sudo systemctl reload nginx"
+    else
+        echo "❌ 未找到 proxy_pass 配置"
+    fi
 fi
 
 echo ""
