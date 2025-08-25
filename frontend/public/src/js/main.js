@@ -91,6 +91,70 @@ window.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    // 移动端聊天框切换功能
+    const mobileChatToggle = document.getElementById('mobile-chat-toggle');
+    const chatbox = document.querySelector('.chatbox');
+
+    if (mobileChatToggle && chatbox) {
+        let isChatVisible = false;
+
+        // 初始化移动端聊天框状态
+        function initMobileChatState() {
+            if (window.innerWidth <= 768) {
+                chatbox.classList.add('mobile-hidden');
+                chatbox.classList.remove('mobile-visible');
+                isChatVisible = false;
+                mobileChatToggle.textContent = '💬';
+                mobileChatToggle.classList.remove('active');
+            } else {
+                chatbox.classList.remove('mobile-hidden', 'mobile-visible');
+            }
+        }
+
+        // 切换聊天框显示/隐藏
+        mobileChatToggle.addEventListener('click', function () {
+            if (window.innerWidth <= 768) {
+                isChatVisible = !isChatVisible;
+
+                if (isChatVisible) {
+                    chatbox.classList.remove('mobile-hidden');
+                    chatbox.classList.add('mobile-visible');
+                    mobileChatToggle.textContent = '✕';
+                    mobileChatToggle.classList.add('active');
+                    // 聚焦到输入框
+                    setTimeout(() => {
+                        const chatInput = chatbox.querySelector('.chat-input');
+                        if (chatInput) chatInput.focus();
+                    }, 300);
+                } else {
+                    chatbox.classList.remove('mobile-visible');
+                    chatbox.classList.add('mobile-hidden');
+                    mobileChatToggle.textContent = '💬';
+                    mobileChatToggle.classList.remove('active');
+                }
+            }
+        });
+
+        // 初始化状态
+        initMobileChatState();
+
+        // 监听窗口大小变化
+        window.addEventListener('resize', initMobileChatState);
+
+        // 点击聊天框外部时在移动端隐藏聊天框
+        document.addEventListener('click', function (e) {
+            if (window.innerWidth <= 768 && isChatVisible) {
+                if (!chatbox.contains(e.target) && e.target !== mobileChatToggle) {
+                    isChatVisible = false;
+                    chatbox.classList.remove('mobile-visible');
+                    chatbox.classList.add('mobile-hidden');
+                    mobileChatToggle.textContent = '💬';
+                    mobileChatToggle.classList.remove('active');
+                }
+            }
+        });
+    }
+
     const moneyRainContainer = document.getElementById('money-rain');
     const rainControlBtn = document.getElementById('rain-control');
     console.log('Money rain container:', moneyRainContainer);
@@ -115,12 +179,12 @@ window.addEventListener('DOMContentLoaded', function () {
     if (sidebarEl) {
         // create toggle button
         const toggle = document.createElement('button');
-    toggle.className = 'sidebar-toggle';
-    toggle.title = '切换侧边栏';
-    // use a refined SVG icon (hamburger -> chevrons) and a tooltip via data attribute
-    toggle.setAttribute('data-tooltip', '切换侧边栏');
-    toggle.setAttribute('aria-label', '切换侧边栏');
-    toggle.innerHTML = '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M4.5 12l6-6 1.41 1.41L7.33 12l4.58 4.59L10.5 18 4.5 12zm15 0l-6 6-1.41-1.41L16.67 12l-4.58-4.59L13.5 6l6 6z" fill="currentColor"/></svg>';
+        toggle.className = 'sidebar-toggle';
+        toggle.title = '切换侧边栏';
+        // use a refined SVG icon (hamburger -> chevrons) and a tooltip via data attribute
+        toggle.setAttribute('data-tooltip', '切换侧边栏');
+        toggle.setAttribute('aria-label', '切换侧边栏');
+        toggle.innerHTML = '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M4.5 12l6-6 1.41 1.41L7.33 12l4.58 4.59L10.5 18 4.5 12zm15 0l-6 6-1.41-1.41L16.67 12l-4.58-4.59L13.5 6l6 6z" fill="currentColor"/></svg>';
         toggle.style.position = 'absolute';
         toggle.style.top = '8px';
         toggle.style.right = '-28px';
@@ -280,9 +344,9 @@ window.addEventListener('DOMContentLoaded', function () {
             return d;
         }
 
-    const bitcoinData = '../src/assets/bitcoin.svg';
-    // use external asset path for etherum tile (browser will request this file)
-    const etherData = '../src/assets/etherum.svg';
+        const bitcoinData = '../src/assets/bitcoin.svg';
+        // use external asset path for etherum tile (browser will request this file)
+        const etherData = '../src/assets/etherum.svg';
 
         const tileSizeNow = (window.innerWidth < 900) ? 160 : 240;
         const half = Math.round(tileSizeNow / 2);
@@ -290,20 +354,20 @@ window.addEventListener('DOMContentLoaded', function () {
         const bDiv = makeTileDiv(bitcoinData, 0);
         const eDiv = makeTileDiv(etherData, half);
 
-    // add a subtle security texture overlay (thin-line guilloche-like) above tiles
-    const secDiv = document.createElement('div');
-    secDiv.style.position = 'absolute';
-    secDiv.style.inset = '0';
-    secDiv.style.pointerEvents = 'none';
-    secDiv.style.backgroundImage = `url('../src/assets/security.svg')`;
-    secDiv.style.backgroundRepeat = 'repeat';
-    secDiv.style.opacity = '0.22';
-    secDiv.style.zIndex = '2';
-    secDiv.style.backgroundSize = tileSizeNow + 'px ' + tileSizeNow + 'px';
+        // add a subtle security texture overlay (thin-line guilloche-like) above tiles
+        const secDiv = document.createElement('div');
+        secDiv.style.position = 'absolute';
+        secDiv.style.inset = '0';
+        secDiv.style.pointerEvents = 'none';
+        secDiv.style.backgroundImage = `url('../src/assets/security.svg')`;
+        secDiv.style.backgroundRepeat = 'repeat';
+        secDiv.style.opacity = '0.22';
+        secDiv.style.zIndex = '2';
+        secDiv.style.backgroundSize = tileSizeNow + 'px ' + tileSizeNow + 'px';
 
-    tileWrap.appendChild(bDiv);
-    tileWrap.appendChild(eDiv);
-    tileWrap.appendChild(secDiv);
+        tileWrap.appendChild(bDiv);
+        tileWrap.appendChild(eDiv);
+        tileWrap.appendChild(secDiv);
         document.body.insertBefore(tileWrap, document.body.firstChild);
 
         // update on resize to keep offset correct for responsive breakpoints
@@ -333,11 +397,11 @@ window.addEventListener('DOMContentLoaded', function () {
         const sym = currencySymbols[Math.floor(Math.random() * currencySymbols.length)];
         bill.textContent = sym;
         bill.className = 'money-bill';
-    bill.style.position = 'absolute';
-    // keep style.top unused for layout; control vertical position via transform and JS y
-    bill.style.top = '0px';
-    bill.style.left = Math.random() * window.innerWidth + 'px';
-    bill.style.fontSize = '42px';
+        bill.style.position = 'absolute';
+        // keep style.top unused for layout; control vertical position via transform and JS y
+        bill.style.top = '0px';
+        bill.style.left = Math.random() * window.innerWidth + 'px';
+        bill.style.fontSize = '42px';
         bill.style.opacity = '0.85';
         bill.style.pointerEvents = 'none';
         bill.style.transform = 'translate3d(0,0,0) rotate(' + (Math.random() * 360) + 'deg)';
@@ -442,62 +506,62 @@ window.addEventListener('DOMContentLoaded', function () {
 
     function createBackDollars() {
         const layer = glassStage.querySelector('.dollar-layer');
-    // compute responsive vertical bounds inside the fixed glass stage (stage coords)
-    const stageHeight = glassStage.clientHeight || Math.max(400, window.innerHeight);
-    const topY = Math.max(0, Math.round(stageHeight * 0.02));
-    const delta = Math.min(Math.max(Math.round(stageHeight * 0.25), 50), 400);
-    const bottomY = topY + delta;
+        // compute responsive vertical bounds inside the fixed glass stage (stage coords)
+        const stageHeight = glassStage.clientHeight || Math.max(400, window.innerHeight);
+        const topY = Math.max(0, Math.round(stageHeight * 0.02));
+        const delta = Math.min(Math.max(Math.round(stageHeight * 0.25), 50), 400);
+        const bottomY = topY + delta;
 
-    // compute spacing and fixed font size to avoid overlap
-    const spacing = Math.floor(window.innerWidth / Math.max(1, backCount));
-    const desiredDesktop = 360;
-    const desiredMobile = 220;
-    const fontSize = Math.max(60, Math.min(isSmallScreen ? desiredMobile : desiredDesktop, Math.floor(spacing * 0.9)));
+        // compute spacing and fixed font size to avoid overlap
+        const spacing = Math.floor(window.innerWidth / Math.max(1, backCount));
+        const desiredDesktop = 360;
+        const desiredMobile = 220;
+        const fontSize = Math.max(60, Math.min(isSmallScreen ? desiredMobile : desiredDesktop, Math.floor(spacing * 0.9)));
 
-    // number of segments per column (train length) - set to 1 to enforce a single symbol per column
-    const segmentsPerColumn = 1;
-    // choose a per-column gap based on the column's scale to avoid vertical overlap
-    // we'll compute a scaleBase per column below and derive a safe gap there
+        // number of segments per column (train length) - set to 1 to enforce a single symbol per column
+        const segmentsPerColumn = 1;
+        // choose a per-column gap based on the column's scale to avoid vertical overlap
+        // we'll compute a scaleBase per column below and derive a safe gap there
 
-    for (let i = 0; i < backCount; i++) {
-        const leftPx = Math.round((i + 0.5) * spacing - fontSize / 2);
-        const dir = (i % 2 === 0) ? 1 : -1;
-        const initialY = (i % 2 === 0) ? topY : bottomY;
-        const distance = Math.abs(bottomY - topY) || 200;
-        const speed = Math.max(30, distance / (4 + Math.random() * 6));
-        const baseOpacity = 0.45;
-    const scaleBase = 1.05 + Math.random() * 0.4;
+        for (let i = 0; i < backCount; i++) {
+            const leftPx = Math.round((i + 0.5) * spacing - fontSize / 2);
+            const dir = (i % 2 === 0) ? 1 : -1;
+            const initialY = (i % 2 === 0) ? topY : bottomY;
+            const distance = Math.abs(bottomY - topY) || 200;
+            const speed = Math.max(30, distance / (4 + Math.random() * 6));
+            const baseOpacity = 0.45;
+            const scaleBase = 1.05 + Math.random() * 0.4;
 
-    // vertical spacing between segments: ensure it's at least the height of the
-    // largest scaled glyph so segments cannot visually overlap. add small padding.
-    const segmentGap = Math.ceil(fontSize * scaleBase * 1.05);
+            // vertical spacing between segments: ensure it's at least the height of the
+            // largest scaled glyph so segments cannot visually overlap. add small padding.
+            const segmentGap = Math.ceil(fontSize * scaleBase * 1.05);
 
-    // compute respawn for leader segment inside stage coordinates
-    const spawnOffset = Math.max(60, Math.round(stageHeight * 0.08)) + Math.round(fontSize * 0.3);
-    const stageBottom = stageHeight;
-    const respawnY = (dir === 1)
-        ? (topY - spawnOffset - Math.round(fontSize * 0.5))
-        : (stageBottom + spawnOffset);
+            // compute respawn for leader segment inside stage coordinates
+            const spawnOffset = Math.max(60, Math.round(stageHeight * 0.08)) + Math.round(fontSize * 0.3);
+            const stageBottom = stageHeight;
+            const respawnY = (dir === 1)
+                ? (topY - spawnOffset - Math.round(fontSize * 0.5))
+                : (stageBottom + spawnOffset);
 
-        // single segment per column (simplified, no train)
-        const el = document.createElement('div');
-        el.className = 'back-dollar';
-        el.style.fontSize = fontSize + 'px';
-        el.style.left = Math.max(0, leftPx) + 'px';
-        el.style.opacity = '0';
-        el.textContent = '$';
-        el.setAttribute('data-symbol', '$');
-        const segScale = scaleBase; // single glyph uses base scale
-        const phase = Math.random() * Math.PI * 2;
-        const swayFreq = 0.6 + Math.random() * 0.8;
-        const swayAmp = Math.round(fontSize * 0.07);
-        el.style.transform = `translate3d(0, ${Math.round(respawnY)}px, 0) scale(${segScale})`;
-        layer.appendChild(el);
+            // single segment per column (simplified, no train)
+            const el = document.createElement('div');
+            el.className = 'back-dollar';
+            el.style.fontSize = fontSize + 'px';
+            el.style.left = Math.max(0, leftPx) + 'px';
+            el.style.opacity = '0';
+            el.textContent = '$';
+            el.setAttribute('data-symbol', '$');
+            const segScale = scaleBase; // single glyph uses base scale
+            const phase = Math.random() * Math.PI * 2;
+            const swayFreq = 0.6 + Math.random() * 0.8;
+            const swayAmp = Math.round(fontSize * 0.07);
+            el.style.transform = `translate3d(0, ${Math.round(respawnY)}px, 0) scale(${segScale})`;
+            layer.appendChild(el);
 
-        const seg = { el, y: respawnY, segIndex: 0, segScale, phase, swayFreq, swayAmp, curOpacity: 0 };
+            const seg = { el, y: respawnY, segIndex: 0, segScale, phase, swayFreq, swayAmp, curOpacity: 0 };
 
-    backColumns.push({ seg, xPx: leftPx, dir, speed, baseOpacity, respawnY, topY, bottomY, segmentGap, scaleBase });
-    }
+            backColumns.push({ seg, xPx: leftPx, dir, speed, baseOpacity, respawnY, topY, bottomY, segmentGap, scaleBase });
+        }
     }
 
     createBackDollars();
@@ -510,90 +574,90 @@ window.addEventListener('DOMContentLoaded', function () {
         const dt = Math.max(0.001, (now - lastBackTime) / 1000);
         lastBackTime = now;
 
-    const stageHeightNow = glassStage.clientHeight || Math.max(400, window.innerHeight);
-    const stageBottomNow = stageHeightNow;
-    const recycleMargin = Math.round(Math.max(100, stageHeightNow * 0.05));
+        const stageHeightNow = glassStage.clientHeight || Math.max(400, window.innerHeight);
+        const stageBottomNow = stageHeightNow;
+        const recycleMargin = Math.round(Math.max(100, stageHeightNow * 0.05));
 
         backColumns.forEach((col, colIdx) => {
-                // single segment per column
-                const delta = col.dir * col.speed * motionScale * dt;
-                const seg = col.seg;
-                seg.y += delta;
+            // single segment per column
+            const delta = col.dir * col.speed * motionScale * dt;
+            const seg = col.seg;
+            seg.y += delta;
 
-                // render and apply per-seg independent fade logic and motion
-                const tNow = now / 1000;
-                const vis = Math.max(0, Math.min(1, (seg.curOpacity !== undefined ? seg.curOpacity : 1)));
-                // reduce motion amplitude as segment fades to avoid chaotic movement during fade-out
-                const ampScale = 0.4 + 0.6 * vis;
-                const sway = Math.sin(tNow * seg.swayFreq + seg.phase) * seg.swayAmp * ampScale;
-                const rot = Math.sin(tNow * (seg.swayFreq * 0.7) + seg.phase) * 3 * ampScale; // small deg
-                const scaleJitter = 1 + Math.sin(tNow * (seg.swayFreq * 0.9) + seg.phase) * 0.01 * ampScale;
-                seg.el.style.transform = `translate3d(${sway.toFixed(2)}px, ${seg.y.toFixed(2)}px, 0) rotate(${rot.toFixed(2)}deg) scale(${(seg.segScale * scaleJitter).toFixed(3)})`;
+            // render and apply per-seg independent fade logic and motion
+            const tNow = now / 1000;
+            const vis = Math.max(0, Math.min(1, (seg.curOpacity !== undefined ? seg.curOpacity : 1)));
+            // reduce motion amplitude as segment fades to avoid chaotic movement during fade-out
+            const ampScale = 0.4 + 0.6 * vis;
+            const sway = Math.sin(tNow * seg.swayFreq + seg.phase) * seg.swayAmp * ampScale;
+            const rot = Math.sin(tNow * (seg.swayFreq * 0.7) + seg.phase) * 3 * ampScale; // small deg
+            const scaleJitter = 1 + Math.sin(tNow * (seg.swayFreq * 0.9) + seg.phase) * 0.01 * ampScale;
+            seg.el.style.transform = `translate3d(${sway.toFixed(2)}px, ${seg.y.toFixed(2)}px, 0) rotate(${rot.toFixed(2)}deg) scale(${(seg.segScale * scaleJitter).toFixed(3)})`;
 
-                // compute desired opacity based on this segment's vertical position and glyph extent
-                let targetOp = 0;
-                const bottomEdge = stageBottomNow;
-                const bottomEnterMargin = Math.max(40, Math.round(stageHeightNow * 0.06));
-                const topEnterMargin = Math.max(20, Math.round(stageHeightNow * 0.03));
-                const fontPx = parseFloat(seg.el.style.fontSize || '100');
-                const glyphHalf = (fontPx * (seg.segScale || 1)) * 0.5;
-                const intersectsBand = (seg.y + glyphHalf) >= col.topY && (seg.y - glyphHalf) <= col.bottomY;
+            // compute desired opacity based on this segment's vertical position and glyph extent
+            let targetOp = 0;
+            const bottomEdge = stageBottomNow;
+            const bottomEnterMargin = Math.max(40, Math.round(stageHeightNow * 0.06));
+            const topEnterMargin = Math.max(20, Math.round(stageHeightNow * 0.03));
+            const fontPx = parseFloat(seg.el.style.fontSize || '100');
+            const glyphHalf = (fontPx * (seg.segScale || 1)) * 0.5;
+            const intersectsBand = (seg.y + glyphHalf) >= col.topY && (seg.y - glyphHalf) <= col.bottomY;
 
-                if (intersectsBand) {
-                    const bandCenter = (col.topY + col.bottomY) / 2;
-                    const dist = Math.abs(seg.y - bandCenter);
-                    const maxDist = (col.bottomY - col.topY) / 2;
-                    const t = Math.max(0, 1 - (dist / Math.max(1, maxDist)));
-                    targetOp = col.baseOpacity * (0.35 + 0.65 * t);
+            if (intersectsBand) {
+                const bandCenter = (col.topY + col.bottomY) / 2;
+                const dist = Math.abs(seg.y - bandCenter);
+                const maxDist = (col.bottomY - col.topY) / 2;
+                const t = Math.max(0, 1 - (dist / Math.max(1, maxDist)));
+                targetOp = col.baseOpacity * (0.35 + 0.65 * t);
+            }
+
+            if (col.dir === 1) {
+                if ((seg.y - glyphHalf) >= (bottomEdge)) targetOp = 0;
+            } else {
+                if ((seg.y - glyphHalf) <= bottomEdge && (seg.y - glyphHalf) >= (bottomEdge - bottomEnterMargin)) {
+                    const entered = bottomEdge - (seg.y - glyphHalf);
+                    const tt = Math.max(0, Math.min(1, entered / bottomEnterMargin));
+                    targetOp = Math.max(targetOp, col.baseOpacity * (0.25 + 0.75 * tt));
                 }
+                if ((seg.y + glyphHalf) <= 0) targetOp = 0;
+            }
 
-                if (col.dir === 1) {
-                    if ((seg.y - glyphHalf) >= (bottomEdge)) targetOp = 0;
+            const lerpSpeed = 6;
+            seg.curOpacity = seg.curOpacity + (targetOp - seg.curOpacity) * Math.min(1, lerpSpeed * dt);
+            seg.el.style.opacity = seg.curOpacity.toFixed(3);
+
+            // recycle when leader goes out of view
+            const leader = seg;
+            if (col.dir === 1 && leader.y > stageBottomNow + recycleMargin) {
+                if (isGeneratingNew) {
+                    leader.y = col.respawnY;
+                    leader.el.style.left = (col.xPx || 0) + 'px';
+                    leader.el.style.opacity = '0';
+                    console.log('back-column recycled idx=', colIdx, 'set leader y=', col.respawnY);
                 } else {
-                    if ((seg.y - glyphHalf) <= bottomEdge && (seg.y - glyphHalf) >= (bottomEdge - bottomEnterMargin)) {
-                        const entered = bottomEdge - (seg.y - glyphHalf);
-                        const tt = Math.max(0, Math.min(1, entered / bottomEnterMargin));
-                        targetOp = Math.max(targetOp, col.baseOpacity * (0.25 + 0.75 * tt));
-                    }
-                    if ((seg.y + glyphHalf) <= 0) targetOp = 0;
+                    leader.el.style.opacity = '0';
                 }
-
-                const lerpSpeed = 6;
-                seg.curOpacity = seg.curOpacity + (targetOp - seg.curOpacity) * Math.min(1, lerpSpeed * dt);
-                seg.el.style.opacity = seg.curOpacity.toFixed(3);
-
-                // recycle when leader goes out of view
-                const leader = seg;
-                if (col.dir === 1 && leader.y > stageBottomNow + recycleMargin) {
-                    if (isGeneratingNew) {
-                        leader.y = col.respawnY;
-                        leader.el.style.left = (col.xPx || 0) + 'px';
-                        leader.el.style.opacity = '0';
-                        console.log('back-column recycled idx=', colIdx, 'set leader y=', col.respawnY);
-                    } else {
-                        leader.el.style.opacity = '0';
-                    }
-                } else if (col.dir === -1 && leader.y < -recycleMargin) {
-                    if (isGeneratingNew) {
-                        leader.y = col.respawnY;
-                        leader.el.style.left = (col.xPx || 0) + 'px';
-                        leader.el.style.opacity = '0';
-                        console.log('back-column recycled idx=', colIdx, 'set leader y=', col.respawnY);
-                    } else {
-                        leader.el.style.opacity = '0';
-                    }
+            } else if (col.dir === -1 && leader.y < -recycleMargin) {
+                if (isGeneratingNew) {
+                    leader.y = col.respawnY;
+                    leader.el.style.left = (col.xPx || 0) + 'px';
+                    leader.el.style.opacity = '0';
+                    console.log('back-column recycled idx=', colIdx, 'set leader y=', col.respawnY);
+                } else {
+                    leader.el.style.opacity = '0';
                 }
-            });
+            }
+        });
 
-    backAnimId = requestAnimationFrame(animateBackDollars);
+        backAnimId = requestAnimationFrame(animateBackDollars);
     }
 
     // responsive recompute on resize: update topY/bottomY and adjust targets proportionally
     function recomputeBackBounds() {
-    const stageHeight = glassStage.clientHeight || Math.max(400, window.innerHeight);
-    const topY = Math.max(0, Math.round(stageHeight * 0.02));
-    const delta = Math.min(Math.max(Math.round(stageHeight * 0.25), 50), 400);
-    const bottomY = topY + delta;
+        const stageHeight = glassStage.clientHeight || Math.max(400, window.innerHeight);
+        const topY = Math.max(0, Math.round(stageHeight * 0.02));
+        const delta = Math.min(Math.max(Math.round(stageHeight * 0.25), 50), 400);
+        const bottomY = topY + delta;
         backColumns.forEach((col, idx) => {
             const spacing = Math.floor(window.innerWidth / Math.max(1, backCount));
             const fontSize = parseInt(col.seg.el.style.fontSize || '100', 10);
@@ -629,20 +693,20 @@ window.addEventListener('DOMContentLoaded', function () {
         rainControlBtn.title = '暂停钞票雨';
 
         rainControlBtn.addEventListener('click', function () {
-                // Toggle generation/respawn of new bills
-                if (isGeneratingNew) {
-                    isGeneratingNew = false;
-                    rainControlBtn.innerHTML = '<img src="../src/assets/start.svg" style="width: 20px; height: 20px;" alt="开始">';
-                    rainControlBtn.title = '开始钞票雨生成/回收';
-                    console.log('停止生成/回收新钞票（已有钞票继续下落或隐藏）');
-                } else {
-                    isGeneratingNew = true;
-                    // when resuming generation, bring back hidden bills
-                    billImages.forEach(bill => { if (bill.inactive) { bill.el.style.display = 'block'; bill.inactive = false; } });
-                    rainControlBtn.innerHTML = '<img src="../src/assets/pause.svg" style="width: 20px; height: 20px;" alt="暂停">';
-                    rainControlBtn.title = '暂停钞票雨';
-                    console.log('恢复生成/回收新钞票');
-                }
+            // Toggle generation/respawn of new bills
+            if (isGeneratingNew) {
+                isGeneratingNew = false;
+                rainControlBtn.innerHTML = '<img src="../src/assets/start.svg" style="width: 20px; height: 20px;" alt="开始">';
+                rainControlBtn.title = '开始钞票雨生成/回收';
+                console.log('停止生成/回收新钞票（已有钞票继续下落或隐藏）');
+            } else {
+                isGeneratingNew = true;
+                // when resuming generation, bring back hidden bills
+                billImages.forEach(bill => { if (bill.inactive) { bill.el.style.display = 'block'; bill.inactive = false; } });
+                rainControlBtn.innerHTML = '<img src="../src/assets/pause.svg" style="width: 20px; height: 20px;" alt="暂停">';
+                rainControlBtn.title = '暂停钞票雨';
+                console.log('恢复生成/回收新钞票');
+            }
         });
 
         // 添加悬停效果
@@ -726,7 +790,7 @@ window.addEventListener('DOMContentLoaded', function () {
             let r = 232, g = 247, b = 232;
             if (m) { r = +m[1]; g = +m[2]; b = +m[3]; }
             // luminance perceived
-            const lum = 0.2126 * (r/255) + 0.7152 * (g/255) + 0.0722 * (b/255);
+            const lum = 0.2126 * (r / 255) + 0.7152 * (g / 255) + 0.0722 * (b / 255);
             const root = document.documentElement.style;
             if (lum < 0.45) {
                 // dark background -> bright hero

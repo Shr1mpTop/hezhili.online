@@ -6,679 +6,1430 @@
     --hero-color: #072a00;
     --hero-accent: #0b8a2e;
     --hero-shadow: 0 8px 30px rgba(2, 44, 8, 0.18);
-    --hero-size: 128px; /* 更吸引人的更大主标题默认大小 */
-    --subtitle-size: 20px; /* 副标题默认较小，避免盖过主标题 */
-    --hero-subcolor: #000000; /* 副标题默认颜色设为黑色以提高可读性 */
-    --sidebar-rail-width: 64px; /* collapsed rail width */
-    --sidebar-mini-chat-width: 48px; /* compact chatbox width when sidebar collapsed */
-}
+    --hero-size: 128px;
+    /* 更吸引人的更大主标题默认大小 */
+    --subtitle-size: 20px;
+    /* 副标题默认较小，避免盖过主标题 */
+    --hero-subcolor: #000000;
+    /* 副标题默认颜色设为黑色以提高可读性 */
+    --sidebar-rail-width: 64px;
+    /* collapsed rail width */
+    --sidebar-mini-chat-width: 48px;
+    /* compact chatbox width when sidebar collapsed */
 
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    box-sizing: border-box;
-    color: #000; /* 默认字体为黑色 */
-    background-color: #f9f9f9;
-}
+    /* 响应式 hero 尺寸变量 */
+    --hero-size-mobile: 32px;
+    --hero-size-tablet: 56px;
+    --hero-size-desktop: 80px;
+    --hero-size-large: 96px;
+    --hero-size-xl: 128px;
 
-#rain-control {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    z-index: 1000;
-    width: 50px;
-    height: 50px;
-    border: none;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.9);
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 16px;
-    transition: all 0.3s ease;
-}
+    --subtitle-size-mobile: 14px;
+    --subtitle-size-tablet: 16px;
+    --subtitle-size-desktop: 18px;
+    --subtitle-size-large: 20px;
+    --subtitle-size-xl: 24px;
+    /* end of stylesheet */
 
-.sidebar {
-    position: fixed;
-    left: 0;
-    top: 0;
-    width: var(--sidebar-width);
-    height: 100%;
-    background: #075004;
-    color: #fff;
-    padding-top: 40px;
-    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.6);
-}
-
-/* Collapsible sidebar styles: collapsed to a small rail, expand on hover via JS */
-.sidebar {
-    transition: width 360ms cubic-bezier(.2,.9,.2,1), background 240ms ease;
-    overflow: hidden;
-}
-
-/* collapsed state: narrow rail, hide text labels */
-.sidebar.collapsed {
-    width: var(--sidebar-rail-width); /* rail width when collapsed */
-}
-
-.sidebar.collapsed h2,
-.sidebar.collapsed ul li a {
-    opacity: 0;
-    transform: translateX(-6px);
-    transition: opacity 220ms ease, transform 260ms ease;
-    pointer-events: none;
-}
-
-/* ensure icons or interactive area still usable; keep list items spacing */
-.sidebar ul li {
-    padding: 12px 12px;
-}
-
-/* Improved collapsed layout: center icons, hide text smoothly, and ensure consistent hit area */
-.sidebar.collapsed ul li {
-    padding: 10px 6px;
-}
-
-.sidebar ul li a {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    transition: padding 220ms ease, justify-content 220ms ease;
-}
-
-.sidebar ul li a .nav-icon {
-    width: 28px;
-    height: 28px;
-    flex: 0 0 28px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.sidebar ul li a .nav-text {
-    max-width: 160px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    transition: opacity 220ms ease, transform 260ms ease, max-width 260ms ease;
-}
-
-.sidebar.collapsed ul li a {
-    justify-content: center;
-}
-
-.sidebar.collapsed ul li a .nav-text {
-    max-width: 0;
-    opacity: 0;
-    transform: translateX(-6px);
-    pointer-events: none;
-}
-
-/* ensure sidebar toggle uses CSS to position reliably (override inline JS offsets) */
-.sidebar .sidebar-toggle {
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    width: 32px;
-    height: 32px;
-}
-
-.sidebar.collapsed .chatbox {
-    width: var(--sidebar-mini-chat-width); /* preserve compact chatbox */
-    left: calc((var(--sidebar-rail-width) - var(--sidebar-mini-chat-width)) / 2);
-}
-
-/* When collapsed, move main content left-margin to match narrow rail on wide screens */
-@media (min-width: 1200px) {
-    .sidebar.collapsed ~ .main-content {
-        margin-left: var(--sidebar-rail-width); /* align content when sidebar is rail */
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        box-sizing: border-box;
+        color: #000;
+        /* 默认字体为黑色 */
+        background-color: #f9f9f9;
     }
-}
 
-.sidebar h2 {
-    text-align: center;
-    margin-bottom: 30px;
-    font-size: 1.4em;
-}
+    #rain-control {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 1000;
+        width: 50px;
+        height: 50px;
+        border: none;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.9);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        transition: all 0.3s ease;
+    }
 
-.sidebar ul {
-    list-style: none;
-    padding: 0;
-}
+    .sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: var(--sidebar-width);
+        height: 100%;
+        background: #075004;
+        color: #fff;
+        padding-top: 40px;
+        box-shadow: 2px 0 8px rgba(0, 0, 0, 0.6);
+    }
 
-.sidebar ul li {
-    padding: 12px 24px;
-    cursor: pointer;
-    transition: background 0.2s;
-}
+    /* Collapsible sidebar styles: collapsed to a small rail, expand on hover via JS */
+    .sidebar {
+        transition: width 360ms cubic-bezier(.2, .9, .2, 1), background 240ms ease;
+        overflow: hidden;
+    }
 
-.sidebar ul li a {
-    color: #fff;
-    text-decoration: none;
-    display: block;
-    width: 100%;
-    height: 100%;
-}
+    /* collapsed state: narrow rail, hide text labels */
+    .sidebar.collapsed {
+        width: var(--sidebar-rail-width);
+        /* rail width when collapsed */
+    }
 
-/* make sidebar links layout with icon + text */
-.sidebar ul li a {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-.sidebar ul li a .nav-icon {
-    width: 24px; /* increased size for better affordance */
-    height: 24px;
-    flex: 0 0 24px;
-    display: inline-block;
-    vertical-align: middle;
-}
-.sidebar ul li a .nav-text {
-    transition: opacity 220ms ease, transform 260ms ease;
-}
+    .sidebar.collapsed h2,
+    .sidebar.collapsed ul li a {
+        opacity: 0;
+        transform: translateX(-6px);
+        transition: opacity 220ms ease, transform 260ms ease;
+        pointer-events: none;
+    }
 
-/* when collapsed, keep icons visible but hide text */
-.sidebar.collapsed ul li a {
-    opacity: 1; /* override earlier rule that hid anchors entirely */
-}
-.sidebar.collapsed ul li a .nav-text {
-    opacity: 0;
-    transform: translateX(-6px);
-    pointer-events: none;
-}
+    /* ensure icons or interactive area still usable; keep list items spacing */
+    .sidebar ul li {
+        padding: 12px 12px;
+    }
 
-/* Circular chat send button to match sidebar toggle size */
-.chat-form button {
-    width: 36px;
-    height: 36px;
-    padding: 0;
-    border-radius: 50%;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-}
-.chat-form button svg {
-    width: 18px;
-    height: 18px;
-}
+    /* Improved collapsed layout: center icons, hide text smoothly, and ensure consistent hit area */
+    .sidebar.collapsed ul li {
+        padding: 10px 6px;
+    }
 
-.sidebar ul li a:hover {
-    color: #e0e0e0;
-}
+    .sidebar ul li a {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        transition: padding 220ms ease, justify-content 220ms ease;
+    }
 
-.sidebar ul li:hover {
-    background: #5f735f59;
-}
+    .sidebar ul li a .nav-icon {
+        width: 28px;
+        height: 28px;
+        flex: 0 0 28px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
 
-.sidebar ul li.active {
-    background: #4a6b4a;
-    border-left: 4px solid #90ee90;
-}
+    .sidebar ul li a .nav-text {
+        max-width: 160px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        transition: opacity 220ms ease, transform 260ms ease, max-width 260ms ease;
+    }
 
-.main-content {
-    transition: margin 0.3s, padding 0.3s;
-    min-height: 60vh;
-    color: #000; /* 主内容区字体颜色设置为黑色 */
-    max-width: 960px;
-    margin: 0 auto; /* center by default */
-    padding: 24px;
-    box-sizing: border-box;
-}
+    .sidebar.collapsed ul li a {
+        justify-content: center;
+    }
 
-/* Hero / 主展示区 */
-.main-hero {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: calc(100vh - 40px);
-    text-align: center;
-    z-index: 5; /* above background tiles but below UI controls like rain */
-    pointer-events: auto;
-}
+    .sidebar.collapsed ul li a .nav-text {
+        max-width: 0;
+        opacity: 0;
+        transform: translateX(-6px);
+        pointer-events: none;
+    }
 
-.hero-title {
-    font-family: var(--hero-font);
-    font-size: var(--hero-size);
-    line-height: 1.02;
-    margin: 0 12px;
-    color: var(--hero-color);
-    text-shadow: var(--hero-shadow);
-    letter-spacing: 0.6px;
-    -webkit-font-smoothing: antialiased;
-}
+    /* ensure sidebar toggle uses CSS to position reliably (override inline JS offsets) */
+    .sidebar .sidebar-toggle {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        width: 32px;
+        height: 32px;
+    }
 
-/* 更醒目的主标题视觉：更粗、更显眼的描边与投影 */
-.hero-title {
-    font-weight: 900;
-    text-transform: none;
-    -webkit-text-stroke: 0.6px rgba(0,0,0,0.08);
-}
+    .sidebar.collapsed .chatbox {
+        width: var(--sidebar-mini-chat-width);
+        /* preserve compact chatbox */
+        left: calc((var(--sidebar-rail-width) - var(--sidebar-mini-chat-width)) / 2);
+    }
 
-.hero-subtitle {
-    margin-top: 12px;
-    color: var(--hero-subcolor);
-    font-size: var(--subtitle-size);
-    opacity: 0.98;
-    max-width: 900px;
-    line-height: 1.4;
-}
+    /* When collapsed, move main content left-margin to match narrow rail on wide screens */
+    @media (min-width: 1200px) {
+        .sidebar.collapsed~.main-content {
+            margin-left: var(--sidebar-rail-width);
+            /* align content when sidebar is rail */
+        }
+    }
 
-/* 打字机光标样式 */
-.typewriter-caret {
-    display: inline-block;
-    width: 2px;
-    height: 1.05em;
-    background: currentColor;
-    margin-left: 6px;
-    vertical-align: bottom;
-    animation: caret-blink 1s steps(1) infinite;
-}
+    .sidebar h2 {
+        text-align: center;
+        margin-bottom: 30px;
+        font-size: 1.4em;
+    }
 
-@keyframes caret-blink {
-    0% { opacity: 1; }
-    50% { opacity: 0; }
-    100% { opacity: 1; }
-}
+    .sidebar ul {
+        list-style: none;
+        padding: 0;
+    }
 
-/* slide-in helper for subtitle entrance (used before typing) */
-.slide-in-from-left {
-    transform: translateX(-18px);
-    opacity: 0;
-    transition: transform 420ms ease-out, opacity 420ms ease-out;
-}
-.slide-in-from-left.visible {
-    transform: translateX(0);
-    opacity: 1;
-}
+    .sidebar ul li {
+        padding: 12px 24px;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
 
-/* Smaller screens scale down hero sizes */
-@media (max-width: 900px) {
-    :root { --hero-size: 64px; --subtitle-size: 18px; }
-    .main-hero { height: calc(70vh - 20px); padding-top: 6vh; }
-}
+    .sidebar ul li a {
+        color: #fff;
+        text-decoration: none;
+        display: block;
+        width: 100%;
+        height: 100%;
+    }
 
-/* accessibility: respect reduced-motion */
-@media (prefers-reduced-motion: reduce) {
-    .hero-title, .hero-subtitle { animation: none !important; }
-}
+    /* make sidebar links layout with icon + text */
+    .sidebar ul li a {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
 
-/* On wide screens leave space for the sidebar */
-@media (min-width: 1200px) {
+    .sidebar ul li a .nav-icon {
+        width: 24px;
+        /* increased size for better affordance */
+        height: 24px;
+        flex: 0 0 24px;
+        display: inline-block;
+        vertical-align: middle;
+    }
+
+    .sidebar ul li a .nav-text {
+        transition: opacity 220ms ease, transform 260ms ease;
+    }
+
+    /* when collapsed, keep icons visible but hide text */
+    .sidebar.collapsed ul li a {
+        opacity: 1;
+        /* override earlier rule that hid anchors entirely */
+    }
+
+    .sidebar.collapsed ul li a .nav-text {
+        opacity: 0;
+        transform: translateX(-6px);
+        pointer-events: none;
+    }
+
+    /* Circular chat send button to match sidebar toggle size */
+    .chat-form button {
+        width: 36px;
+        height: 36px;
+        padding: 0;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .chat-form button svg {
+        width: 18px;
+        height: 18px;
+    }
+
+    .sidebar ul li a:hover {
+        color: #e0e0e0;
+    }
+
+    .sidebar ul li:hover {
+        background: #5f735f59;
+    }
+
+    .sidebar ul li.active {
+        background: #4a6b4a;
+        border-left: 4px solid #90ee90;
+    }
+
     .main-content {
-        margin-left: var(--sidebar-width); /* dynamic: match the sidebar width */
-        max-width: calc(100% - var(--sidebar-width));
-        padding: 24px 32px;
+        transition: margin 0.3s, padding 0.3s;
+        min-height: 60vh;
+        color: #000;
+        /* 主内容区字体颜色设置为黑色 */
+        max-width: 960px;
+        margin: 0 auto;
+        /* center by default */
+        padding: 24px;
+        box-sizing: border-box;
     }
-}
 
-/* When sidebar is collapsed ensure main content aligns with narrow rail */
-@media (min-width: 1200px) {
-    .sidebar.collapsed ~ .main-content {
-        margin-left: var(--sidebar-rail-width); /* match collapsed rail width */
-        max-width: calc(100% - var(--sidebar-rail-width));
+    /* Hero / 主展示区 */
+    .main-hero {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: calc(100vh - 40px);
+        text-align: center;
+        z-index: 10;
+        /* above background tiles and sidebar to prevent occlusion */
+        pointer-events: auto;
+        position: relative;
+        /* ensure z-index takes effect */
     }
-}
 
-.chatbox {
-    background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-    height: 300px;
-    padding: 14px; /* increased padding for breathing room */
-    display: flex;
-    flex-direction: column;
-    position: fixed; /* default: fixed for small screens / floating */
-    left: 16px;
-    bottom: 40px; /* ensure a clear margin from viewport bottom */
-    width: calc(100% - 32px);
-    max-width: none;
-    transition: width 360ms cubic-bezier(.2,.9,.2,1), left 360ms cubic-bezier(.2,.9,.2,1), transform 260ms ease, bottom 260ms ease;
-    z-index: 12;
-    /* visual margin: keep space from bottom content */
-    margin-bottom: 12px;
-}
+    .hero-title {
+        font-family: var(--hero-font);
+        font-size: var(--hero-size);
+        line-height: 1.02;
+        margin: 0 12px;
+        color: var(--hero-color);
+        text-shadow: var(--hero-shadow);
+        letter-spacing: 0.6px;
+        -webkit-font-smoothing: antialiased;
+        position: relative;
+        z-index: 15;
+        /* ensure both titles are above sidebar */
+        /* 添加平滑过渡动画 */
+        transition: font-size 360ms cubic-bezier(.2, .9, .2, 1),
+            max-width 360ms cubic-bezier(.2, .9, .2, 1),
+            margin 360ms cubic-bezier(.2, .9, .2, 1),
+            text-align 360ms ease,
+            transform 360ms cubic-bezier(.2, .9, .2, 1);
+    }
 
-/* On wide screens when the sidebar is expanded, keep the chatbox inside the sidebar
-   instead of spanning the full viewport. This prevents the chatbox from overflowing. */
-@media (min-width: 1200px) {
-    .sidebar:not(.collapsed) .chatbox {
-        position: absolute; /* position relative to .sidebar (which is fixed) */
+    /* 更醒目的主标题视觉：更粗、更显眼的描边与投影 */
+    .hero-title {
+        font-weight: 900;
+        text-transform: none;
+        -webkit-text-stroke: 0.6px rgba(0, 0, 0, 0.08);
+    }
+
+    .hero-subtitle {
+        margin-top: 12px;
+        color: var(--hero-subcolor);
+        font-size: var(--subtitle-size);
+        opacity: 0.98;
+        max-width: 900px;
+        line-height: 1.4;
+        font-weight: 400;
+        padding: 0 16px;
+        position: relative;
+        z-index: 15;
+        /* same z-index as hero-title to prevent occlusion */
+        /* 为小屏幕添加水平内边距 */
+        /* 添加平滑过渡动画 */
+        transition: font-size 360ms cubic-bezier(.2, .9, .2, 1),
+            max-width 360ms cubic-bezier(.2, .9, .2, 1),
+            margin 360ms cubic-bezier(.2, .9, .2, 1),
+            text-align 360ms ease,
+            padding 360ms ease,
+            transform 360ms cubic-bezier(.2, .9, .2, 1);
+    }
+
+    /* 响应式 Hero 标题设计 */
+
+    /* 超小屏幕 (手机竖屏) */
+    @media (max-width: 480px) {
+        .hero-title {
+            font-size: var(--hero-size-mobile);
+            margin: 0 8px;
+            line-height: 1.1;
+            letter-spacing: 0.3px;
+            max-width: 90vw;
+            word-break: break-word;
+        }
+
+        .hero-subtitle {
+            font-size: var(--subtitle-size-mobile);
+            margin-top: 8px;
+            max-width: 85vw;
+            line-height: 1.3;
+            padding: 0 12px;
+        }
+
+        .main-hero {
+            height: calc(100vh - 60px);
+            padding: 20px 8px;
+        }
+    }
+
+    /* 小屏幕 (手机横屏/小平板) */
+    @media (min-width: 481px) and (max-width: 768px) {
+        .hero-title {
+            font-size: var(--hero-size-tablet);
+            margin: 0 12px;
+            line-height: 1.05;
+            letter-spacing: 0.4px;
+            max-width: 85vw;
+        }
+
+        .hero-subtitle {
+            font-size: var(--subtitle-size-tablet);
+            margin-top: 10px;
+            max-width: 80vw;
+            line-height: 1.35;
+            padding: 0 16px;
+        }
+
+        .main-hero {
+            height: calc(90vh - 40px);
+            padding: 30px 16px;
+        }
+    }
+
+    /* 中等屏幕 (平板/小桌面) */
+    @media (min-width: 769px) and (max-width: 1199px) {
+        .hero-title {
+            font-size: var(--hero-size-desktop);
+            margin: 0 16px;
+            line-height: 1.02;
+            letter-spacing: 0.5px;
+            max-width: 75vw;
+        }
+
+        .hero-subtitle {
+            font-size: var(--subtitle-size-desktop);
+            margin-top: 12px;
+            max-width: 70vw;
+            line-height: 1.4;
+            padding: 0 20px;
+        }
+
+        .main-hero {
+            height: calc(85vh - 30px);
+            padding: 40px 24px;
+        }
+    }
+
+    /* 大屏幕 (桌面) */
+    @media (min-width: 1200px) and (max-width: 1599px) {
+        .hero-title {
+            font-size: var(--hero-size-large);
+            margin: 0 20px;
+            line-height: 1.02;
+            letter-spacing: 0.6px;
+            max-width: 60vw;
+        }
+
+        .hero-subtitle {
+            font-size: var(--subtitle-size-large);
+            margin-top: 14px;
+            max-width: 55vw;
+            line-height: 1.4;
+            padding: 0 24px;
+        }
+
+        .main-hero {
+            height: calc(80vh - 20px);
+            padding: 50px 32px;
+        }
+    }
+
+    /* 超大屏幕 (大桌面/4K) */
+    @media (min-width: 1600px) {
+        .hero-title {
+            font-size: var(--hero-size-xl);
+            margin: 0 24px;
+            line-height: 1.02;
+            letter-spacing: 0.8px;
+            max-width: 50vw;
+        }
+
+        .hero-subtitle {
+            font-size: var(--subtitle-size-xl);
+            margin-top: 16px;
+            max-width: 45vw;
+            line-height: 1.45;
+            padding: 0 32px;
+            font-weight: 300;
+        }
+
+        .main-hero {
+            height: calc(75vh - 10px);
+            padding: 60px 40px;
+        }
+    }
+
+    /* 超宽屏幕 (21:9 等比例) */
+    @media (min-width: 1920px) and (min-aspect-ratio: 21/9) {
+        .hero-title {
+            font-size: calc(var(--hero-size-xl) * 1.1);
+            max-width: 40vw;
+        }
+
+        .hero-subtitle {
+            font-size: calc(var(--subtitle-size-xl) * 1.1);
+            max-width: 35vw;
+            margin-top: 20px;
+        }
+    }
+
+    /* 垂直屏幕优化 (竖屏平板等) */
+    @media (orientation: portrait) and (min-height: 800px) {
+        .main-hero {
+            padding-top: 10vh;
+            height: calc(70vh);
+        }
+
+        .hero-title {
+            margin-bottom: 8px;
+        }
+
+        .hero-subtitle {
+            margin-top: 16px;
+            line-height: 1.5;
+        }
+    }
+
+    /* 横屏但高度较小的设备 (如横屏手机) */
+    @media (orientation: landscape) and (max-height: 500px) {
+        .main-hero {
+            height: calc(90vh);
+            padding: 20px;
+        }
+
+        .hero-title {
+            font-size: calc(var(--hero-size-tablet) * 0.8);
+            margin-bottom: 0;
+        }
+
+        .hero-subtitle {
+            font-size: calc(var(--subtitle-size-tablet) * 0.9);
+            margin-top: 8px;
+        }
+    }
+
+    /* 打字机光标样式 */
+    .typewriter-caret {
+        display: inline-block;
+        width: 2px;
+        height: 1.05em;
+        background: currentColor;
+        margin-left: 6px;
+        vertical-align: bottom;
+        animation: caret-blink 1s steps(1) infinite;
+    }
+
+    @keyframes caret-blink {
+        0% {
+            opacity: 1;
+        }
+
+        50% {
+            opacity: 0;
+        }
+
+        100% {
+            opacity: 1;
+        }
+    }
+
+    /* slide-in helper for subtitle entrance (used before typing) */
+    .slide-in-from-left {
+        transform: translateX(-18px);
+        opacity: 0;
+        transition: transform 420ms ease-out, opacity 420ms ease-out;
+    }
+
+    .slide-in-from-left.visible {
+        transform: translateX(0);
+        opacity: 1;
+    }
+
+    /* accessibility: respect reduced-motion */
+    @media (prefers-reduced-motion: reduce) {
+
+        .hero-title,
+        .hero-subtitle {
+            animation: none !important;
+        }
+    }
+
+    /* On wide screens leave space for the sidebar */
+    @media (min-width: 1200px) {
+        .main-content {
+            margin-left: var(--sidebar-width);
+            /* dynamic: match the sidebar width */
+            max-width: calc(100% - var(--sidebar-width));
+            padding: 24px 32px;
+            transition: margin-left 360ms cubic-bezier(.2, .9, .2, 1), max-width 360ms cubic-bezier(.2, .9, .2, 1);
+        }
+
+        /* Hero 标题在侧边栏展开时向右移动 */
+        .main-hero {
+            padding-left: 40px;
+            padding-right: 40px;
+            /* 确保内容不被侧边栏遮挡 */
+            transform: translateX(0);
+        }
+
+        .hero-title,
+        .hero-subtitle {
+            /* baseline: 不偏移，居中对齐 */
+            transform: translateX(0);
+            text-align: center;
+        }
+
+        .hero-title {
+            max-width: calc(100vw - var(--sidebar-width) - 120px);
+        }
+
+        .hero-subtitle {
+            max-width: calc(100vw - var(--sidebar-width) - 160px);
+        }
+    }
+
+    /* When sidebar is collapsed ensure main content aligns with narrow rail */
+    @media (min-width: 1200px) {
+        .sidebar.collapsed~.main-content {
+            margin-left: var(--sidebar-rail-width);
+            /* match collapsed rail width */
+            max-width: calc(100% - var(--sidebar-rail-width));
+        }
+
+        /* Hero 标题在侧边栏收缩时向左回归中心，有更多空间 */
+        .sidebar.collapsed~.main-content .main-hero {
+            padding-left: 60px;
+            padding-right: 60px;
+        }
+
+        .sidebar.collapsed~.main-content .hero-title,
+        .sidebar.collapsed~.main-content .hero-subtitle {
+            /* 侧边栏收缩时，标题回到完全居中状态 */
+            transform: translateX(0);
+            text-align: center;
+        }
+
+        .sidebar.collapsed~.main-content .hero-title {
+            max-width: calc(100vw - var(--sidebar-rail-width) - 160px);
+            font-size: calc(var(--hero-size-xl) * 1.1);
+            /* 收缩时可以稍大一些 */
+        }
+
+        .sidebar.collapsed~.main-content .hero-subtitle {
+            max-width: calc(100vw - var(--sidebar-rail-width) - 200px);
+            font-size: calc(var(--subtitle-size-xl) * 1.05);
+        }
+    }
+
+    /* 当侧边栏展开（不是 .collapsed）时，将标题向右移动，避免被侧边栏遮挡 */
+    @media (min-width: 1200px) {
+
+        .sidebar:not(.collapsed)~.main-content .hero-title,
+        .sidebar:not(.collapsed)~.main-content .hero-subtitle {
+            /* expanded sidebar: move titles to the right */
+            transform: translateX(80px);
+        }
+    }
+
+    .chatbox {
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        height: 300px;
+        padding: 14px;
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        /* 改为absolute，相对于sidebar定位 */
         left: 16px;
         bottom: 20px;
-        width: calc(var(--sidebar-width) - 32px);
-        max-width: calc(var(--sidebar-width) - 32px);
-        padding: 10px;
-        margin-bottom: 0;
-    }
-}
-
-/* When sidebar is collapsed, make the chatbox compact and visually consistent */
-.sidebar.collapsed .chatbox {
-    /* compact mini chat rail when sidebar is collapsed */
-    width: var(--sidebar-mini-chat-width); /* compact width for icon/mini view */
-    left: calc((var(--sidebar-rail-width) - var(--sidebar-mini-chat-width)) / 2);
-    padding: 6px; /* slightly larger padding so icon breathes */
-    height: calc(var(--sidebar-rail-width)); /* reduced height for tighter appearance */
-    border-radius: 10px;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    bottom: 40px; /* match expanded bottom spacing */
-}
-
-.sidebar.collapsed .chatbox .chat-header,
-.sidebar.collapsed .chatbox .chat-messages,
-.sidebar.collapsed .chatbox .chat-form {
-    opacity: 0;
-    transform: translateY(4px);
-    pointer-events: none;
-    transition: opacity 240ms ease, transform 240ms ease;
-}
-
-/* show a compact chat icon when collapsed */
-.sidebar.collapsed .chatbox::before {
-    content: '\1F4AC'; /* speech balloon emoji as fallback icon */
-    font-size: 16px;
-    display: block;
-    color: #fff;
-    background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
-    width: 28px;
-    height: 28px;
-    border-radius: 8px;
-    line-height: 28px;
-    text-align: center;
-}
-
-/* Toggle button styles */
-.sidebar-toggle {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    transition: transform 180ms ease, background 160ms ease;
-    /* move toggle away from the H2 so it doesn't replace the '导航' text */
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    width: 32px;
-    height: 32px;
-    border-radius: 6px;
-}
-.sidebar-toggle svg {
-    width: 18px;
-    height: 18px;
-    display: block;
-}
-.sidebar-toggle:hover {
-    transform: scale(1.06);
-    background: rgba(255,255,255,0.12);
-}
-
-/* tooltip via data-tooltip attribute */
-.sidebar-toggle[data-tooltip]:hover:after {
-    content: attr(data-tooltip);
-    position: absolute;
-    right: -140%;
-    top: 50%;
-    transform: translateY(-50%);
-    background: rgba(0,0,0,0.75);
-    color: #fff;
-    padding: 6px 8px;
-    border-radius: 6px;
-    white-space: nowrap;
-    font-size: 12px;
-    z-index: 60;
-}
-
-/* When expanded (normal sidebar), ensure collapsed-state transitions reverse cleanly */
-.sidebar .chatbox::before {
-    display: none;
-}
-
-/* Smooth font-size and padding transitions for messages when expanding */
-.chat-messages, .chat-header p, .chat-form button, .chat-input {
-    transition: opacity 260ms ease, transform 260ms ease, font-size 200ms ease, padding 200ms ease;
-}
-
-.chat-messages {
-    flex-grow: 1;
-    overflow-y: auto;
-    padding: 5px;
-    margin-bottom: 10px;
-    background-color: rgba(255, 255, 255, 0.6);
-    border-radius: 5px;
-}
-
-.chat-form {
-    display: flex;
-    margin-top: auto;
-}
-
-.chat-input {
-    flex-grow: 1;
-    padding: 8px 12px;
-    border: 1px solid #ccc;
-    border-radius: 4px 0 0 4px;
-    font-size: 14px;
-}
-
-.chat-form button {
-    background: #075004;
-    color: white;
-    border: none;
-    border-radius: 0 4px 4px 0;
-    padding: 0 15px;
-    cursor: pointer;
-    transition: background 0.2s;
-}
-
-.chat-form button:hover {
-    background: #0a7007;
-}
-
-.chat-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-}
-
-.chat-header p {
-    margin: 0;
-    flex-grow: 1;
-}
-
-#clear-chat {
-    background: none;
-    border: none;
-    font-size: 16px;
-    cursor: pointer;
-    color: #999;
-    transition: color 0.3s;
-}
-
-#clear-chat:hover {
-    color: #ff3333;
-}
-
-/* 消息样式 */
-.message {
-    padding: 8px 12px;
-    margin: 8px 0;
-    border-radius: 15px;
-    max-width: 85%;
-    word-break: break-word;
-}
-
-.user-message {
-    background-color: #e3f2e3;
-    color: #075004;
-    margin-left: auto;
-    border-bottom-right-radius: 5px;
-    text-align: right;
-}
-
-.assistant-message {
-    background-color: #f0f0f0;
-    color: #333;
-    margin-right: auto;
-    border-bottom-left-radius: 5px;
-    text-align: left;
-}
-
-.message-sender {
-    font-weight: bold;
-    display: block;
-    margin-bottom: 4px;
-}
-
-.typing-indicator {
-    color: #888;
-    display: inline-block;
-}
-
-.typing-indicator:after {
-    content: '...';
-    display: inline-block;
-    animation: ellipsis 1.5s infinite;
-}
-
-@keyframes ellipsis {
-    0% {
-        content: '.';
-    }
-
-    33% {
-        content: '..';
-    }
-
-    66% {
-        content: '...';
-    }
-
-    100% {
-        content: '.';
-    }
-}
-
-.chatbox p {
-    color: #000;
-    font-size: large;
-    font-style: oblique;
-    margin: 0 0 8px 0;
-    flex-shrink: 0;
-}
-
-.chat-messages {
-    flex: 1;
-    color: #000;
-    min-height: 0;
-    max-height: none;
-    overflow-y: auto;
-    font-size: 1em;
-    padding: 0 2px 0 2px;
-    margin-bottom: 8px;
-}
-
-.chat-form {
-    display: flex;
-    gap: 8px;
-    margin-top: auto;
-    /* 让输入区始终贴底 */
-}
-
-.chat-input {
-    flex: 1;
-    padding: 8px;
-    border-radius: 4px;
-    border: 1px solid #ccc;
-    font-size: 1em;
-}
-
-.chat-form button {
-    padding: 8px 16px;
-    border-radius: 4px;
-    border: none;
-    background: #075004;
-    color: #fff;
-    cursor: pointer;
-    font-size: 1em;
-}
-
-/* 响应式设计：仅针对 iPhone 屏幕宽度 */
-@media (max-width: 900px) {
-    .chatbox {
         right: 16px;
-        left: auto;
-        width: calc(100% - 32px);
-        max-width: 560px;
-        bottom: 24px;
-        padding: 10px;
+        /* 添加right属性确保宽度自适应 */
+        width: auto;
+        /* 改为auto，让left和right控制宽度 */
+        max-width: calc(var(--sidebar-width) - 32px);
+        transition: width 360ms cubic-bezier(.2, .9, .2, 1), left 360ms cubic-bezier(.2, .9, .2, 1), transform 260ms ease, bottom 260ms ease, right 360ms cubic-bezier(.2, .9, .2, 1);
+        z-index: 12;
+        margin-bottom: 0;
+        /* 移除margin-bottom */
+        box-sizing: border-box;
+        /* 确保padding计算正确 */
     }
-}
 
-/* Floating mini-chat overlay container (created dynamically by JS) */
-.mini-chat-container {
-    position: fixed;
-    right: 20px;
-    bottom: 40px;
-    width: 360px;
-    max-width: calc(100% - 40px); /* never overflow viewport */
-    height: 420px;
-    z-index: 2200;
-    box-shadow: 0 8px 30px rgba(0,0,0,0.25);
-    border-radius: 10px;
-    background: transparent;
-    display: flex;
-    flex-direction: column;
-    overflow: visible;
-    box-sizing: border-box;
-    padding: 6px; /* ensure inner spacing so chatbox doesn't touch edges */
-}
-.mini-chat-container {
-    opacity: 0;
-    transform: translateY(10px) scale(0.98);
-    transition: opacity 220ms cubic-bezier(.2,.9,.2,1), transform 220ms cubic-bezier(.2,.9,.2,1);
-}
-.mini-chat-container.open {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-}
-.mini-chat-container.closing {
-    opacity: 0;
-    transform: translateY(6px) scale(0.995);
-}
-.mini-chat-container .chatbox {
-    position: relative !important; /* override fixed positioning */
-    left: auto !important;
-    bottom: auto !important;
-    width: 100% !important;
-    height: 100% !important;
-    padding: 12px !important;
-    margin: 0 !important;
-    border-radius: 10px !important;
-}
-.mini-chat-close {
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    z-index: 2300;
-    width: 28px;
-    height: 28px;
-    border-radius: 6px;
-    border: none;
-    background: rgba(0,0,0,0.6);
-    color: #fff;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-}
-.mini-chat-close:hover { transform: scale(1.06); }
-@media (max-width: 430px) {
+    /* 宽屏幕时保持聊天框在侧边栏内，避免溢出和重叠 */
+    @media (min-width: 1200px) {
+        .sidebar:not(.collapsed) .chatbox {
+            position: absolute;
+            /* 相对于sidebar定位 */
+            left: 16px;
+            bottom: 20px;
+            right: 16px;
+            /* 使用right替代固定width */
+            width: auto;
+            /* 让left和right控制宽度 */
+            max-width: none;
+            /* 移除max-width限制 */
+            padding: 12px;
+            margin-bottom: 0;
+            height: 280px;
+            /* 稍微减小高度避免与导航重叠 */
+        }
+    }
+
+    /* 当侧边栏折叠时，聊天框变为紧凑的迷你版本 */
+    .sidebar.collapsed .chatbox {
+        position: absolute;
+        /* 保持相对于sidebar定位 */
+        width: var(--sidebar-mini-chat-width);
+        left: calc((var(--sidebar-rail-width) - var(--sidebar-mini-chat-width)) / 2);
+        right: auto;
+        /* 重置right属性 */
+        padding: 6px;
+        height: calc(var(--sidebar-rail-width));
+        border-radius: 10px;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        bottom: 20px;
+        /* 与展开状态保持一致的底部间距 */
+    }
+
+    .sidebar.collapsed .chatbox .chat-header,
+    .sidebar.collapsed .chatbox .chat-messages,
+    .sidebar.collapsed .chatbox .chat-form {
+        opacity: 0;
+        transform: translateY(4px);
+        pointer-events: none;
+        transition: opacity 240ms ease, transform 240ms ease;
+    }
+
+    /* show a compact chat icon when collapsed */
+    .sidebar.collapsed .chatbox::before {
+        content: '\1F4AC';
+        /* speech balloon emoji as fallback icon */
+        font-size: 16px;
+        display: block;
+        color: #fff;
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02));
+        width: 28px;
+        height: 28px;
+        border-radius: 8px;
+        line-height: 28px;
+        text-align: center;
+    }
+
+    /* Toggle button styles */
+    .sidebar-toggle {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform 180ms ease, background 160ms ease;
+        /* move toggle away from the H2 so it doesn't replace the '导航' text */
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        width: 32px;
+        height: 32px;
+        border-radius: 6px;
+    }
+
+    .sidebar-toggle svg {
+        width: 18px;
+        height: 18px;
+        display: block;
+    }
+
+    .sidebar-toggle:hover {
+        transform: scale(1.06);
+        background: rgba(255, 255, 255, 0.12);
+    }
+
+    /* tooltip via data-tooltip attribute */
+    .sidebar-toggle[data-tooltip]:hover:after {
+        content: attr(data-tooltip);
+        position: absolute;
+        right: -140%;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(0, 0, 0, 0.75);
+        color: #fff;
+        padding: 6px 8px;
+        border-radius: 6px;
+        white-space: nowrap;
+        font-size: 12px;
+        z-index: 60;
+    }
+
+    /* When expanded (normal sidebar), ensure collapsed-state transitions reverse cleanly */
+    .sidebar .chatbox::before {
+        display: none;
+    }
+
+    /* Smooth font-size and padding transitions for messages when expanding */
+    .chat-messages,
+    .chat-header p,
+    .chat-form button,
+    .chat-input {
+        transition: opacity 260ms ease, transform 260ms ease, font-size 200ms ease, padding 200ms ease;
+    }
+
+    .chat-messages {
+        flex-grow: 1;
+        overflow-y: auto;
+        padding: 8px;
+        margin-bottom: 10px;
+        max-height: calc(100% - 80px);
+        /* 为标题和输入框留出空间 */
+        scrollbar-width: thin;
+        /* Firefox */
+        scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+        /* Firefox */
+    }
+
+    /* Webkit浏览器滚动条样式 */
+    .chat-messages::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .chat-messages::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .chat-messages::-webkit-scrollbar-thumb {
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 3px;
+    }
+
+    .chat-messages::-webkit-scrollbar-thumb:hover {
+        background: rgba(0, 0, 0, 0.3);
+    }
+
+    /* 聊天消息样式优化 */
+    .message {
+        margin-bottom: 12px;
+        padding: 8px 12px;
+        border-radius: 8px;
+        line-height: 1.4;
+        word-wrap: break-word;
+        max-width: 100%;
+    }
+
+    .user-message {
+        background: #e3f2fd;
+        border: 1px solid #bbdefb;
+        margin-left: 20px;
+    }
+
+    .assistant-message {
+        background: #f1f8e9;
+        border: 1px solid #c8e6c9;
+        margin-right: 20px;
+    }
+
+    .message-sender {
+        font-weight: bold;
+        display: block;
+        margin-bottom: 4px;
+        font-size: 0.9em;
+    }
+
+    /* 聊天表单样式 */
+    .chat-form {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        margin-top: auto;
+        /* 推到底部 */
+        padding-top: 8px;
+        border-top: 1px solid #eee;
+    }
+
+    .chat-input {
+        flex: 1;
+        padding: 10px 12px;
+        border: 1px solid #ddd;
+        border-radius: 20px;
+        font-size: 14px;
+        outline: none;
+        transition: border-color 0.2s;
+    }
+
+    .chat-input:focus {
+        border-color: #075004;
+        box-shadow: 0 0 0 2px rgba(7, 80, 4, 0.1);
+    }
+
+    .chat-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-bottom: 8px;
+        border-bottom: 1px solid #eee;
+        margin-bottom: 8px;
+    }
+
+    .chat-header p {
+        margin: 0;
+        font-size: 14px;
+        color: #666;
+        flex: 1;
+    }
+
+    #clear-chat {
+        background: none;
+        border: none;
+        font-size: 16px;
+        cursor: pointer;
+        padding: 4px 8px;
+        border-radius: 4px;
+        transition: background-color 0.2s;
+    }
+
+    #clear-chat:hover {
+        background-color: rgba(0, 0, 0, 0.1);
+    }
+
+    .chat-form {
+        display: flex;
+        margin-top: auto;
+    }
+
+    .chat-input {
+        flex-grow: 1;
+        padding: 8px 12px;
+        border: 1px solid #ccc;
+        border-radius: 4px 0 0 4px;
+        font-size: 14px;
+    }
+
+    .chat-form button {
+        background: #075004;
+        color: white;
+        border: none;
+        border-radius: 0 4px 4px 0;
+        padding: 0 15px;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+
+    .chat-form button:hover {
+        background: #0a7007;
+    }
+
+    .chat-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+    .chat-header p {
+        margin: 0;
+        flex-grow: 1;
+    }
+
+    #clear-chat {
+        background: none;
+        border: none;
+        font-size: 16px;
+        cursor: pointer;
+        color: #999;
+        transition: color 0.3s;
+    }
+
+    #clear-chat:hover {
+        color: #ff3333;
+    }
+
+    /* 消息样式 */
+    .message {
+        padding: 8px 12px;
+        margin: 8px 0;
+        border-radius: 15px;
+        max-width: 85%;
+        word-break: break-word;
+    }
+
+    .user-message {
+        background-color: #e3f2e3;
+        color: #075004;
+        margin-left: auto;
+        border-bottom-right-radius: 5px;
+        text-align: right;
+    }
+
+    .assistant-message {
+        background-color: #f0f0f0;
+        color: #333;
+        margin-right: auto;
+        border-bottom-left-radius: 5px;
+        text-align: left;
+    }
+
+    .message-sender {
+        font-weight: bold;
+        display: block;
+        margin-bottom: 4px;
+    }
+
+    .typing-indicator {
+        color: #888;
+        display: inline-block;
+    }
+
+    .typing-indicator:after {
+        content: '...';
+        display: inline-block;
+        animation: ellipsis 1.5s infinite;
+    }
+
+    @keyframes ellipsis {
+        0% {
+            content: '.';
+        }
+
+        33% {
+            content: '..';
+        }
+
+        66% {
+            content: '...';
+        }
+
+        100% {
+            content: '.';
+        }
+    }
+
+    .chatbox p {
+        color: #000;
+        font-size: large;
+        font-style: oblique;
+        margin: 0 0 8px 0;
+        flex-shrink: 0;
+    }
+
+    .chat-messages {
+        flex: 1;
+        color: #000;
+        min-height: 0;
+        max-height: none;
+        overflow-y: auto;
+        font-size: 1em;
+        padding: 0 2px 0 2px;
+        margin-bottom: 8px;
+    }
+
+    .chat-form {
+        display: flex;
+        gap: 8px;
+        margin-top: auto;
+        /* 让输入区始终贴底 */
+    }
+
+    .chat-input {
+        flex: 1;
+        padding: 8px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+        font-size: 1em;
+    }
+
+    .chat-form button {
+        padding: 8px 16px;
+        border-radius: 4px;
+        border: none;
+        background: #075004;
+        color: #fff;
+        cursor: pointer;
+        font-size: 1em;
+    }
+
+    /* 中等屏幕时的响应式设计 */
+    @media (max-width: 1199px) and (min-width: 769px) {
+
+        /* 侧边栏影响的主内容布局调整 */
+        .main-content {
+            transition: margin-left 360ms cubic-bezier(.2, .9, .2, 1);
+        }
+
+        /* 当侧边栏展开时，为 hero 内容留出空间并调整布局 */
+        .sidebar:not(.collapsed)~.main-content {
+            margin-left: var(--sidebar-width);
+        }
+
+        .sidebar:not(.collapsed)~.main-content .main-hero {
+            padding-left: 40px;
+            padding-right: 40px;
+            text-align: center;
+        }
+
+        .sidebar:not(.collapsed)~.main-content .hero-title {
+            max-width: calc(100vw - var(--sidebar-width) - 120px);
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .sidebar:not(.collapsed)~.main-content .hero-subtitle {
+            max-width: calc(100vw - var(--sidebar-width) - 160px);
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* 侧边栏收缩时充分利用空间 */
+        .sidebar.collapsed~.main-content {
+            margin-left: var(--sidebar-rail-width);
+        }
+
+        .sidebar.collapsed~.main-content .main-hero {
+            padding-left: 60px;
+            padding-right: 40px;
+            text-align: center;
+        }
+
+        .sidebar.collapsed~.main-content .hero-title {
+            max-width: calc(100vw - var(--sidebar-rail-width) - 140px);
+            font-size: calc(var(--hero-size-desktop) * 1.1);
+        }
+
+        .sidebar.collapsed~.main-content .hero-subtitle {
+            max-width: calc(100vw - var(--sidebar-rail-width) - 180px);
+            font-size: calc(var(--subtitle-size-desktop) * 1.05);
+        }
+
+        .chatbox {
+            position: fixed;
+            /* 中等屏幕时浮动显示 */
+            left: 20px;
+            bottom: 20px;
+            right: auto;
+            width: 400px;
+            /* 固定宽度 */
+            max-width: calc(100vw - 40px);
+            /* 确保不超出视口 */
+            height: 350px;
+            z-index: 1000;
+            /* 提高层级避免被遮挡 */
+        }
+
+        /* 确保侧边栏不遮挡聊天框 */
+        .sidebar:not(.collapsed)~.main-content .chatbox,
+        .sidebar.collapsed~.main-content .chatbox {
+            left: calc(var(--sidebar-width) + 20px);
+            width: 380px;
+        }
+
+        .sidebar.collapsed~.main-content .chatbox {
+            left: calc(var(--sidebar-rail-width) + 20px);
+        }
+    }
+
+    /* 移动端聊天切换按钮 */
+    .mobile-chat-toggle {
+        display: none;
+        /* 默认隐藏 */
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 56px;
+        height: 56px;
+        background: #075004;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        font-size: 24px;
+        cursor: pointer;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+        z-index: 1600;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .mobile-chat-toggle:hover {
+        background: #0a6006;
+        transform: scale(1.05);
+    }
+
+    .mobile-chat-toggle.active {
+        background: #d32f2f;
+    }
+
+    /* 在小屏幕时显示切换按钮 */
+    @media (max-width: 768px) {
+        .mobile-chat-toggle {
+            display: flex;
+        }
+
+        /* 聊天框初始隐藏，通过JavaScript控制显示 */
+        .chatbox.mobile-hidden {
+            transform: translateY(100%);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .chatbox.mobile-visible {
+            transform: translateY(0);
+            opacity: 1;
+            pointer-events: auto;
+        }
+    }
+
+    /* 小屏幕时的响应式设计 (手机和小平板) */
+    @media (max-width: 768px) {
+
+        /* 移动端时主内容占满全屏，不受侧边栏影响 */
+        .main-content {
+            margin-left: 0 !important;
+            max-width: 100% !important;
+            padding: 20px 16px;
+        }
+
+        .main-hero {
+            height: calc(100vh - 60px);
+            padding: 20px 8px;
+            text-align: center;
+        }
+
+        .hero-title {
+            max-width: 90vw;
+            margin: 0 auto;
+        }
+
+        .hero-subtitle {
+            max-width: 85vw;
+            margin: 8px auto 0;
+        }
+
+        .chatbox {
+            position: fixed;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100vw;
+            max-width: 100vw;
+            height: 50vh;
+            /* 使用视口高度的50% */
+            min-height: 250px;
+            max-height: 400px;
+            margin: 0;
+            border-radius: 16px 16px 0 0;
+            /* 只有顶部圆角 */
+            padding: 12px;
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+            z-index: 1500;
+            /* 最高层级 */
+        }
+
+        /* 小屏幕时隐藏侧边栏的聊天框，使用全局聊天框 */
+        .sidebar .chatbox {
+            display: none;
+        }
+    }
+
+    /* 超小屏幕 (小手机) */
+    @media (max-width: 480px) {
+        .chatbox {
+            height: 45vh;
+            min-height: 220px;
+            padding: 8px;
+            border-radius: 12px 12px 0 0;
+        }
+
+        .chat-messages {
+            font-size: 14px;
+            max-height: calc(45vh - 120px);
+            /* 为输入框和标题留出空间 */
+        }
+
+        .chat-input {
+            font-size: 16px;
+            /* 防止iOS缩放 */
+            padding: 10px;
+        }
+
+        .chat-form button {
+            padding: 10px 15px;
+            font-size: 14px;
+        }
+    }
+
+    /* 响应式设计：仅针对 iPhone 屏幕宽度 (原有代码优化) */
+    @media (max-width: 900px) {
+        /* 这个规则现在被上面更全面的响应式规则覆盖 */
+        /* 保留用于向后兼容 */
+    }
+
+    /* Floating mini-chat overlay container (created dynamically by JS) */
+    .mini-chat-container {
+        position: fixed;
+        right: 20px;
+        bottom: 40px;
+        width: 360px;
+        max-width: calc(100% - 40px);
+        /* never overflow viewport */
+        height: 420px;
+        z-index: 2200;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+        border-radius: 10px;
+        background: transparent;
+        display: flex;
+        flex-direction: column;
+        overflow: visible;
+        box-sizing: border-box;
+        padding: 6px;
+        /* ensure inner spacing so chatbox doesn't touch edges */
+    }
+
+    .mini-chat-container {
+        opacity: 0;
+        transform: translateY(10px) scale(0.98);
+        transition: opacity 220ms cubic-bezier(.2, .9, .2, 1), transform 220ms cubic-bezier(.2, .9, .2, 1);
+    }
+
+    .mini-chat-container.open {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+
+    .mini-chat-container.closing {
+        opacity: 0;
+        transform: translateY(6px) scale(0.995);
+    }
+
+    .mini-chat-container .chatbox {
+        position: relative !important;
+        /* override fixed positioning */
+        left: auto !important;
+        bottom: auto !important;
+        width: 100% !important;
+        height: 100% !important;
+        padding: 12px !important;
+        margin: 0 !important;
+        border-radius: 10px !important;
+    }
+
+    .mini-chat-close {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        z-index: 2300;
+        width: 28px;
+        height: 28px;
+        border-radius: 6px;
+        border: none;
+        background: rgba(0, 0, 0, 0.6);
+        color: #fff;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+    }
+
+    .mini-chat-close:hover {
+        transform: scale(1.06);
+    }
+
+    /* 超宽屏幕支持 (2K, 4K等) */
+    @media (min-width: 1600px) {
+        .sidebar:not(.collapsed) .chatbox {
+            height: 320px;
+            /* 在大屏幕上增加高度 */
+            padding: 16px;
+        }
+
+        .chat-messages {
+            font-size: 15px;
+            /* 稍微增大字体 */
+        }
+
+        .chat-input {
+            font-size: 15px;
+            padding: 12px 16px;
+        }
+    }
+
+    /* 高DPI屏幕优化 */
+    @media (-webkit-min-device-pixel-ratio: 2),
+    (min-resolution: 192dpi) {
+        .chatbox {
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+        }
+
+        .chat-messages::-webkit-scrollbar {
+            width: 8px;
+        }
+    }
+
+    /* 确保在所有情况下聊天框都不会被遮挡 */
+    .chatbox {
+        /* 添加最小高度确保可用性 */
+        min-height: 200px;
+    }
+
+    /* 确保聊天框的过渡动画在所有设备上都流畅 */
+    .chatbox {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* 防止聊天框内容在动画过程中溢出 */
+    .chatbox.mobile-hidden,
+    .chatbox.mobile-visible {
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+            opacity 0.3s ease;
+    }
+
+    /* 确保在桌面端移除移动端专用的类 */
+    @media (min-width: 769px) {
+
+        .chatbox.mobile-hidden,
+        .chatbox.mobile-visible {
+            transform: none !important;
+            opacity: 1 !important;
+            pointer-events: auto !important;
+        }
+
+        .mobile-chat-toggle {
+            display: none !important;
+        }
+    }
+
+    /* 改善聊天框在不同状态下的视觉效果 */
+    .sidebar.collapsed .chatbox::before {
+        transition: all 0.2s ease;
+    }
+
+    .sidebar.collapsed .chatbox:hover::before {
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05));
+        transform: scale(1.05);
+    }
+
+    /* 确保聊天框始终在正确的层级 */
+    .chatbox {
+        isolation: isolate;
+        /* 创建新的堆叠上下文 */
+    }
+
+    /* 优化滚动性能 */
+    .chat-messages {
+        scroll-behavior: smooth;
+        overscroll-behavior: contain;
+    }
+
+    /* 针对触摸设备的优化 */
+    @media (hover: none) and (pointer: coarse) {
+        .chat-input {
+            font-size: 16px;
+            /* 防止iOS Safari自动缩放 */
+        }
+
+        .chat-form button {
+            min-height: 44px;
+            /* iOS推荐的最小点击目标 */
+            min-width: 44px;
+        }
+
+        #clear-chat {
+            min-height: 32px;
+            min-width: 32px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .chatbox {
+            margin-top: 0;
+            /* 移动端重置margin-top */
+        }
+    }
+
     body {
         font-size: 16px;
 
@@ -762,20 +1513,25 @@ body {
 /* Ensure .pattern-bg class applies the same background (used by pages/index.html) */
 .pattern-bg {
     /* light green background */
-    background-color: #e8f7e8; /* 浅绿色 */
+    background-color: #e8f7e8;
+    /* 浅绿色 */
     /* icons inherit this color */
-    color: #0b6623; /* 深绿色 */
-    position: relative; /* create stacking context for pseudo-elements */
+    color: #0b6623;
+    /* 深绿色 */
+    position: relative;
+    /* create stacking context for pseudo-elements */
 }
 
 /* Use two pseudo-elements to render spaced, offset grids of icons reliably */
 .pattern-bg::before,
 .pattern-bg::after {
     content: '';
-    position: fixed; /* cover viewport */
+    position: fixed;
+    /* cover viewport */
     inset: 0;
     pointer-events: none;
-    z-index: -3; /* behind page content */
+    z-index: -3;
+    /* behind page content */
     background-repeat: space;
     background-size: 240px 240px;
     opacity: 0.95;
@@ -797,11 +1553,15 @@ body {
 }
 
 @media (max-width: 900px) {
+
     .pattern-bg::before,
     .pattern-bg::after {
         background-size: 160px 160px;
     }
-    .pattern-bg::after { background-position: 80px 80px; }
+
+    .pattern-bg::after {
+        background-position: 80px 80px;
+    }
 }
 
 /* Import a popular Chinese font (Noto Sans SC) for headings */
@@ -820,8 +1580,9 @@ h1 {
     /* Prefer common Chinese system fonts for a default look */
     font-family: 'Noto Sans SC', 'Microsoft YaHei', 'PingFang SC', 'Hiragino Sans GB', 'WenQuanYi Micro Hei', sans-serif;
     font-weight: 700;
-    color: #000; /* 标题颜色设置为黑色 */
-    text-shadow: 0 4px 8px rgba(0,0,0,0.12);
+    color: #000;
+    /* 标题颜色设置为黑色 */
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
     margin-top: 0;
 }
 
@@ -833,7 +1594,7 @@ h1 {
     pointer-events: none;
     /* visual: subtle text shadow and light drop shadow for better legibility */
     text-shadow: 0 2px 4px rgba(2, 45, 4, 0.902);
-    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.08));
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.08));
 }
 
 /* Glass curtain background + deep-moving giant dollar symbols */
@@ -842,7 +1603,8 @@ h1 {
     position: fixed;
     inset: 0;
     pointer-events: none;
-    z-index: 0; /* keep behind interactive content but above page background */
+    z-index: 0;
+    /* keep behind interactive content but above page background */
     overflow: hidden;
 }
 
@@ -850,7 +1612,7 @@ h1 {
     position: absolute;
     inset: 0;
     /* subtle glass sheen and tint */
-    background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(230,255,230,0.02));
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(230, 255, 230, 0.02));
     opacity: 0.92;
     mix-blend-mode: normal;
     /* stronger frosted effect: blur what lies behind this layer (where supported) */
@@ -863,7 +1625,7 @@ h1 {
     content: '';
     position: absolute;
     inset: -10% -20% -10% -20%;
-    background: linear-gradient(120deg, rgba(255,255,255,0.02), rgba(255,255,255,0.06) 40%, rgba(255,255,255,0.02));
+    background: linear-gradient(120deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.06) 40%, rgba(255, 255, 255, 0.02));
     opacity: 0.78;
     pointer-events: none;
     mix-blend-mode: screen;
@@ -872,8 +1634,13 @@ h1 {
 
 /* subtle animated sheen for more life */
 @keyframes glass-sheen {
-    from { transform: translateX(-40%); }
-    to { transform: translateX(40%); }
+    from {
+        transform: translateX(-40%);
+    }
+
+    to {
+        transform: translateX(40%);
+    }
 }
 
 #glass-stage .glass-layer::after {
@@ -885,7 +1652,7 @@ h1 {
     content: '';
     position: absolute;
     inset: 0;
-    background-image: repeating-linear-gradient(180deg, rgba(0,0,0,0.002) 0 1px, transparent 1px 4px);
+    background-image: repeating-linear-gradient(180deg, rgba(0, 0, 0, 0.002) 0 1px, transparent 1px 4px);
     opacity: 0.6;
     pointer-events: none;
 }
@@ -903,9 +1670,9 @@ h1 {
     pointer-events: none;
     mix-blend-mode: overlay;
     /* grain texture made from repeating linear gradients and a faint noise-like pattern */
-    background-image: 
-        linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.02)),
-        repeating-linear-gradient(0deg, rgba(0,0,0,0.004) 0 1px, transparent 1px 6px);
+    background-image:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(0, 0, 0, 0.02)),
+        repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.004) 0 1px, transparent 1px 6px);
     opacity: 0.22;
     transform-origin: center;
     filter: contrast(1.06) saturate(0.9) blur(0.4px);
@@ -918,9 +1685,9 @@ h1 {
     left: 50%;
     transform: translateX(-50%) translateY(-100%);
     font-weight: 900;
-    color: rgba(0,0,0,0.40);
+    color: rgba(0, 0, 0, 0.40);
     z-index: 1000;
-    text-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    text-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
     will-change: transform, opacity, filter;
     pointer-events: none;
     user-select: none;
@@ -938,14 +1705,26 @@ h1 {
     opacity: 0.35;
     filter: blur(4px) brightness(0.95) saturate(0.9);
     pointer-events: none;
-    z-index: -1; /* sit behind the crisp glyph */
+    z-index: -1;
+    /* sit behind the crisp glyph */
 }
 
 /* a subtle animated blur pulse to suggest translucency */
 @keyframes back-dollar-blur {
-    0% { filter: blur(3px) opacity(0.32); transform: translate(-50%, -50%) scale(1.01); }
-    50% { filter: blur(5px) opacity(0.44); transform: translate(-50%, -50%) scale(1.03); }
-    100% { filter: blur(3px) opacity(0.32); transform: translate(-50%, -50%) scale(1.01); }
+    0% {
+        filter: blur(3px) opacity(0.32);
+        transform: translate(-50%, -50%) scale(1.01);
+    }
+
+    50% {
+        filter: blur(5px) opacity(0.44);
+        transform: translate(-50%, -50%) scale(1.03);
+    }
+
+    100% {
+        filter: blur(3px) opacity(0.32);
+        transform: translate(-50%, -50%) scale(1.01);
+    }
 }
 
 .back-dollar::before {
@@ -953,9 +1732,20 @@ h1 {
 }
 
 @keyframes dollar-layer-grain {
-    0% { transform: translateY(0); opacity: 0.10; }
-    50% { transform: translateY(-3%); opacity: 0.16; }
-    100% { transform: translateY(0); opacity: 0.10; }
+    0% {
+        transform: translateY(0);
+        opacity: 0.10;
+    }
+
+    50% {
+        transform: translateY(-3%);
+        opacity: 0.16;
+    }
+
+    100% {
+        transform: translateY(0);
+        opacity: 0.10;
+    }
 }
 
 /* per-dollar subtle sheen and micro-grain to create the '若隐若现' effect */
@@ -963,6 +1753,7 @@ h1 {
     -webkit-font-smoothing: antialiased;
     filter: contrast(1.02) saturate(0.9);
 }
+
 .back-dollar::after {
     content: '';
     position: absolute;
@@ -973,8 +1764,8 @@ h1 {
     pointer-events: none;
     border-radius: 8px;
     /* subtle radial sheen + grain */
-    background-image: radial-gradient(circle at 30% 25%, rgba(255,255,255,0.06), transparent 25%),
-                      repeating-linear-gradient(45deg, rgba(0,0,0,0.003) 0 1px, transparent 1px 6px);
+    background-image: radial-gradient(circle at 30% 25%, rgba(255, 255, 255, 0.06), transparent 25%),
+        repeating-linear-gradient(45deg, rgba(0, 0, 0, 0.003) 0 1px, transparent 1px 6px);
     mix-blend-mode: screen;
     opacity: 0.0;
     transform-origin: center;
@@ -983,17 +1774,42 @@ h1 {
 }
 
 @keyframes back-dollar-sheen {
-    0% { opacity: 0.00; transform: translateX(-8%); }
-    25% { opacity: 0.08; transform: translateX(-2%); }
-    50% { opacity: 0.22; transform: translateX(2%); }
-    75% { opacity: 0.08; transform: translateX(8%); }
-    100% { opacity: 0.00; transform: translateX(-8%); }
+    0% {
+        opacity: 0.00;
+        transform: translateX(-8%);
+    }
+
+    25% {
+        opacity: 0.08;
+        transform: translateX(-2%);
+    }
+
+    50% {
+        opacity: 0.22;
+        transform: translateX(2%);
+    }
+
+    75% {
+        opacity: 0.08;
+        transform: translateX(8%);
+    }
+
+    100% {
+        opacity: 0.00;
+        transform: translateX(-8%);
+    }
 }
 
 /* reduce intensity on small screens */
 @media (max-width: 600px) {
-    #glass-stage .dollar-layer::before { opacity: 0.06; }
-    .back-dollar::after { opacity: 0.04; animation-duration: 9s; }
+    #glass-stage .dollar-layer::before {
+        opacity: 0.06;
+    }
+
+    .back-dollar::after {
+        opacity: 0.04;
+        animation-duration: 9s;
+    }
 }
 
 /* When sidebar is collapsed, chatbox stays positioned relative and thus moves with sidebar width */
@@ -1004,9 +1820,11 @@ h1 {
     left: 50%;
     transform: translateX(-50%) translateY(-100%);
     font-weight: 900;
-    color: rgba(0,0,0,0.40); /* increased alpha for visibility during debug */
-    z-index: 1000; /* ensure visible above most layers during debug */
-    text-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    color: rgba(0, 0, 0, 0.40);
+    /* increased alpha for visibility during debug */
+    z-index: 1000;
+    /* ensure visible above most layers during debug */
+    text-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
     will-change: transform, opacity;
     pointer-events: none;
     user-select: none;
@@ -1015,10 +1833,14 @@ h1 {
 
 /* lower-motion / mobile downgrade */
 @media (prefers-reduced-motion: reduce) {
-    .back-dollar { opacity: 0.06; }
+    .back-dollar {
+        opacity: 0.06;
+    }
 }
 
 @media (max-width: 600px) {
-    .back-dollar { font-size: 120px !important; color: rgba(2,90,12,0.06); }
+    .back-dollar {
+        font-size: 120px !important;
+        color: rgba(2, 90, 12, 0.06);
+    }
 }
- 
