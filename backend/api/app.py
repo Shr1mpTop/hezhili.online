@@ -62,6 +62,24 @@ client = OpenAI(
     api_key=os.environ.get("ARK_API_KEY"),
 )
 
+@app.route('/admin/login', methods=['POST', 'OPTIONS'])
+def admin_login():
+    """管理员登录验证"""
+    try:
+        data = request.json
+        username = data.get('username')
+        password = data.get('password')
+        
+        # 验证用户名和密码
+        if username == 'admin' and password == '20020908':
+            return jsonify({"message": "登录成功", "success": True}), 200
+        else:
+            return jsonify({"message": "用户名或密码错误", "success": False}), 401
+            
+    except Exception as e:
+        print(f"管理员登录错误: {str(e)}")
+        return jsonify({'error': str(e)}), 500
+
 @app.route('/chat/history', methods=['GET', 'OPTIONS'])
 def chat_history():
     """获取聊天历史记录"""
@@ -210,4 +228,4 @@ def chat():
         return response
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=5001)
