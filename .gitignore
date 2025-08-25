@@ -3,6 +3,7 @@ __pycache__/
 *.pyc
 *.pyo
 *.pyd
+.venv
 
 # Logs
 logs/
@@ -60,6 +61,7 @@ stop_dev.sh
 start_local.sh
 start_frontend.py
 README_DEV.md
+start_dev.ps1
 
 # 数据库文件
 backend/data/*.db
