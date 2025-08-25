@@ -7,12 +7,12 @@ echo "1. 检查Python Flask进程:"
 ps aux | grep "python.*app.py" | grep -v grep
 echo
 
-echo "2. 检查5000端口是否被占用:"
-netstat -tlnp | grep :5000 || echo "端口5000未被占用"
+echo "2. 检查5001端口是否被占用:"
+netstat -tlnp | grep :5001 || echo "端口5001未被占用"
 echo
 
 echo "3. 检查API服务是否响应 (本地):"
-curl -s http://127.0.0.1:5000/stats || echo "本地API无响应"
+curl -s http://127.0.0.1:5001/stats || echo "本地API无响应"
 echo
 
 echo "4. 检查nginx状态:"
