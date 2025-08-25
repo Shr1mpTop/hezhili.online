@@ -147,7 +147,7 @@
             try {
                 // 这里根据实际API调整
                 const apiUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-                    ? 'http://localhost:5000/stats'
+                    ? 'http://localhost:5001/stats'
                     : `${window.location.protocol}//${window.location.host}/stats`;
 
                 const response = await fetch(apiUrl);
