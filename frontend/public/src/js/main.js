@@ -687,7 +687,7 @@ window.addEventListener('DOMContentLoaded', function () {
                     leader.y = col.respawnY;
                     leader.el.style.left = (col.xPx || 0) + 'px';
                     leader.el.style.opacity = '0';
-                    console.log('back-column recycled idx=', colIdx, 'set leader y=', col.respawnY);
+                    //console.log('back-column recycled idx=', colIdx, 'set leader y=', col.respawnY);
                 } else {
                     leader.el.style.opacity = '0';
                 }
@@ -696,7 +696,7 @@ window.addEventListener('DOMContentLoaded', function () {
                     leader.y = col.respawnY;
                     leader.el.style.left = (col.xPx || 0) + 'px';
                     leader.el.style.opacity = '0';
-                    console.log('back-column recycled idx=', colIdx, 'set leader y=', col.respawnY);
+                    //console.log('back-column recycled idx=', colIdx, 'set leader y=', col.respawnY);
                 } else {
                     leader.el.style.opacity = '0';
                 }
