@@ -247,71 +247,125 @@ window.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // Mini chat overlay behavior: when sidebar is collapsed and the chatbox (mini) is clicked,
-    // open a floating chat container instead of expanding the whole sidebar.
+    // Mini chat overlay behavior used to live here (sidebar-bound). Disabled because chat is now
+    // implemented as a floating, draggable widget independent from the sidebar.
     (function miniChatOverlay() {
-        const sidebar = document.querySelector('.sidebar');
-        const chatbox = document.querySelector('.sidebar .chatbox');
-        if (!sidebar || !chatbox) return;
+        return; // disabled
+    })();
 
-        chatbox.style.cursor = 'pointer';
+    // --- Floating draggable chat widget (new behavior) ---
+    (function floatingChatWidget() {
+        const chatbox = document.querySelector('.chatbox');
+        if (!chatbox) return;
 
-        chatbox.addEventListener('click', function (e) {
-            // only trigger when sidebar is collapsed
-            if (!sidebar.classList.contains('collapsed')) return;
-            // prevent double creation
-            if (document.querySelector('.mini-chat-container')) return;
+        // Create toggle button under the rain control button
+        const rainBtn = document.getElementById('rain-control');
+        const floatToggle = document.createElement('button');
+        floatToggle.id = 'floating-chat-toggle';
+        floatToggle.title = '打开/关闭聊天';
+        floatToggle.className = 'floating-chat-toggle';
+        floatToggle.innerHTML = '<img class="chat-icon" src="../src/assets/chat.svg" alt="chat">';
 
-            // create container
-            const container = document.createElement('div');
-            container.className = 'mini-chat-container';
+        if (rainBtn && rainBtn.parentNode) {
+            rainBtn.parentNode.insertBefore(floatToggle, rainBtn.nextSibling);
+        } else {
+            document.body.appendChild(floatToggle);
+        }
 
-            // create close button
-            const closeBtn = document.createElement('button');
-            closeBtn.className = 'mini-chat-close';
-            closeBtn.innerHTML = '✕';
-            container.appendChild(closeBtn);
+        // Build floating container and move chatbox inside it
+        const container = document.createElement('div');
+        container.className = 'floating-chat-container';
+        container.setAttribute('aria-hidden', 'true');
+        // move chatbox into container (detach from sidebar)
+        const originalParent = chatbox.parentNode;
+        container.appendChild(chatbox);
+        document.body.appendChild(container);
 
-            // move chatbox into container
-            const originalParent = chatbox.parentNode;
-            container.appendChild(chatbox);
-            document.body.appendChild(container);
-            // ensure chatbox is interactive now
-            chatbox.style.pointerEvents = 'auto';
+        // ensure chatbox is interactive
+        chatbox.style.pointerEvents = 'auto';
 
-            // open animation
-            requestAnimationFrame(() => container.classList.add('open'));
+        // add explicit close control in header
+        const header = chatbox.querySelector('.chat-header');
+        const closeBtn = document.createElement('button');
+        closeBtn.className = 'floating-chat-close';
+        closeBtn.title = '关闭';
+        closeBtn.innerHTML = '\u2715';
+        if (header) header.appendChild(closeBtn);
 
-            // close helper
-            function closeMiniChat() {
-                container.classList.remove('open');
-                container.classList.add('closing');
-                // after animation remove and move chatbox back
-                setTimeout(() => {
-                    if (originalParent) originalParent.appendChild(chatbox);
-                    if (container && container.parentNode) container.parentNode.removeChild(container);
-                    // cleanup listeners
-                    document.removeEventListener('keydown', onKeyDown);
-                    document.removeEventListener('click', onDocClick);
-                }, 240);
-            }
+        // toggle visibility
+        function openChat() {
+            container.classList.add('open');
+            container.setAttribute('aria-hidden', 'false');
+            // focus input after open
+            setTimeout(() => { const input = container.querySelector('.chat-input'); if (input) input.focus(); }, 200);
+        }
+        function closeChat() {
+            container.classList.remove('open');
+            container.setAttribute('aria-hidden', 'true');
+        }
 
-            closeBtn.addEventListener('click', closeMiniChat);
-
-            // close on ESC
-            function onKeyDown(ev) {
-                if (ev.key === 'Escape') closeMiniChat();
-            }
-
-            // close on outside click (ignore clicks inside container)
-            function onDocClick(ev) {
-                if (!container.contains(ev.target)) closeMiniChat();
-            }
-
-            document.addEventListener('keydown', onKeyDown);
-            // use capture so we detect before other handlers
-            document.addEventListener('click', onDocClick, true);
+        floatToggle.addEventListener('click', function (e) {
+            if (container.classList.contains('open')) closeChat(); else openChat();
         });
+
+        closeBtn.addEventListener('click', closeChat);
+
+        // Dragging
+        let dragging = false; let dragOffsetX = 0; let dragOffsetY = 0;
+
+        function onPointerDown(e) {
+            // ignore clicks on buttons inside header
+            if (e.target.closest('button')) return;
+            dragging = true;
+            const rect = container.getBoundingClientRect();
+            const clientX = e.clientX !== undefined ? e.clientX : (e.touches && e.touches[0] && e.touches[0].clientX);
+            const clientY = e.clientY !== undefined ? e.clientY : (e.touches && e.touches[0] && e.touches[0].clientY);
+            dragOffsetX = clientX - rect.left;
+            dragOffsetY = clientY - rect.top;
+            container.classList.add('dragging');
+            document.addEventListener('pointermove', onPointerMove);
+            document.addEventListener('pointerup', onPointerUp);
+            e.preventDefault();
+        }
+
+        function onPointerMove(e) {
+            if (!dragging) return;
+            const clientX = e.clientX !== undefined ? e.clientX : (e.touches && e.touches[0] && e.touches[0].clientX);
+            const clientY = e.clientY !== undefined ? e.clientY : (e.touches && e.touches[0] && e.touches[0].clientY);
+            let left = clientX - dragOffsetX;
+            let top = clientY - dragOffsetY;
+            // clamp to viewport
+            const maxLeft = window.innerWidth - container.offsetWidth - 8;
+            const maxTop = window.innerHeight - container.offsetHeight - 8;
+            left = Math.max(8, Math.min(maxLeft, left));
+            top = Math.max(8, Math.min(maxTop, top));
+            container.style.left = left + 'px';
+            container.style.top = top + 'px';
+            container.style.right = 'auto';
+            container.style.bottom = 'auto';
+        }
+
+        function onPointerUp() {
+            dragging = false;
+            container.classList.remove('dragging');
+            document.removeEventListener('pointermove', onPointerMove);
+            document.removeEventListener('pointerup', onPointerUp);
+        }
+
+        // Use header as drag handle if present, else whole container
+        const dragHandle = header || container;
+        dragHandle.style.touchAction = 'none';
+        dragHandle.addEventListener('pointerdown', onPointerDown);
+
+        // close on ESC
+        document.addEventListener('keydown', function (ev) { if (ev.key === 'Escape') closeChat(); });
+
+        // ensure initial position is bottom-right
+        container.style.right = '20px';
+        container.style.bottom = '80px';
+
+        // make sure chatbox styles adapt when moved out of sidebar
+        container.classList.add('floating-chat-container-init');
     })();
 
     // --- Robust background tile fallback (DOM-based) ---
