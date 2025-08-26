@@ -878,7 +878,15 @@ window.addEventListener('DOMContentLoaded', function () {
         const root = document.getElementById('model-canvas-root');
         if (!root) return;
 
-        let renderer, scene, camera, mixer, clock, animId;
+    let renderer, scene, camera, mixer, clock, animId;
+    // interactive camera movement state (moved to top-level so animate() can access)
+    let faceTargetGlobal = null;      // THREE.Vector3 the camera should look at (model centroid / face)
+    let baseCameraPos = null;         // original camera world position (centered)
+    let targetCameraPos = null;       // desired world position (updated from mouse)
+    let MAX_SHIFT_X = 0;              // max shift along camera local X (world units)
+    let MAX_SHIFT_Z = 0;              // max shift along camera local Z (world units)
+    let camPlaneHelper = null;        // visual helper attached to camera
+    let lastPointer = { x: 0, y: 0 }; // normalized pointer (-1..1)
 
         async function initThree() {
             try {
@@ -923,9 +931,14 @@ window.addEventListener('DOMContentLoaded', function () {
                 renderer.setSize(root.clientWidth, root.clientHeight, false);
                 // ensure transparent clear so page background shows through
                 renderer.setClearColor(0x000000, 0);
+                renderer.domElement.style.position = 'absolute';
+                renderer.domElement.style.top = '0';
+                renderer.domElement.style.left = '0';
                 renderer.domElement.style.width = '100%';
                 renderer.domElement.style.height = '100%';
                 renderer.domElement.style.background = 'transparent';
+                // don't intercept pointer events by default so UI controls remain usable
+                renderer.domElement.style.pointerEvents = 'none';
                 root.style.background = 'transparent';
                 root.appendChild(renderer.domElement);
 
@@ -933,8 +946,10 @@ window.addEventListener('DOMContentLoaded', function () {
                 scene = new THREE.Scene();
                 scene.background = null;
                 // Camera field-of-view (degrees). Smaller value => narrower POV (zoomed in).
-                const CAMERA_FOV = 28; // adjust this to taste (e.g., 22..36)
+                const CAMERA_FOV = 18; // adjusted per user
                 camera = new THREE.PerspectiveCamera(CAMERA_FOV, root.clientWidth / root.clientHeight, 1, 2000);
+
+                // interactive camera movement state (initialized after model loads)
 
                 // lights
                 const hemi = new THREE.HemisphereLight(0xffffff, 0x444444, 0.6);
@@ -1002,15 +1017,15 @@ window.addEventListener('DOMContentLoaded', function () {
                     // compute an approximate face target: a point near the top quarter of the model
                     const faceTarget = center.clone();
                     // bias upward by ~22% of height to approximate face region (may be tuned per-model)
-                    faceTarget.y += size.y * 0.22;
+                    faceTarget.y += size.y * 0.5;
 
                     // position camera relative to model size so face fills view consistently
                     // Previously camera was placed along Z (facing -Z). To face -Y, place camera on +Y and look downwards.
-                    const camDistance = Math.max(size.x, size.y, size.z) * 2.0;
+                    const camDistance = Math.max(size.x, size.y, size.z) * 3.0;
                     // place camera on the -Y side so it looks toward +Y (faceTarget)
                     // apply a small negative-Z offset so the camera is moved slightly downwards
                     // move camera further down (increase multiplier to shift more along -Z)
-                    const Z_OFFSET = 150 ; // was 0.12; adjust in 0.05..0.5 range as needed
+                    const Z_OFFSET = 0 ; // was 0.12; adjust in 0.05..0.5 range as needed
                     camera.position.set(faceTarget.x, faceTarget.y - camDistance, faceTarget.z - Z_OFFSET);
                     // set up vector so the view 'up' is along +Z (prevents roll when looking along -Y)
                     camera.up.set(0, 0, 1);
@@ -1018,15 +1033,75 @@ window.addEventListener('DOMContentLoaded', function () {
 
                     // Create a light that lives with the camera so it always illuminates the face area
                     // PointLight is positioned in camera-local space; negative Z is forward for the camera
-                    const cameraLight = new THREE.PointLight(0xffffff, 0.95, Math.max(400, camDistance * 3));
+                    const cameraLight = new THREE.PointLight(0xffffff, 200000, Math.max(400, camDistance * 3));
                     cameraLight.position.set(0, 0, -Math.max(60, size.y * 0.6)); // in front of camera
                     camera.add(cameraLight);
                     // small ambient to soften shadows
-                    const cameraAmbient = new THREE.AmbientLight(0xffffff, 0.18);
+                    const cameraAmbient = new THREE.AmbientLight(0xffffff, 6);
                     camera.add(cameraAmbient);
 
                     // ensure camera is part of the scene graph so its children (lights) transform correctly
                     if (!scene.children.includes(camera)) scene.add(camera);
+
+                    // store global face target so other systems can access it
+                    faceTargetGlobal = faceTarget.clone();
+
+                    // base camera position (world space) that represents the centered view
+                    baseCameraPos = camera.position.clone();
+                    targetCameraPos = baseCameraPos.clone();
+
+                    // determine max shifts (user-specified constants)
+                    MAX_SHIFT_X = 256.00; // fixed per user input
+                    MAX_SHIFT_Z = 72.00;  // fixed per user input
+
+                    // create a small axes helper in camera-local XZ plane for debugging (optional)
+                    if (!camPlaneHelper) {
+                        camPlaneHelper = new THREE.Group();
+                        const matX = new THREE.LineBasicMaterial({ color: 0xff4444 });
+                        const matZ = new THREE.LineBasicMaterial({ color: 0x4444ff });
+                        const geoX = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-MAX_SHIFT_X,0,0), new THREE.Vector3(MAX_SHIFT_X,0,0)]);
+                        const geoZ = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0,0,-MAX_SHIFT_Z), new THREE.Vector3(0,0,MAX_SHIFT_Z)]);
+                        const lineX = new THREE.Line(geoX, matX);
+                        const lineZ = new THREE.Line(geoZ, matZ);
+                        camPlaneHelper.add(lineX); camPlaneHelper.add(lineZ);
+                        // attach helper to camera so it moves with it
+                        camera.add(camPlaneHelper);
+                    }
+
+                    // mouse handling: map page pointer (clientX/clientY) -> normalized (-1..1)
+                    function updatePointer(e) {
+                        const rect = root.getBoundingClientRect();
+                        const cx = ((e.clientX - rect.left) / rect.width) * 2 - 1; // -1..1
+                        const cy = -(((e.clientY - rect.top) / rect.height) * 2 - 1); // -1..1, inverted Y
+                        lastPointer.x = Math.max(-1, Math.min(1, cx));
+                        lastPointer.y = Math.max(-1, Math.min(1, cy));
+
+                        // compute target offset in camera local XZ plane
+                        // X axis: left/right (camera local X)
+                        // Z axis: up/down (camera local Z)
+                        const offsetX = lastPointer.x * MAX_SHIFT_X;
+                        // invert vertical mapping so mouse up/down produces opposite camera Z movement
+                        const offsetZ = -lastPointer.y * MAX_SHIFT_Z;
+
+                        // convert camera-local offsets to world by using camera local axes
+                        const worldOffset = new THREE.Vector3();
+                        // camera.getWorldDirection gives a vector pointing towards -Z in camera space; compute right and up
+                        const camDir = new THREE.Vector3(); camera.getWorldDirection(camDir);
+                        const camRight = new THREE.Vector3().crossVectors(camera.up, camDir).normalize();
+                        const camUp = new THREE.Vector3().copy(camera.up).normalize();
+
+                        worldOffset.copy(camRight).multiplyScalar(offsetX);
+                        worldOffset.add(camUp.clone().multiplyScalar(offsetZ));
+
+                        targetCameraPos.copy(baseCameraPos).add(worldOffset);
+                    }
+
+                    // bind pointermove to a parent container if present, otherwise listen on the whole document
+                    // Prefer an explicit main container (#MAIN-CONTAIT) or .main-content to keep coordinates local,
+                    // but default to document so the interaction works anywhere on the page.
+                    const preferredParent = document.getElementById('MAIN-CONTAIT') || document.querySelector('.main-content');
+                    const pointerContainer = preferredParent || document;
+                    pointerContainer.addEventListener('pointermove', updatePointer);
 
                     scene.add(obj);
 
@@ -1052,6 +1127,18 @@ window.addEventListener('DOMContentLoaded', function () {
             animId = requestAnimationFrame(animate);
             const dt = clock ? clock.getDelta() : 0.016;
             if (mixer) mixer.update(dt);
+
+            // Smoothly interpolate camera position toward targetCameraPos if available
+            if (camera && targetCameraPos && typeof targetCameraPos.lerp === 'function') {
+                // smoothing factor scaled by dt
+                const smoothing = Math.min(1, 6 * dt);
+                camera.position.lerp(targetCameraPos, smoothing);
+                // ensure camera children (lights/helpers) update
+                camera.updateMatrixWorld();
+                // always look at model face target if available
+                if (faceTargetGlobal) camera.lookAt(faceTargetGlobal);
+            }
+
             if (renderer && scene && camera) renderer.render(scene, camera);
             // remove loading once first frame rendered
             const loading = root.querySelector('.model-loading'); if (loading) loading.style.display = 'none';
@@ -1065,6 +1152,8 @@ window.addEventListener('DOMContentLoaded', function () {
         }, { root: null, threshold: 0.1 });
 
         io.observe(root);
+
+    // camera config panel removed per user request
     })();
 
     // ---- Sidebar hover expand/collapse ----
