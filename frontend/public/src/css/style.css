@@ -323,6 +323,48 @@
             transform 360ms cubic-bezier(.2, .9, .2, 1);
     }
 
+/* Sketchfab embed responsive wrapper placed under hero */
+.sketchfab-embed-wrapper {
+    width: 100%;
+    max-width: 720px;
+    margin: 18px auto 0 auto;
+    display: block;
+    text-align: center;
+}
+.sketchfab-embed-wrapper iframe {
+    width: 100%;
+    height: 360px;
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.14);
+}
+
+@media (max-width: 900px) {
+    .sketchfab-embed-wrapper iframe { height: 260px; }
+}
+
+@media (max-width: 480px) {
+    /* 在最小屏幕上缩小并减少视觉占用 */
+    .sketchfab-embed-wrapper { max-width: 92vw; margin-top: 12px; }
+    .sketchfab-embed-wrapper iframe { height: 200px; border-radius: 8px; }
+}
+
+/* 本地 three.js canvas root */
+.model-canvas-root {
+    width: 100%;
+    height: 360px;
+    max-height: 420px;
+    background: linear-gradient(180deg,#fafafa,#f0f0f0);
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+}
+.model-canvas-root .model-loading {
+    position: absolute; inset: 0; display:flex; align-items:center; justify-content:center; color:#444; font-size:14px;
+}
+@media (max-width: 900px) { .model-canvas-root { height: 260px; } }
+@media (max-width: 480px) { .model-canvas-root { height: 200px; } }
+
     /* 响应式 Hero 标题设计 */
 
     /* 超小屏幕 (手机竖屏) */

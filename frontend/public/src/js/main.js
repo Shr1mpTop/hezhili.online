@@ -873,6 +873,200 @@ window.addEventListener('DOMContentLoaded', function () {
         window.addEventListener('resize', setHeroTheme);
     })();
 
+    /* --- 本地 three.js 渲染器（固定正视图） --- */
+    (function localThreePreview() {
+        const root = document.getElementById('model-canvas-root');
+        if (!root) return;
+
+        let renderer, scene, camera, mixer, clock, animId;
+
+        async function initThree() {
+            try {
+                // dynamic import three.js modules from CDN
+                // Prefer ES module imports (jsDelivr). If that fails, fall back to UMD script injection.
+                let THREE = null;
+                let FBXLoader = null;
+
+                try {
+                    // Attempt ESM dynamic import (recommended)
+                    // Use import('three') so that the importmap in index.html can resolve the bare specifier.
+                    const threeModule = await import('three');
+                    // Import the FBXLoader ES module from jsDelivr; it uses a bare 'three' import which will be
+                    // resolved by the importmap to the same ESM build above.
+                    const loaderModule = await import('https://cdn.jsdelivr.net/npm/three@0.158.0/examples/jsm/loaders/FBXLoader.js');
+                    THREE = threeModule;
+                    FBXLoader = loaderModule.FBXLoader;
+                } catch (esmErr) {
+                    console.warn('ESM import failed, falling back to UMD injection', esmErr);
+
+                    function loadScript(url) {
+                        return new Promise((resolve, reject) => {
+                            const s = document.createElement('script');
+                            s.src = url;
+                            s.async = true;
+                            s.onload = () => resolve();
+                            s.onerror = (e) => reject(new Error('Failed to load ' + url));
+                            document.head.appendChild(s);
+                        });
+                    }
+
+                    // UMD fallback (may be deprecated in newer r versions but works for older builds)
+                    await loadScript('https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.min.js');
+                    await loadScript('https://cdn.jsdelivr.net/npm/three@0.158.0/examples/js/loaders/FBXLoader.js');
+                    THREE = window.THREE;
+                    FBXLoader = THREE && THREE.FBXLoader ? THREE.FBXLoader : window.FBXLoader;
+                }
+
+                // renderer (transparent background)
+                renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+                renderer.setPixelRatio(window.devicePixelRatio || 1);
+                renderer.setSize(root.clientWidth, root.clientHeight, false);
+                // ensure transparent clear so page background shows through
+                renderer.setClearColor(0x000000, 0);
+                renderer.domElement.style.width = '100%';
+                renderer.domElement.style.height = '100%';
+                renderer.domElement.style.background = 'transparent';
+                root.style.background = 'transparent';
+                root.appendChild(renderer.domElement);
+
+                // scene & camera (transparent background). We'll position the camera after the model is loaded
+                scene = new THREE.Scene();
+                scene.background = null;
+                // Camera field-of-view (degrees). Smaller value => narrower POV (zoomed in).
+                const CAMERA_FOV = 28; // adjust this to taste (e.g., 22..36)
+                camera = new THREE.PerspectiveCamera(CAMERA_FOV, root.clientWidth / root.clientHeight, 1, 2000);
+
+                // lights
+                const hemi = new THREE.HemisphereLight(0xffffff, 0x444444, 0.6);
+                scene.add(hemi);
+                const dir = new THREE.DirectionalLight(0xffffff, 0.8);
+                dir.position.set(0.5, 1, 0.8).normalize();
+                scene.add(dir);
+
+                // clock for animations
+                clock = new THREE.Clock();
+
+                // load fbx
+                const loader = new FBXLoader();
+                loader.load('../src/assets/trump_lp_anim_iddle01.fbx', (obj) => {
+
+                    // Normalize scale
+                    // First compute bounding box, then scale object to a predictable size
+                    let box = new THREE.Box3().setFromObject(obj);
+                    const size = new THREE.Vector3();
+                    box.getSize(size);
+                    const maxDim = Math.max(size.x, size.y, size.z) || 1;
+                    const scale = (120 / maxDim);
+                    obj.scale.setScalar(scale);
+                    // recompute box after scaling so positioning calculations are correct
+                    box = new THREE.Box3().setFromObject(obj);
+                    box.getSize(size);
+
+
+                    // apply colors texture if model has no material
+                    const texLoader = new THREE.TextureLoader();
+                    texLoader.load('../src/assets/tumpLPcolors.png', (tex) => {
+                        let hasMesh = false;
+                        obj.traverse((c) => {
+                            if (c.isMesh) {
+                                hasMesh = true;
+                                if (!c.material || Array.isArray(c.material) && c.material.length === 0) {
+                                    c.material = new THREE.MeshStandardMaterial({ map: tex });
+                                } else if (c.material && c.material.isMaterial && !c.material.map) {
+                                    c.material.map = tex; c.material.needsUpdate = true;
+                                }
+                                c.castShadow = false; c.receiveShadow = false;
+                            }
+                        });
+                        // if no mesh found, add a placeholder
+                        if (!hasMesh) {
+                            const g = new THREE.BoxGeometry(80, 180, 40);
+                            const m = new THREE.MeshStandardMaterial({ map: tex });
+                            const mesh = new THREE.Mesh(g, m);
+                            scene.add(mesh);
+                        }
+                    }, undefined, (err) => { console.warn('color texture load failed', err); });
+
+                    // play animations if present
+                    if (obj.animations && obj.animations.length) {
+                        mixer = new THREE.AnimationMixer(obj);
+                        obj.animations.forEach((clip) => mixer.clipAction(clip).play());
+                    }
+
+                        // center and add to scene
+                    const center = new THREE.Vector3();
+                    box.getCenter(center);
+                    // move object so its center is at origin
+                    obj.position.sub(center);
+
+                    // compute an approximate face target: a point near the top quarter of the model
+                    const faceTarget = center.clone();
+                    // bias upward by ~22% of height to approximate face region (may be tuned per-model)
+                    faceTarget.y += size.y * 0.22;
+
+                    // position camera relative to model size so face fills view consistently
+                    // Previously camera was placed along Z (facing -Z). To face -Y, place camera on +Y and look downwards.
+                    const camDistance = Math.max(size.x, size.y, size.z) * 2.0;
+                    // place camera on the -Y side so it looks toward +Y (faceTarget)
+                    // apply a small negative-Z offset so the camera is moved slightly downwards
+                    // move camera further down (increase multiplier to shift more along -Z)
+                    const Z_OFFSET = 150 ; // was 0.12; adjust in 0.05..0.5 range as needed
+                    camera.position.set(faceTarget.x, faceTarget.y - camDistance, faceTarget.z - Z_OFFSET);
+                    // set up vector so the view 'up' is along +Z (prevents roll when looking along -Y)
+                    camera.up.set(0, 0, 1);
+                    camera.lookAt(faceTarget);
+
+                    // Create a light that lives with the camera so it always illuminates the face area
+                    // PointLight is positioned in camera-local space; negative Z is forward for the camera
+                    const cameraLight = new THREE.PointLight(0xffffff, 0.95, Math.max(400, camDistance * 3));
+                    cameraLight.position.set(0, 0, -Math.max(60, size.y * 0.6)); // in front of camera
+                    camera.add(cameraLight);
+                    // small ambient to soften shadows
+                    const cameraAmbient = new THREE.AmbientLight(0xffffff, 0.18);
+                    camera.add(cameraAmbient);
+
+                    // ensure camera is part of the scene graph so its children (lights) transform correctly
+                    if (!scene.children.includes(camera)) scene.add(camera);
+
+                    scene.add(obj);
+
+                    // initial render
+                    animate();
+                }, undefined, (err) => { console.error('FBX load failed', err); root.querySelector('.model-loading').textContent = '模型加载失败'; });
+
+                // responsive
+                window.addEventListener('resize', () => {
+                    if (!renderer || !camera) return;
+                    const w = root.clientWidth; const h = root.clientHeight;
+                    renderer.setSize(w, h, false);
+                    camera.aspect = w / h; camera.updateProjectionMatrix();
+                });
+
+            } catch (e) {
+                console.error('three init error', e);
+                root.querySelector('.model-loading').textContent = '无法初始化 3D 渲染器';
+            }
+        }
+
+        function animate() {
+            animId = requestAnimationFrame(animate);
+            const dt = clock ? clock.getDelta() : 0.016;
+            if (mixer) mixer.update(dt);
+            if (renderer && scene && camera) renderer.render(scene, camera);
+            // remove loading once first frame rendered
+            const loading = root.querySelector('.model-loading'); if (loading) loading.style.display = 'none';
+        }
+
+        // start lazy init when element becomes visible via IntersectionObserver (defer load)
+        const io = new IntersectionObserver((entries) => {
+            entries.forEach(ent => {
+                if (ent.isIntersecting) { initThree(); io.disconnect(); }
+            });
+        }, { root: null, threshold: 0.1 });
+
+        io.observe(root);
+    })();
+
     // ---- Sidebar hover expand/collapse ----
     (function sidebarHoverToggle() {
         const sidebar = document.querySelector('.sidebar');

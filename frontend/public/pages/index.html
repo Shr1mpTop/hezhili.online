@@ -12,6 +12,14 @@
     <noscript>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
     </noscript>
+        <!-- Import map so modules that use bare specifier "three" resolve to the CDN ESM bundle -->
+        <script type="importmap">
+        {
+            "imports": {
+                "three": "https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.module.js"
+            }
+        }
+        </script>
     <!-- Desktop-only visual enhancements: preload then swap to stylesheet onload to avoid blocking mobile first paint -->
     <link rel="preload" href="../src/css/desktop-extras.css" as="style" media="(min-width: 1200px)" onload="this.rel='stylesheet'">
     <noscript>
@@ -51,6 +59,16 @@
         <main-contait id="MAIN-CONTAIT" class="main-hero" role="main">
             <h1 class="hero-title">欢迎来到我的世界</h1>
             <p class="hero-subtitle">我是何致力！来自南洋理工大学的一名区块链技术在读研究生</p>
+
+            <!-- 本地模型查看器占位：替换 Sketchfab iframe，渲染本地 FBX（fixed frontal view） -->
+            <div class="sketchfab-embed-wrapper" aria-hidden="false">
+                <div id="model-canvas-root" class="model-canvas-root" role="img" aria-label="人物模型预览">
+                    <div class="model-loading">正在加载模型…</div>
+                </div>
+                <p style="font-size:13px;font-weight:normal;margin:8px 0 0;color:#4A4A4A;">
+                    模型来源：本地资源（trump_lp_anim_iddle01.fbx），贴图：tumpLPcolors.png
+                </p>
+            </div>
         </main-contait>
         <!-- 对话框容器 -->
 
