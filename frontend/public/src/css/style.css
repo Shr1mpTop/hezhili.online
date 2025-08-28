@@ -32,296 +32,292 @@
     --subtitle-size-large: 20px;
     --subtitle-size-xl: 24px;
     /* end of stylesheet */
+}
 
-    body {
-        margin: 0;
-        font-family: Arial, sans-serif;
-        box-sizing: border-box;
-        color: #000;
-        /* 默认字体为黑色 */
-        background-color: #f9f9f9;
-    }
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    box-sizing: border-box;
+    color: #000;
+    /* 默认字体为黑色 */
+    background-color: #f9f9f9;
+}
 
-    #rain-control {
+#rain-control {
     position: fixed;
     top: 20px;
     right: 20px;
     z-index: 1000;
     width: var(--action-button-size);
     height: var(--action-button-size);
-        border: none;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.9);
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 16px;
-        transition: all 0.3s ease;
-    }
+    border: none;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
 
-    .sidebar {
-        position: fixed;
-        left: 0;
-        top: 0;
-        width: var(--sidebar-width);
-        height: 100%;
-        background: #075004;
-        color: #fff;
-        padding-top: 40px;
-        box-shadow: 2px 0 8px rgba(0, 0, 0, 0.6);
-    }
+.sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: var(--sidebar-width);
+    height: 100%;
+    background: #075004;
+    color: #fff;
+    padding-top: 40px;
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.6);
+}
 
-    /* Collapsible sidebar styles: collapsed to a small rail, expand on hover via JS */
-    .sidebar {
-        transition: width 360ms cubic-bezier(.2, .9, .2, 1), background 240ms ease;
-        overflow: hidden;
-    }
+/* Collapsible sidebar styles: collapsed to a small rail, expand on hover via JS */
+.sidebar {
+    transition: width 360ms cubic-bezier(.2, .9, .2, 1), background 240ms ease;
+    overflow: hidden;
+}
 
-    /* collapsed state: narrow rail, hide text labels */
-    .sidebar.collapsed {
-        width: var(--sidebar-rail-width);
-        /* rail width when collapsed */
-    }
+/* collapsed state: narrow rail, hide text labels */
+.sidebar.collapsed {
+    width: var(--sidebar-rail-width);
+    /* rail width when collapsed */
+}
 
-    .sidebar.collapsed h2,
-    .sidebar.collapsed ul li a {
-        opacity: 0;
-        transform: translateX(-6px);
-        transition: opacity 220ms ease, transform 260ms ease;
-        pointer-events: none;
-    }
+.sidebar.collapsed h2,
+.sidebar.collapsed ul li a {
+    opacity: 0;
+    transform: translateX(-6px);
+    transition: opacity 220ms ease, transform 260ms ease;
+    pointer-events: none;
+}
 
-    /* ensure icons or interactive area still usable; keep list items spacing */
-    .sidebar ul li {
-        padding: 12px 12px;
-    }
+/* ensure icons or interactive area still usable; keep list items spacing */
+.sidebar ul li {
+    padding: 12px 12px;
+}
 
-    /* Improved collapsed layout: center icons, hide text smoothly, and ensure consistent hit area */
-    .sidebar.collapsed ul li {
-        padding: 10px 6px;
-    }
+/* Improved collapsed layout: center icons, hide text smoothly, and ensure consistent hit area */
+.sidebar.collapsed ul li {
+    padding: 10px 6px;
+}
 
-    .sidebar ul li a {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        transition: padding 220ms ease, justify-content 220ms ease;
-    }
+.sidebar ul li a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: padding 220ms ease, justify-content 220ms ease;
+}
 
-    .sidebar ul li a .nav-icon {
-        width: 28px;
-        height: 28px;
-        flex: 0 0 28px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-    }
+.sidebar ul li a .nav-icon {
+    width: 28px;
+    height: 28px;
+    flex: 0 0 28px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
 
-    .sidebar ul li a .nav-text {
-        max-width: 160px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        transition: opacity 220ms ease, transform 260ms ease, max-width 260ms ease;
-    }
+.sidebar ul li a .nav-text {
+    max-width: 160px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    transition: opacity 220ms ease, transform 260ms ease, max-width 260ms ease;
+}
 
-    .sidebar.collapsed ul li a {
-        justify-content: center;
-    }
+.sidebar.collapsed ul li a {
+    justify-content: center;
+}
 
-    .sidebar.collapsed ul li a .nav-text {
-        max-width: 0;
-        opacity: 0;
-        transform: translateX(-6px);
-        pointer-events: none;
-    }
+.sidebar.collapsed ul li a .nav-text {
+    max-width: 0;
+    opacity: 0;
+    transform: translateX(-6px);
+    pointer-events: none;
+}
 
-    /* ensure sidebar toggle uses CSS to position reliably (override inline JS offsets) */
-    .sidebar .sidebar-toggle {
-        position: absolute;
-        top: 8px;
-        right: 8px;
-        width: 32px;
-        height: 32px;
-    }
+/* ensure sidebar toggle uses CSS to position reliably (override inline JS offsets) */
+.sidebar .sidebar-toggle {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 32px;
+    height: 32px;
+}
 
-    .sidebar.collapsed .chatbox {
-        width: var(--sidebar-mini-chat-width);
-        /* preserve compact chatbox */
-        left: calc((var(--sidebar-rail-width) - var(--sidebar-mini-chat-width)) / 2);
-    }
+.sidebar.collapsed .chatbox {
+    width: var(--sidebar-mini-chat-width);
+    /* preserve compact chatbox */
+    left: calc((var(--sidebar-rail-width) - var(--sidebar-mini-chat-width)) / 2);
+}
 
-    /* When collapsed, move main content left-margin to match narrow rail on wide screens */
-    @media (min-width: 1200px) {
-        .sidebar.collapsed~.main-content {
-            margin-left: var(--sidebar-rail-width);
-            /* align content when sidebar is rail */
-        }
-    }
+/* When collapsed, move main content left-margin to match narrow rail on wide screens */
 
-    .sidebar h2 {
-        text-align: center;
-        margin-bottom: 30px;
-        font-size: 1.4em;
-    }
 
-    .sidebar ul {
-        list-style: none;
-        padding: 0;
-    }
+.sidebar h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 1.4em;
+}
 
-    .sidebar ul li {
-        padding: 12px 24px;
-        cursor: pointer;
-        transition: background 0.2s;
-    }
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+}
 
-    .sidebar ul li a {
-        color: #fff;
-        text-decoration: none;
-        display: block;
-        width: 100%;
-        height: 100%;
-    }
+.sidebar ul li {
+    padding: 12px 24px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
 
-    /* make sidebar links layout with icon + text */
-    .sidebar ul li a {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
+.sidebar ul li a {
+    color: #fff;
+    text-decoration: none;
+    display: block;
+    width: 100%;
+    height: 100%;
+}
 
-    .sidebar ul li a .nav-icon {
-        width: 24px;
-        /* increased size for better affordance */
-        height: 24px;
-        flex: 0 0 24px;
-        display: inline-block;
-        vertical-align: middle;
-    }
+/* make sidebar links layout with icon + text */
+.sidebar ul li a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
 
-    .sidebar ul li a .nav-text {
-        transition: opacity 220ms ease, transform 260ms ease;
-    }
+.sidebar ul li a .nav-icon {
+    width: 24px;
+    /* increased size for better affordance */
+    height: 24px;
+    flex: 0 0 24px;
+    display: inline-block;
+    vertical-align: middle;
+}
 
-    /* when collapsed, keep icons visible but hide text */
-    .sidebar.collapsed ul li a {
-        opacity: 1;
-        /* override earlier rule that hid anchors entirely */
-    }
+.sidebar ul li a .nav-text {
+    transition: opacity 220ms ease, transform 260ms ease;
+}
 
-    .sidebar.collapsed ul li a .nav-text {
-        opacity: 0;
-        transform: translateX(-6px);
-        pointer-events: none;
-    }
+/* when collapsed, keep icons visible but hide text */
+.sidebar.collapsed ul li a {
+    opacity: 1;
+    /* override earlier rule that hid anchors entirely */
+}
 
-    /* Circular chat send button to match sidebar toggle size */
-    .chat-form button {
-        width: 36px;
-        height: 36px;
-        padding: 0;
-        border-radius: 50%;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-    }
+.sidebar.collapsed ul li a .nav-text {
+    opacity: 0;
+    transform: translateX(-6px);
+    pointer-events: none;
+}
 
-    .chat-form button svg {
-        width: 18px;
-        height: 18px;
-    }
+/* Circular chat send button to match sidebar toggle size */
+.chat-form button {
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
 
-    .sidebar ul li a:hover {
-        color: #e0e0e0;
-    }
+.chat-form button svg {
+    width: 18px;
+    height: 18px;
+}
 
-    .sidebar ul li:hover {
-        background: #5f735f59;
-    }
+.sidebar ul li a:hover {
+    color: #e0e0e0;
+}
 
-    .sidebar ul li.active {
-        background: #4a6b4a;
-        border-left: 4px solid #90ee90;
-    }
+.sidebar ul li:hover {
+    background: #5f735f59;
+}
 
-    .main-content {
-        transition: margin 0.3s, padding 0.3s;
-        min-height: 60vh;
-        color: #000;
-        /* 主内容区字体颜色设置为黑色 */
-        max-width: 960px;
-        margin: 0 auto;
-        /* center by default */
-        padding: 24px;
-        box-sizing: border-box;
-    }
+.sidebar ul li.active {
+    background: #4a6b4a;
+    border-left: 4px solid #90ee90;
+}
 
-    /* Hero / 主展示区 */
-    .main-hero {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        height: calc(100vh - 40px);
-        text-align: center;
-        z-index: 10;
-        /* above background tiles and sidebar to prevent occlusion */
-        pointer-events: auto;
-        position: relative;
-        /* ensure z-index takes effect */
-    }
+.main-content {
+    transition: margin 0.3s, padding 0.3s;
+    min-height: 60vh;
+    color: #000;
+    /* 主内容区字体颜色设置为黑色 */
+    max-width: 960px;
+    margin: 0 auto;
+    /* center by default */
+    padding: 24px;
+    box-sizing: border-box;
+}
 
-    .hero-title {
-        font-family: var(--hero-font);
-        font-size: var(--hero-size);
-        line-height: 1.02;
-        margin: 0 12px;
-        color: var(--hero-color);
-        text-shadow: var(--hero-shadow);
-        letter-spacing: 0.6px;
-        -webkit-font-smoothing: antialiased;
-        position: relative;
-        z-index: 15;
-        /* ensure both titles are above sidebar */
-        /* 添加平滑过渡动画 */
-        transition: font-size 360ms cubic-bezier(.2, .9, .2, 1),
-            max-width 360ms cubic-bezier(.2, .9, .2, 1),
-            margin 360ms cubic-bezier(.2, .9, .2, 1),
-            text-align 360ms ease,
-            transform 360ms cubic-bezier(.2, .9, .2, 1);
-    }
+/* Hero / 主展示区 */
+.main-hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: calc(100vh - 40px);
+    text-align: center;
+    z-index: 10;
+    /* above background tiles and sidebar to prevent occlusion */
+    pointer-events: auto;
+    position: relative;
+    /* ensure z-index takes effect */
+}
 
-    /* 更醒目的主标题视觉：更粗、更显眼的描边与投影 */
-    .hero-title {
-        font-weight: 900;
-        text-transform: none;
-        -webkit-text-stroke: 0.6px rgba(0, 0, 0, 0.08);
-    }
+.hero-title {
+    font-family: var(--hero-font);
+    font-size: var(--hero-size);
+    line-height: 1.02;
+    margin: 0 12px;
+    color: var(--hero-color);
+    text-shadow: var(--hero-shadow);
+    letter-spacing: 0.6px;
+    -webkit-font-smoothing: antialiased;
+    position: relative;
+    z-index: 15;
+    /* ensure both titles are above sidebar */
+    /* 添加平滑过渡动画 */
+    transition: font-size 360ms cubic-bezier(.2, .9, .2, 1),
+        max-width 360ms cubic-bezier(.2, .9, .2, 1),
+        margin 360ms cubic-bezier(.2, .9, .2, 1),
+        text-align 360ms ease,
+        transform 360ms cubic-bezier(.2, .9, .2, 1);
+}
 
-    .hero-subtitle {
-        margin-top: 12px;
-        color: var(--hero-subcolor);
-        font-size: var(--subtitle-size);
-        opacity: 0.98;
-        max-width: 900px;
-        line-height: 1.4;
-        font-weight: 400;
-        padding: 0 16px;
-        position: relative;
-        z-index: 15;
-        /* same z-index as hero-title to prevent occlusion */
-        /* 为小屏幕添加水平内边距 */
-        /* 添加平滑过渡动画 */
-        transition: font-size 360ms cubic-bezier(.2, .9, .2, 1),
-            max-width 360ms cubic-bezier(.2, .9, .2, 1),
-            margin 360ms cubic-bezier(.2, .9, .2, 1),
-            text-align 360ms ease,
-            padding 360ms ease,
-            transform 360ms cubic-bezier(.2, .9, .2, 1);
-    }
+/* 更醒目的主标题视觉：更粗、更显眼的描边与投影 */
+.hero-title {
+    font-weight: 800;
+    text-transform: none;
+    -webkit-text-stroke: 0.6px rgba(0, 0, 0, 0.08);
+}
+
+.hero-subtitle {
+    margin-top: 12px;
+    color: var(--hero-subcolor);
+    font-size: var(--subtitle-size);
+    opacity: 0.98;
+    max-width: 900px;
+    line-height: 1.4;
+    font-weight: 400;
+    padding: 0 16px;
+    position: relative;
+    z-index: 15;
+    /* same z-index as hero-title to prevent occlusion */
+    /* 为小屏幕添加水平内边距 */
+    /* 添加平滑过渡动画 */
+    transition: font-size 360ms cubic-bezier(.2, .9, .2, 1),
+        max-width 360ms cubic-bezier(.2, .9, .2, 1),
+        margin 360ms cubic-bezier(.2, .9, .2, 1),
+        text-align 360ms ease,
+        padding 360ms ease,
+        transform 360ms cubic-bezier(.2, .9, .2, 1);
+}
 
 /* Sketchfab embed responsive wrapper placed under hero */
 .sketchfab-embed-wrapper {
@@ -331,39 +327,37 @@
     display: block;
     text-align: center;
 }
+
 .sketchfab-embed-wrapper iframe {
     width: 100%;
     height: 360px;
     border: none;
     border-radius: 10px;
-    box-shadow: 0 8px 30px rgba(0,0,0,0.14);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.14);
 }
 
-@media (max-width: 900px) {
-    .sketchfab-embed-wrapper iframe { height: 260px; }
-}
 
-@media (max-width: 480px) {
-    /* 在最小屏幕上缩小并减少视觉占用 */
-    .sketchfab-embed-wrapper { max-width: 92vw; margin-top: 12px; }
-    .sketchfab-embed-wrapper iframe { height: 200px; border-radius: 8px; }
-}
+
+
 
 /* 本地 three.js canvas root - 全屏中间层 */
 .model-canvas-root {
     /* 覆盖整个视口，作为中间视觉层（位于背景与主要 UI 之间） */
     position: fixed;
-    inset: 0; /* top:0; right:0; bottom:0; left:0 */
+    inset: 0;
+    /* top:0; right:0; bottom:0; left:0 */
     width: 100vw;
     height: 100vh;
     max-height: none;
     background: transparent;
     border-radius: 0;
     overflow: hidden;
-    z-index: 9; /* 背景 tiles 使用 -5，主视觉 .main-hero z-index 为 10，故使用 9 作为中间层 */
+    z-index: 9;
+    /* 背景 tiles 使用 -5，主视觉 .main-hero z-index 为 10，故使用 9 作为中间层 */
     /* 默认为不阻碍页面其他交互；若需要在 canvas 上直接交互，可改为 pointer-events: auto */
     pointer-events: none;
 }
+
 .model-canvas-root .model-loading {
     position: absolute;
     inset: 0;
@@ -375,1180 +369,600 @@
     pointer-events: none;
 }
 
-    /* 响应式 Hero 标题设计 */
+/* 响应式 Hero 标题设计 */
 
-    /* 超小屏幕 (手机竖屏) */
-    @media (max-width: 480px) {
-        .hero-title {
-            font-size: var(--hero-size-mobile);
-            margin: 0 8px;
-            line-height: 1.1;
-            letter-spacing: 0.3px;
-            max-width: 90vw;
-            word-break: break-word;
-        }
+/* 超小屏幕 (手机竖屏) */
 
-        .hero-subtitle {
-            font-size: var(--subtitle-size-mobile);
-            margin-top: 8px;
-            max-width: 85vw;
-            line-height: 1.3;
-            padding: 0 12px;
-        }
 
-        .main-hero {
-            height: calc(100vh - 60px);
-            padding: 20px 8px;
-        }
-    }
+/* 小屏幕 (手机横屏/小平板) */
 
-    /* 小屏幕 (手机横屏/小平板) */
-    @media (min-width: 481px) and (max-width: 768px) {
-        .hero-title {
-            font-size: var(--hero-size-tablet);
-            margin: 0 12px;
-            line-height: 1.05;
-            letter-spacing: 0.4px;
-            max-width: 85vw;
-        }
 
-        .hero-subtitle {
-            font-size: var(--subtitle-size-tablet);
-            margin-top: 10px;
-            max-width: 80vw;
-            line-height: 1.35;
-            padding: 0 16px;
-        }
+/* 中等屏幕 (平板/小桌面) */
 
-        .main-hero {
-            height: calc(90vh - 40px);
-            padding: 30px 16px;
-        }
-    }
 
-    /* 中等屏幕 (平板/小桌面) */
-    @media (min-width: 769px) and (max-width: 1199px) {
-        .hero-title {
-            font-size: var(--hero-size-desktop);
-            margin: 0 16px;
-            line-height: 1.02;
-            letter-spacing: 0.5px;
-            max-width: 75vw;
-        }
+/* 大屏幕 (桌面) */
 
-        .hero-subtitle {
-            font-size: var(--subtitle-size-desktop);
-            margin-top: 12px;
-            max-width: 70vw;
-            line-height: 1.4;
-            padding: 0 20px;
-        }
 
-        .main-hero {
-            height: calc(85vh - 30px);
-            padding: 40px 24px;
-        }
-    }
+/* 超大屏幕 (大桌面/4K) */
 
-    /* 大屏幕 (桌面) */
-    @media (min-width: 1200px) and (max-width: 1599px) {
-        .hero-title {
-            font-size: var(--hero-size-large);
-            margin: 0 20px;
-            line-height: 1.02;
-            letter-spacing: 0.6px;
-            max-width: 60vw;
-        }
 
-        .hero-subtitle {
-            font-size: var(--subtitle-size-large);
-            margin-top: 14px;
-            max-width: 55vw;
-            line-height: 1.4;
-            padding: 0 24px;
-        }
+/* 超宽屏幕 (21:9 等比例) */
 
-        .main-hero {
-            height: calc(80vh - 20px);
-            padding: 50px 32px;
-        }
-    }
 
-    /* 超大屏幕 (大桌面/4K) */
-    @media (min-width: 1600px) {
-        .hero-title {
-            font-size: var(--hero-size-xl);
-            margin: 0 24px;
-            line-height: 1.02;
-            letter-spacing: 0.8px;
-            max-width: 50vw;
-        }
+/* 垂直屏幕优化 (竖屏平板等) */
 
-        .hero-subtitle {
-            font-size: var(--subtitle-size-xl);
-            margin-top: 16px;
-            max-width: 45vw;
-            line-height: 1.45;
-            padding: 0 32px;
-            font-weight: 300;
-        }
 
-        .main-hero {
-            height: calc(75vh - 10px);
-            padding: 60px 40px;
-        }
-    }
+/* 横屏但高度较小的设备 (如横屏手机) */
 
-    /* 超宽屏幕 (21:9 等比例) */
-    @media (min-width: 1920px) and (min-aspect-ratio: 21/9) {
-        .hero-title {
-            font-size: calc(var(--hero-size-xl) * 1.1);
-            max-width: 40vw;
-        }
 
-        .hero-subtitle {
-            font-size: calc(var(--subtitle-size-xl) * 1.1);
-            max-width: 35vw;
-            margin-top: 20px;
-        }
-    }
+/* 打字机光标样式 */
+.typewriter-caret {
+    display: inline-block;
+    width: 2px;
+    height: 1.05em;
+    background: currentColor;
+    margin-left: 6px;
+    vertical-align: bottom;
+    animation: caret-blink 1s steps(1) infinite;
+}
 
-    /* 垂直屏幕优化 (竖屏平板等) */
-    @media (orientation: portrait) and (min-height: 800px) {
-        .main-hero {
-            padding-top: 10vh;
-            height: calc(70vh);
-        }
-
-        .hero-title {
-            margin-bottom: 8px;
-        }
-
-        .hero-subtitle {
-            margin-top: 16px;
-            line-height: 1.5;
-        }
-    }
-
-    /* 横屏但高度较小的设备 (如横屏手机) */
-    @media (orientation: landscape) and (max-height: 500px) {
-        .main-hero {
-            height: calc(90vh);
-            padding: 20px;
-        }
-
-        .hero-title {
-            font-size: calc(var(--hero-size-tablet) * 0.8);
-            margin-bottom: 0;
-        }
-
-        .hero-subtitle {
-            font-size: calc(var(--subtitle-size-tablet) * 0.9);
-            margin-top: 8px;
-        }
-    }
-
-    /* 打字机光标样式 */
-    .typewriter-caret {
-        display: inline-block;
-        width: 2px;
-        height: 1.05em;
-        background: currentColor;
-        margin-left: 6px;
-        vertical-align: bottom;
-        animation: caret-blink 1s steps(1) infinite;
-    }
-
-    @keyframes caret-blink {
-        0% {
-            opacity: 1;
-        }
-
-        50% {
-            opacity: 0;
-        }
-
-        100% {
-            opacity: 1;
-        }
-    }
-
-    /* slide-in helper for subtitle entrance (used before typing) */
-    .slide-in-from-left {
-        transform: translateX(-18px);
-        opacity: 0;
-        transition: transform 420ms ease-out, opacity 420ms ease-out;
-    }
-
-    .slide-in-from-left.visible {
-        transform: translateX(0);
+@keyframes caret-blink {
+    0% {
         opacity: 1;
     }
 
-    /* accessibility: respect reduced-motion */
-    @media (prefers-reduced-motion: reduce) {
-
-        .hero-title,
-        .hero-subtitle {
-            animation: none !important;
-        }
-    }
-
-    /* On wide screens leave space for the sidebar */
-    @media (min-width: 1200px) {
-        .main-content {
-            margin-left: var(--sidebar-width);
-            /* dynamic: match the sidebar width */
-            max-width: calc(100% - var(--sidebar-width));
-            padding: 24px 32px;
-            transition: margin-left 360ms cubic-bezier(.2, .9, .2, 1), max-width 360ms cubic-bezier(.2, .9, .2, 1);
-        }
-
-        /* Hero 标题在侧边栏展开时向右移动 */
-        .main-hero {
-            padding-left: 40px;
-            padding-right: 40px;
-            /* 确保内容不被侧边栏遮挡 */
-            transform: translateX(0);
-        }
-
-        .hero-title,
-        .hero-subtitle {
-            /* baseline: 不偏移，居中对齐 */
-            transform: translateX(0);
-            text-align: center;
-        }
-
-        .hero-title {
-            max-width: calc(100vw - var(--sidebar-width) - 120px);
-        }
-
-        .hero-subtitle {
-            max-width: calc(100vw - var(--sidebar-width) - 160px);
-        }
-    }
-
-    /* When sidebar is collapsed ensure main content aligns with narrow rail */
-    @media (min-width: 1200px) {
-        .sidebar.collapsed~.main-content {
-            margin-left: var(--sidebar-rail-width);
-            /* match collapsed rail width */
-            max-width: calc(100% - var(--sidebar-rail-width));
-        }
-
-        /* Hero 标题在侧边栏收缩时向左回归中心，有更多空间 */
-        .sidebar.collapsed~.main-content .main-hero {
-            padding-left: 60px;
-            padding-right: 60px;
-        }
-
-        .sidebar.collapsed~.main-content .hero-title,
-        .sidebar.collapsed~.main-content .hero-subtitle {
-            /* 侧边栏收缩时，标题回到完全居中状态 */
-            transform: translateX(0);
-            text-align: center;
-        }
-
-        .sidebar.collapsed~.main-content .hero-title {
-            max-width: calc(100vw - var(--sidebar-rail-width) - 160px);
-            font-size: calc(var(--hero-size-xl) * 1.1);
-            /* 收缩时可以稍大一些 */
-        }
-
-        .sidebar.collapsed~.main-content .hero-subtitle {
-            max-width: calc(100vw - var(--sidebar-rail-width) - 200px);
-            font-size: calc(var(--subtitle-size-xl) * 1.05);
-        }
-    }
-
-    /* 当侧边栏展开（不是 .collapsed）时，将标题向右移动，避免被侧边栏遮挡 */
-    @media (min-width: 1200px) {
-
-        .sidebar:not(.collapsed)~.main-content .hero-title,
-        .sidebar:not(.collapsed)~.main-content .hero-subtitle {
-            /* expanded sidebar: move titles to the right */
-            transform: translateX(80px);
-        }
-    }
-
-    .chatbox {
-        background: #fff;
-        border-radius: 8px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-        height: 300px;
-        padding: 14px;
-        display: flex;
-        flex-direction: column;
-        position: absolute;
-        /* 改为absolute，相对于sidebar定位 */
-        left: 16px;
-        bottom: 20px;
-        right: 16px;
-        /* 添加right属性确保宽度自适应 */
-        width: auto;
-        /* 改为auto，让left和right控制宽度 */
-        max-width: calc(var(--sidebar-width) - 32px);
-        transition: width 360ms cubic-bezier(.2, .9, .2, 1), left 360ms cubic-bezier(.2, .9, .2, 1), transform 260ms ease, bottom 260ms ease, right 360ms cubic-bezier(.2, .9, .2, 1);
-        z-index: 12;
-        margin-bottom: 0;
-        /* 移除margin-bottom */
-        box-sizing: border-box;
-        /* 确保padding计算正确 */
-    }
-
-    /* 宽屏幕时保持聊天框在侧边栏内，避免溢出和重叠 */
-    @media (min-width: 1200px) {
-        .sidebar:not(.collapsed) .chatbox {
-            position: absolute;
-            /* 相对于sidebar定位 */
-            left: 16px;
-            bottom: 20px;
-            right: 16px;
-            /* 使用right替代固定width */
-            width: auto;
-            /* 让left和right控制宽度 */
-            max-width: none;
-            /* 移除max-width限制 */
-            padding: 12px;
-            margin-bottom: 0;
-            height: 280px;
-            /* 稍微减小高度避免与导航重叠 */
-        }
-    }
-
-    /* 当侧边栏折叠时，聊天框变为紧凑的迷你版本 */
-    .sidebar.collapsed .chatbox {
-        position: absolute;
-        /* 保持相对于sidebar定位 */
-        width: var(--sidebar-mini-chat-width);
-        left: calc((var(--sidebar-rail-width) - var(--sidebar-mini-chat-width)) / 2);
-        right: auto;
-        /* 重置right属性 */
-        padding: 6px;
-        height: calc(var(--sidebar-rail-width));
-        border-radius: 10px;
-        overflow: hidden;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        bottom: 20px;
-        /* 与展开状态保持一致的底部间距 */
-    }
-
-    .sidebar.collapsed .chatbox .chat-header,
-    .sidebar.collapsed .chatbox .chat-messages,
-    .sidebar.collapsed .chatbox .chat-form {
+    50% {
         opacity: 0;
-        transform: translateY(4px);
-        pointer-events: none;
-        transition: opacity 240ms ease, transform 240ms ease;
     }
 
-    /* show a compact chat icon when collapsed */
-    .sidebar.collapsed .chatbox::before {
-        content: '\1F4AC';
-        /* speech balloon emoji as fallback icon */
-        font-size: 16px;
-        display: block;
-        color: #fff;
-        background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02));
-        width: 28px;
-        height: 28px;
-        border-radius: 8px;
-        line-height: 28px;
-        text-align: center;
-    }
-
-    /* Toggle button styles */
-    .sidebar-toggle {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        transition: transform 180ms ease, background 160ms ease;
-        /* move toggle away from the H2 so it doesn't replace the '导航' text */
-        position: absolute;
-        top: 8px;
-        right: 8px;
-        width: 32px;
-        height: 32px;
-        border-radius: 6px;
-    }
-
-    .sidebar-toggle svg {
-        width: 18px;
-        height: 18px;
-        display: block;
-    }
-
-    .sidebar-toggle:hover {
-        transform: scale(1.06);
-        background: rgba(255, 255, 255, 0.12);
-    }
-
-    /* tooltip via data-tooltip attribute */
-    .sidebar-toggle[data-tooltip]:hover:after {
-        content: attr(data-tooltip);
-        position: absolute;
-        right: -140%;
-        top: 50%;
-        transform: translateY(-50%);
-        background: rgba(0, 0, 0, 0.75);
-        color: #fff;
-        padding: 6px 8px;
-        border-radius: 6px;
-        white-space: nowrap;
-        font-size: 12px;
-        z-index: 60;
-    }
-
-    /* When expanded (normal sidebar), ensure collapsed-state transitions reverse cleanly */
-    .sidebar .chatbox::before {
-        display: none;
-    }
-
-    /* Smooth font-size and padding transitions for messages when expanding */
-    .chat-messages,
-    .chat-header p,
-    .chat-form button,
-    .chat-input {
-        transition: opacity 260ms ease, transform 260ms ease, font-size 200ms ease, padding 200ms ease;
-    }
-
-    .chat-messages {
-        flex-grow: 1;
-        overflow-y: auto;
-        padding: 8px;
-        margin-bottom: 10px;
-        max-height: calc(100% - 80px);
-        /* 为标题和输入框留出空间 */
-        scrollbar-width: thin;
-        /* Firefox */
-        scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
-        /* Firefox */
-    }
-
-    /* Webkit浏览器滚动条样式 */
-    .chat-messages::-webkit-scrollbar {
-        width: 6px;
-    }
-
-    .chat-messages::-webkit-scrollbar-track {
-        background: transparent;
-    }
-
-    .chat-messages::-webkit-scrollbar-thumb {
-        background: rgba(0, 0, 0, 0.2);
-        border-radius: 3px;
-    }
-
-    .chat-messages::-webkit-scrollbar-thumb:hover {
-        background: rgba(0, 0, 0, 0.3);
-    }
-
-    /* 聊天消息样式优化 */
-    .message {
-        margin-bottom: 12px;
-        padding: 8px 12px;
-        border-radius: 8px;
-        line-height: 1.4;
-        word-wrap: break-word;
-        max-width: 100%;
-    }
-
-    .user-message {
-        background: #e3f2fd;
-        border: 1px solid #bbdefb;
-        margin-left: 20px;
-    }
-
-    .assistant-message {
-        background: #f1f8e9;
-        border: 1px solid #c8e6c9;
-        margin-right: 20px;
-    }
-
-    .message-sender {
-        font-weight: bold;
-        display: block;
-        margin-bottom: 4px;
-        font-size: 0.9em;
-    }
-
-    /* 聊天表单样式 */
-    .chat-form {
-        display: flex;
-        gap: 8px;
-        align-items: center;
-        margin-top: auto;
-        /* 推到底部 */
-        padding-top: 8px;
-        border-top: 1px solid #eee;
-    }
-
-    .chat-input {
-        flex: 1;
-        padding: 10px 12px;
-        border: 1px solid #ddd;
-        border-radius: 20px;
-        font-size: 14px;
-        outline: none;
-        transition: border-color 0.2s;
-    }
-
-    .chat-input:focus {
-        border-color: #075004;
-        box-shadow: 0 0 0 2px rgba(7, 80, 4, 0.1);
-    }
-
-    .chat-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding-bottom: 8px;
-        border-bottom: 1px solid #eee;
-        margin-bottom: 8px;
-    }
-
-    .chat-header p {
-        margin: 0;
-        font-size: 14px;
-        color: #666;
-        flex: 1;
-    }
-
-    #clear-chat {
-        background: none;
-        border: none;
-        font-size: 16px;
-        cursor: pointer;
-        padding: 4px 8px;
-        border-radius: 4px;
-        transition: background-color 0.2s;
-    }
-
-    #clear-chat:hover {
-        background-color: rgba(0, 0, 0, 0.1);
-    }
-
-    .chat-form {
-        display: flex;
-        margin-top: auto;
-    }
-
-    .chat-input {
-        flex-grow: 1;
-        padding: 8px 12px;
-        border: 1px solid #ccc;
-        border-radius: 4px 0 0 4px;
-        font-size: 14px;
-    }
-
-    .chat-form button {
-        background: #075004;
-        color: white;
-        border: none;
-        border-radius: 0 4px 4px 0;
-        padding: 0 15px;
-        cursor: pointer;
-        transition: background 0.2s;
-    }
-
-    .chat-form button:hover {
-        background: #0a7007;
-    }
-
-    .chat-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 10px;
-    }
-
-    .chat-header p {
-        margin: 0;
-        flex-grow: 1;
-    }
-
-    #clear-chat {
-        background: none;
-        border: none;
-        font-size: 16px;
-        cursor: pointer;
-        color: #999;
-        transition: color 0.3s;
-    }
-
-    #clear-chat:hover {
-        color: #ff3333;
-    }
-
-    /* 消息样式 */
-    .message {
-        padding: 8px 12px;
-        margin: 8px 0;
-        border-radius: 15px;
-        max-width: 85%;
-        word-break: break-word;
-    }
-
-    .user-message {
-        background-color: #e3f2e3;
-        color: #075004;
-        margin-left: auto;
-        border-bottom-right-radius: 5px;
-        text-align: right;
-    }
-
-    .assistant-message {
-        background-color: #f0f0f0;
-        color: #333;
-        margin-right: auto;
-        border-bottom-left-radius: 5px;
-        text-align: left;
-    }
-
-    .message-sender {
-        font-weight: bold;
-        display: block;
-        margin-bottom: 4px;
-    }
-
-    .typing-indicator {
-        color: #888;
-        display: inline-block;
-    }
-
-    .typing-indicator:after {
-        content: '...';
-        display: inline-block;
-        animation: ellipsis 1.5s infinite;
-    }
-
-    @keyframes ellipsis {
-        0% {
-            content: '.';
-        }
-
-        33% {
-            content: '..';
-        }
-
-        66% {
-            content: '...';
-        }
-
-        100% {
-            content: '.';
-        }
-    }
-
-    .chatbox p {
-        color: #000;
-        font-size: large;
-        font-style: oblique;
-        margin: 0 0 8px 0;
-        flex-shrink: 0;
-    }
-
-    .chat-messages {
-        flex: 1;
-        color: #000;
-        min-height: 0;
-        max-height: none;
-        overflow-y: auto;
-        font-size: 1em;
-        padding: 0 2px 0 2px;
-        margin-bottom: 8px;
-    }
-
-    .chat-form {
-        display: flex;
-        gap: 8px;
-        margin-top: auto;
-        /* 让输入区始终贴底 */
-    }
-
-    .chat-input {
-        flex: 1;
-        padding: 8px;
-        border-radius: 4px;
-        border: 1px solid #ccc;
-        font-size: 1em;
-    }
-
-    .chat-form button {
-        padding: 8px 16px;
-        border-radius: 4px;
-        border: none;
-        background: #075004;
-        color: #fff;
-        cursor: pointer;
-        font-size: 1em;
-    }
-
-    /* 中等屏幕时的响应式设计 */
-    @media (max-width: 1199px) and (min-width: 769px) {
-
-        /* 侧边栏影响的主内容布局调整 */
-        .main-content {
-            transition: margin-left 360ms cubic-bezier(.2, .9, .2, 1);
-        }
-
-        /* 当侧边栏展开时，为 hero 内容留出空间并调整布局 */
-        .sidebar:not(.collapsed)~.main-content {
-            margin-left: var(--sidebar-width);
-        }
-
-        .sidebar:not(.collapsed)~.main-content .main-hero {
-            padding-left: 40px;
-            padding-right: 40px;
-            text-align: center;
-        }
-
-        .sidebar:not(.collapsed)~.main-content .hero-title {
-            max-width: calc(100vw - var(--sidebar-width) - 120px);
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .sidebar:not(.collapsed)~.main-content .hero-subtitle {
-            max-width: calc(100vw - var(--sidebar-width) - 160px);
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        /* 侧边栏收缩时充分利用空间 */
-        .sidebar.collapsed~.main-content {
-            margin-left: var(--sidebar-rail-width);
-        }
-
-        .sidebar.collapsed~.main-content .main-hero {
-            padding-left: 60px;
-            padding-right: 40px;
-            text-align: center;
-        }
-
-        .sidebar.collapsed~.main-content .hero-title {
-            max-width: calc(100vw - var(--sidebar-rail-width) - 140px);
-            font-size: calc(var(--hero-size-desktop) * 1.1);
-        }
-
-        .sidebar.collapsed~.main-content .hero-subtitle {
-            max-width: calc(100vw - var(--sidebar-rail-width) - 180px);
-            font-size: calc(var(--subtitle-size-desktop) * 1.05);
-        }
-
-        .chatbox {
-            position: fixed;
-            /* 中等屏幕时浮动显示 */
-            left: 20px;
-            bottom: 20px;
-            right: auto;
-            width: 400px;
-            /* 固定宽度 */
-            max-width: calc(100vw - 40px);
-            /* 确保不超出视口 */
-            height: 350px;
-            z-index: 1000;
-            /* 提高层级避免被遮挡 */
-        }
-
-        /* 确保侧边栏不遮挡聊天框 */
-        .sidebar:not(.collapsed)~.main-content .chatbox,
-        .sidebar.collapsed~.main-content .chatbox {
-            left: calc(var(--sidebar-width) + 20px);
-            width: 380px;
-        }
-
-        .sidebar.collapsed~.main-content .chatbox {
-            left: calc(var(--sidebar-rail-width) + 20px);
-        }
-    }
-
-    /* 移动端聊天切换按钮 */
-    .mobile-chat-toggle {
-        display: none;
-        /* 默认隐藏 */
-        position: fixed;
-        bottom: 20px;
-        right: 20px;
-        width: 56px;
-        height: 56px;
-        background: #075004;
-        color: white;
-        border: none;
-        border-radius: 50%;
-        font-size: 24px;
-        cursor: pointer;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-        z-index: 1600;
-        transition: all 0.3s ease;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .mobile-chat-toggle:hover {
-        background: #0a6006;
-        transform: scale(1.05);
-    }
-
-    .mobile-chat-toggle.active {
-        background: #d32f2f;
-    }
-
-    /* 在小屏幕时显示切换按钮 */
-    @media (max-width: 768px) {
-        .mobile-chat-toggle {
-            display: flex;
-        }
-
-        /* 聊天框初始隐藏，通过JavaScript控制显示 */
-        .chatbox.mobile-hidden {
-            transform: translateY(100%);
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .chatbox.mobile-visible {
-            transform: translateY(0);
-            opacity: 1;
-            pointer-events: auto;
-        }
-    }
-
-    /* 小屏幕时的响应式设计 (手机和小平板) */
-    @media (max-width: 768px) {
-
-        /* 移动端时主内容占满全屏，不受侧边栏影响 */
-        .main-content {
-            margin-left: 0 !important;
-            max-width: 100% !important;
-            padding: 20px 16px;
-        }
-
-        .main-hero {
-            height: calc(100vh - 60px);
-            padding: 20px 8px;
-            text-align: center;
-        }
-
-        .hero-title {
-            max-width: 90vw;
-            margin: 0 auto;
-        }
-
-        .hero-subtitle {
-            max-width: 85vw;
-            margin: 8px auto 0;
-        }
-
-        .chatbox {
-            position: fixed;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            width: 100vw;
-            max-width: 100vw;
-            height: 50vh;
-            /* 使用视口高度的50% */
-            min-height: 250px;
-            max-height: 400px;
-            margin: 0;
-            border-radius: 16px 16px 0 0;
-            /* 只有顶部圆角 */
-            padding: 12px;
-            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
-            z-index: 1500;
-            /* 最高层级 */
-        }
-
-        /* 小屏幕时隐藏侧边栏的聊天框，使用全局聊天框 */
-        .sidebar .chatbox {
-            display: none;
-        }
-    }
-
-    /* 超小屏幕 (小手机) */
-    @media (max-width: 480px) {
-        .chatbox {
-            height: 45vh;
-            min-height: 220px;
-            padding: 8px;
-            border-radius: 12px 12px 0 0;
-        }
-
-        .chat-messages {
-            font-size: 14px;
-            max-height: calc(45vh - 120px);
-            /* 为输入框和标题留出空间 */
-        }
-
-        .chat-input {
-            font-size: 16px;
-            /* 防止iOS缩放 */
-            padding: 10px;
-        }
-
-        .chat-form button {
-            padding: 10px 15px;
-            font-size: 14px;
-        }
-    }
-
-    /* 响应式设计：仅针对 iPhone 屏幕宽度 (原有代码优化) */
-    @media (max-width: 900px) {
-        /* 这个规则现在被上面更全面的响应式规则覆盖 */
-        /* 保留用于向后兼容 */
-    }
-
-    /* Floating mini-chat overlay container (created dynamically by JS) */
-    .mini-chat-container {
-        position: fixed;
-        right: 20px;
-        bottom: 40px;
-        width: 360px;
-        max-width: calc(100% - 40px);
-        /* never overflow viewport */
-        height: 420px;
-        z-index: 2200;
-        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
-        border-radius: 10px;
-        background: transparent;
-        display: flex;
-        flex-direction: column;
-        overflow: visible;
-        box-sizing: border-box;
-        padding: 6px;
-        /* ensure inner spacing so chatbox doesn't touch edges */
-    }
-
-    .mini-chat-container {
-        opacity: 0;
-        transform: translateY(10px) scale(0.98);
-        transition: opacity 220ms cubic-bezier(.2, .9, .2, 1), transform 220ms cubic-bezier(.2, .9, .2, 1);
-    }
-
-    .mini-chat-container.open {
+    100% {
         opacity: 1;
-        transform: translateY(0) scale(1);
-    }
-
-    .mini-chat-container.closing {
-        opacity: 0;
-        transform: translateY(6px) scale(0.995);
-    }
-
-    .mini-chat-container .chatbox {
-        position: relative !important;
-        /* override fixed positioning */
-        left: auto !important;
-        bottom: auto !important;
-        width: 100% !important;
-        height: 100% !important;
-        padding: 12px !important;
-        margin: 0 !important;
-        border-radius: 10px !important;
-    }
-
-    .mini-chat-close {
-        position: absolute;
-        top: 8px;
-        right: 8px;
-        z-index: 2300;
-        width: 28px;
-        height: 28px;
-        border-radius: 6px;
-        border: none;
-        background: rgba(0, 0, 0, 0.6);
-        color: #fff;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-    }
-
-    .mini-chat-close:hover {
-        transform: scale(1.06);
-    }
-
-    /* 超宽屏幕支持 (2K, 4K等) */
-    @media (min-width: 1600px) {
-        .sidebar:not(.collapsed) .chatbox {
-            height: 320px;
-            /* 在大屏幕上增加高度 */
-            padding: 16px;
-        }
-
-        .chat-messages {
-            font-size: 15px;
-            /* 稍微增大字体 */
-        }
-
-        .chat-input {
-            font-size: 15px;
-            padding: 12px 16px;
-        }
-    }
-
-    /* 高DPI屏幕优化 */
-    @media (-webkit-min-device-pixel-ratio: 2),
-    (min-resolution: 192dpi) {
-        .chatbox {
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
-        }
-
-        .chat-messages::-webkit-scrollbar {
-            width: 8px;
-        }
-    }
-
-    /* 确保在所有情况下聊天框都不会被遮挡 */
-    .chatbox {
-        /* 添加最小高度确保可用性 */
-        min-height: 200px;
-    }
-
-    /* 确保聊天框的过渡动画在所有设备上都流畅 */
-    .chatbox {
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    /* 防止聊天框内容在动画过程中溢出 */
-    .chatbox.mobile-hidden,
-    .chatbox.mobile-visible {
-        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-            opacity 0.3s ease;
-    }
-
-    /* 确保在桌面端移除移动端专用的类 */
-    @media (min-width: 769px) {
-
-        .chatbox.mobile-hidden,
-        .chatbox.mobile-visible {
-            transform: none !important;
-            opacity: 1 !important;
-            pointer-events: auto !important;
-        }
-
-        .mobile-chat-toggle {
-            display: none !important;
-        }
-    }
-
-    /* 改善聊天框在不同状态下的视觉效果 */
-    .sidebar.collapsed .chatbox::before {
-        transition: all 0.2s ease;
-    }
-
-    .sidebar.collapsed .chatbox:hover::before {
-        background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05));
-        transform: scale(1.05);
-    }
-
-    /* 确保聊天框始终在正确的层级 */
-    .chatbox {
-        isolation: isolate;
-        /* 创建新的堆叠上下文 */
-    }
-
-    /* 优化滚动性能 */
-    .chat-messages {
-        scroll-behavior: smooth;
-        overscroll-behavior: contain;
-    }
-
-    /* 针对触摸设备的优化 */
-    @media (hover: none) and (pointer: coarse) {
-        .chat-input {
-            font-size: 16px;
-            /* 防止iOS Safari自动缩放 */
-        }
-
-        .chat-form button {
-            min-height: 44px;
-            /* iOS推荐的最小点击目标 */
-            min-width: 44px;
-        }
-
-        #clear-chat {
-            min-height: 32px;
-            min-width: 32px;
-        }
-    }
-
-    @media (max-width: 768px) {
-        .chatbox {
-            margin-top: 0;
-            /* 移动端重置margin-top */
-        }
-    }
-
-    body {
-        font-size: 16px;
-
-        width: 100vw;
-        height: auto;
-        padding-top: 16px;
-        box-shadow: none;
-        background: #075004;
-        color: #fff;
-    }
-
-    .sidebar h2 {
-        font-size: 1.1em;
-        margin-bottom: 16px;
-    }
-
-    .sidebar ul li {
-        padding: 10px 12px;
-        font-size: 1em;
-    }
-
-    .main-content {
-        padding: 16px 8px;
-        min-height: 50vh;
-    }
-
-    .chatbox {
-        position: fixed;
-        left: 0;
-        bottom: 0;
-        width: 100vw;
-        max-width: 100vw;
-        height: 260px;
-        margin: 0;
-        border-radius: 12px 12px 0 0;
-        padding: 8px 6px 6px 6px;
-        box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.12);
-    }
-
-    .chatbox p {
-        font-size: 1em;
-        margin-bottom: 6px;
-    }
-
-    .chat-messages {
-        font-size: 0.95em;
-        padding: 0 2px;
-        margin-bottom: 6px;
-        max-height: 120px;
-    }
-
-    .chat-form {
-        gap: 4px;
-    }
-
-    .chat-input {
-        padding: 6px;
-        font-size: 1em;
-    }
-
-    .chat-form button {
-        padding: 6px 10px;
-        font-size: 1em;
     }
 }
+
+/* slide-in helper for subtitle entrance (used before typing) */
+.slide-in-from-left {
+    transform: translateX(-18px);
+    opacity: 0;
+    transition: transform 420ms ease-out, opacity 420ms ease-out;
+}
+
+.slide-in-from-left.visible {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+/* accessibility: respect reduced-motion */
+/* On wide screens leave space for the sidebar */
+/* When sidebar is collapsed ensure main content aligns with narrow rail */
+/* 当侧边栏展开（不是 .collapsed）时，将标题向右移动，避免被侧边栏遮挡 */
+
+
+.chatbox {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    height: 300px;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    /* 改为absolute，相对于sidebar定位 */
+    left: 16px;
+    bottom: 20px;
+    right: 16px;
+    /* 添加right属性确保宽度自适应 */
+    width: auto;
+    /* 改为auto，让left和right控制宽度 */
+    max-width: calc(var(--sidebar-width) - 32px);
+    transition: width 360ms cubic-bezier(.2, .9, .2, 1), left 360ms cubic-bezier(.2, .9, .2, 1), transform 260ms ease, bottom 260ms ease, right 360ms cubic-bezier(.2, .9, .2, 1);
+    z-index: 12;
+    margin-bottom: 0;
+    /* 移除margin-bottom */
+    box-sizing: border-box;
+    /* 确保padding计算正确 */
+}
+
+/* 宽屏幕时保持聊天框在侧边栏内，避免溢出和重叠 */
+
+
+/* 当侧边栏折叠时，聊天框变为紧凑的迷你版本 */
+.sidebar.collapsed .chatbox {
+    position: absolute;
+    /* 保持相对于sidebar定位 */
+    width: var(--sidebar-mini-chat-width);
+    left: calc((var(--sidebar-rail-width) - var(--sidebar-mini-chat-width)) / 2);
+    right: auto;
+    /* 重置right属性 */
+    padding: 6px;
+    height: calc(var(--sidebar-rail-width));
+    border-radius: 10px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    bottom: 20px;
+    /* 与展开状态保持一致的底部间距 */
+}
+
+.sidebar.collapsed .chatbox .chat-header,
+.sidebar.collapsed .chatbox .chat-messages,
+.sidebar.collapsed .chatbox .chat-form {
+    opacity: 0;
+    transform: translateY(4px);
+    pointer-events: none;
+    transition: opacity 240ms ease, transform 240ms ease;
+}
+
+/* show a compact chat icon when collapsed */
+.sidebar.collapsed .chatbox::before {
+    content: '\1F4AC';
+    /* speech balloon emoji as fallback icon */
+    font-size: 16px;
+    display: block;
+    color: #fff;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02));
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    line-height: 28px;
+    text-align: center;
+}
+
+/* Toggle button styles */
+.sidebar-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 180ms ease, background 160ms ease;
+    /* move toggle away from the H2 so it doesn't replace the '导航' text */
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+}
+
+.sidebar-toggle svg {
+    width: 18px;
+    height: 18px;
+    display: block;
+}
+
+.sidebar-toggle:hover {
+    transform: scale(1.06);
+    background: rgba(255, 255, 255, 0.12);
+}
+
+/* tooltip via data-tooltip attribute */
+.sidebar-toggle[data-tooltip]:hover:after {
+    content: attr(data-tooltip);
+    position: absolute;
+    right: -140%;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.75);
+    color: #fff;
+    padding: 6px 8px;
+    border-radius: 6px;
+    white-space: nowrap;
+    font-size: 12px;
+    z-index: 60;
+}
+
+/* When expanded (normal sidebar), ensure collapsed-state transitions reverse cleanly */
+.sidebar .chatbox::before {
+    display: none;
+}
+
+/* Consolidated chat styles: transitions, messages, header, form, inputs */
+.chat-messages,
+.chat-header p,
+.chat-form button,
+.chat-input {
+    transition: opacity 260ms ease, transform 260ms ease, font-size 200ms ease, padding 200ms ease;
+}
+
+/* Messages container */
+.chat-messages {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    color: #000;
+    min-height: 0;
+    overflow-y: auto;
+    padding: 8px 6px;
+    margin-bottom: 8px;
+    max-height: calc(100% - 80px);
+    /* leave room for header + form */
+    font-size: 1em;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+}
+
+.chat-messages::-webkit-scrollbar {
+    width: 6px;
+}
+
+.chat-messages::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.chat-messages::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 3px;
+}
+
+.chat-messages::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.3);
+}
+
+/* Message bubbles */
+.message {
+    padding: 8px 12px;
+    margin: 8px 0;
+    border-radius: 15px;
+    max-width: 85%;
+    word-break: break-word;
+    line-height: 1.4;
+}
+
+.user-message {
+    background-color: #e3f2e3;
+    color: #075004;
+    margin-left: auto;
+    border-bottom-right-radius: 5px;
+    text-align: right;
+}
+
+.assistant-message {
+    background-color: #f0f0f0;
+    color: #333;
+    margin-right: auto;
+    border-bottom-left-radius: 5px;
+    text-align: left;
+}
+
+.message-sender {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 4px;
+}
+
+.typing-indicator {
+    color: #888;
+    display: inline-block;
+}
+
+.typing-indicator:after {
+    content: '...';
+    display: inline-block;
+    animation: ellipsis 1.5s infinite;
+}
+
+@keyframes ellipsis {
+    0% {
+        content: '.'
+    }
+
+    33% {
+        content: '..'
+    }
+
+    66% {
+        content: '...'
+    }
+
+    100% {
+        content: '.'
+    }
+}
+
+/* Header */
+.chat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 8px;
+}
+
+.chat-header p {
+    margin: 0;
+    font-size: 14px;
+    color: #666;
+    flex: 1;
+}
+
+#clear-chat {
+    background: none;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+    color: #999
+}
+
+#clear-chat:hover {
+    color: #ff3333
+}
+
+/* System notice that fills available space and centers content */
+.chat-messages .system-message {
+    flex: 1 1 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #888;
+    font-style: italic;
+    text-align: center;
+    padding: 10px 12px;
+    margin: 10px 0;
+}
+
+/* Form / input */
+.chat-form {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    padding-top: 8px;
+    border-top: 1px solid #eee;
+    margin: 0;
+    flex: 0 0 auto;
+    max-height: 88px;
+    box-sizing: border-box;
+}
+
+.chatbox .chat-form {
+    margin: 0;
+}
+
+.chat-input,
+.chatbox .chat-input {
+    flex: 1;
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    max-height: 56px;
+    box-sizing: border-box;
+    overflow: auto;
+}
+
+.chat-input:focus {
+    border-color: #075004;
+    box-shadow: 0 0 0 2px rgba(7, 80, 4, 0.1);
+}
+
+.chat-form button {
+    background: #075004;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.chat-form button:hover {
+    background: #0a7007
+}
+
+/* 中等屏幕时的响应式设计 */
+
+
+/* 移动端聊天切换按钮 */
+.mobile-chat-toggle {
+    display: none;
+    /* 默认隐藏 */
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 56px;
+    height: 56px;
+    background: #075004;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    font-size: 24px;
+    cursor: pointer;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    z-index: 1600;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mobile-chat-toggle:hover {
+    background: #0a6006;
+    transform: scale(1.05);
+}
+
+.mobile-chat-toggle.active {
+    background: #d32f2f;
+}
+
+/* 在小屏幕时显示切换按钮 */
+
+
+/* 小屏幕时的响应式设计 (手机和小平板) */
+
+
+/* 超小屏幕 (小手机) */
+
+
+/* 响应式设计：仅针对 iPhone 屏幕宽度 (原有代码优化) */
+
+
+/* Floating mini-chat overlay container (created dynamically by JS) */
+.mini-chat-container {
+    position: fixed;
+    right: 20px;
+    bottom: 40px;
+    width: 360px;
+    max-width: calc(100% - 40px);
+    /* never overflow viewport */
+    height: 420px;
+    z-index: 2200;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+    background: transparent;
+    display: flex;
+    flex-direction: column;
+    overflow: visible;
+    box-sizing: border-box;
+    padding: 6px;
+    /* ensure inner spacing so chatbox doesn't touch edges */
+}
+
+.mini-chat-container {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+    transition: opacity 220ms cubic-bezier(.2, .9, .2, 1), transform 220ms cubic-bezier(.2, .9, .2, 1);
+}
+
+.mini-chat-container.open {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+
+.mini-chat-container.closing {
+    opacity: 0;
+    transform: translateY(6px) scale(0.995);
+}
+
+.mini-chat-container .chatbox {
+    position: relative !important;
+    /* override fixed positioning */
+    left: auto !important;
+    bottom: auto !important;
+    width: 100% !important;
+    height: 100% !important;
+    padding: 12px !important;
+    margin: 0 !important;
+    border-radius: 10px !important;
+}
+
+.mini-chat-close {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    z-index: 2300;
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    border: none;
+    background: rgba(0, 0, 0, 0.6);
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.mini-chat-close:hover {
+    transform: scale(1.06);
+}
+
+/* 超宽屏幕支持 (2K, 4K等) */
+
+
+/* 高DPI屏幕优化 */
+
+
+/* 确保在所有情况下聊天框都不会被遮挡 */
+.chatbox {
+    /* 添加最小高度确保可用性 */
+    min-height: 200px;
+}
+
+/* 确保聊天框的过渡动画在所有设备上都流畅 */
+.chatbox {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 防止聊天框内容在动画过程中溢出 */
+.chatbox.mobile-hidden,
+.chatbox.mobile-visible {
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+        opacity 0.3s ease;
+}
+
+/* 确保在桌面端移除移动端专用的类 */
+
+
+/* 改善聊天框在不同状态下的视觉效果 */
+.sidebar.collapsed .chatbox::before {
+    transition: all 0.2s ease;
+}
+
+.sidebar.collapsed .chatbox:hover::before {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05));
+    transform: scale(1.05);
+}
+
+/* 确保聊天框始终在正确的层级 */
+.chatbox {
+    isolation: isolate;
+    /* 创建新的堆叠上下文 */
+}
+
+/* 优化滚动性能 */
+.chat-messages {
+    scroll-behavior: smooth;
+    overscroll-behavior: contain;
+}
+
+/* 针对触摸设备的优化 */
+
+
+
+
+body {
+    font-size: 16px;
+
+    width: 100vw;
+    height: auto;
+    padding-top: 16px;
+    box-shadow: none;
+    background: #075004;
+    color: #fff;
+}
+
+.sidebar h2 {
+    font-size: 1.1em;
+    margin-bottom: 16px;
+}
+
+.sidebar ul li {
+    padding: 10px 12px;
+    font-size: 1em;
+}
+
+.main-content {
+    padding: 16px 8px;
+    min-height: 50vh;
+}
+
+.chatbox {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100vw;
+    max-width: 100vw;
+    height: 260px;
+    margin: 0;
+    border-radius: 12px 12px 0 0;
+    padding: 8px 6px 6px 6px;
+    box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.12);
+}
+
+/* End of chat / sidebar layout adjustments */
 
 /* 主页按钮弹出提示的浮动动画 */
 @keyframes floatUp {
@@ -1605,17 +1019,7 @@
     background-repeat: repeat;
 }
 
-@media (max-width: 900px) {
 
-    .pattern-bg::before,
-    .pattern-bg::after {
-        background-size: 160px 160px;
-    }
-
-    .pattern-bg::after {
-        background-position: 80px 80px;
-    }
-}
 
 /* Import a popular Chinese font (Noto Sans SC) for headings */
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700;900&display=swap');
@@ -1673,43 +1077,48 @@ h1 {
 }
 
 /* lower-motion / mobile downgrade */
-@media (prefers-reduced-motion: reduce) {
-    .back-dollar {
-        opacity: 0.06;
-    }
-}
 
-@media (max-width: 600px) {
-    .back-dollar {
-        font-size: 120px !important;
-        color: rgba(2, 90, 12, 0.06);
-    }
-}
+
+
 
 /* --- Floating chat widget styles --- */
 .floating-chat-toggle {
     position: fixed;
-    top: 20px; /* align with rain-control */
+    top: 20px;
+    /* align with rain-control */
     right: calc(20px + var(--action-button-size) + var(--action-button-gap));
     z-index: 1100;
     width: var(--action-button-size);
     height: var(--action-button-size);
     border-radius: 50%;
     border: none;
-    background: rgba(255,255,255,0.95);
-    box-shadow: 0 6px 18px rgba(0,0,0,0.18);
+    background: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
 }
 
-.floating-chat-toggle svg { color: #0b6623 }
+.floating-chat-toggle svg {
+    color: #0b6623
+}
 
 /* chat SVG icon sizing */
-.floating-chat-toggle .chat-icon { width: calc(var(--action-button-size) * 0.8); height: calc(var(--action-button-size) * 0.8); display: block; color: inherit; }
+.floating-chat-toggle .chat-icon {
+    width: calc(var(--action-button-size) * 0.8);
+    height: calc(var(--action-button-size) * 0.8);
+    display: block;
+    color: inherit;
+}
+
 /* if chat-icon is an img, ensure it scales and can be recolored by filter if needed */
-.floating-chat-toggle .chat-icon[src] { width: calc(var(--action-button-size) * 0.8); height: calc(var(--action-button-size) * 0.8); object-fit: contain; display: block; }
+.floating-chat-toggle .chat-icon[src] {
+    width: calc(var(--action-button-size) * 0.8);
+    height: calc(var(--action-button-size) * 0.8);
+    object-fit: contain;
+    display: block;
+}
 
 .floating-chat-container {
     position: fixed;
@@ -1718,8 +1127,8 @@ h1 {
     height: 420px;
     max-height: calc(100vh - 120px);
     z-index: 1200;
-    background: linear-gradient(180deg, rgba(255,255,255,0.98), #fff);
-    box-shadow: 0 18px 60px rgba(0,0,0,0.28);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), #fff);
+    box-shadow: 0 18px 60px rgba(0, 0, 0, 0.28);
     border-radius: 12px;
     overflow: hidden;
     display: block;
@@ -1734,21 +1143,40 @@ h1 {
     transform: translateY(0) scale(1);
 }
 
-.floating-chat-container.dragging { cursor: grabbing; }
+.floating-chat-container.dragging {
+    cursor: grabbing;
+}
 
-.floating-chat-container .chatbox { width: 100%; height: 100%; box-shadow: none; border-radius: 0; }
+.floating-chat-container .chatbox {
+    width: 100%;
+    height: 100%;
+    box-shadow: none;
+    border-radius: 0;
+}
 
-.floating-chat-container .chat-header { display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; }
-.floating-chat-close { background: transparent; border: none; font-size: 16px; cursor: pointer; color: #666; }
+.floating-chat-container .chat-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+}
+
+.floating-chat-close {
+    background: transparent;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    color: #666;
+}
 
 /* make header a visible drag handle on small screens */
-.floating-chat-container .chat-header { cursor: grab; }
+.floating-chat-container .chat-header {
+    cursor: grab;
+}
 
 /* initial hidden-to-visible transform */
-.floating-chat-container-init { transform: translateY(8px) scale(0.98); }
+.floating-chat-container-init {
+    transform: translateY(8px) scale(0.98);
+}
 
 /* ensure mobile sizing */
-@media (max-width: 480px) {
-    .floating-chat-container { width: calc(100vw - 24px); height: calc(60vh); right: 12px; left: 12px; bottom: 80px; }
-    .floating-chat-toggle { top: 20px; right: calc(12px + var(--action-button-size) + var(--action-button-gap)); width: calc(var(--action-button-size) - 10px); height: calc(var(--action-button-size) - 10px); }
-}

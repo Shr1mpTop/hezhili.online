@@ -81,12 +81,11 @@ window.addEventListener('DOMContentLoaded', function () {
 
                 // 显示提示
                 const noticeDiv = document.createElement('div');
+                noticeDiv.className = 'system-message';
                 noticeDiv.textContent = '系统：聊天记录已清除';
-                noticeDiv.style.textAlign = 'center';
-                noticeDiv.style.margin = '10px 0';
-                noticeDiv.style.color = '#888';
-                noticeDiv.style.fontStyle = 'italic';
                 chatMessages.appendChild(noticeDiv);
+                // ensure the notice is visible
+                chatMessages.scrollTop = chatMessages.scrollHeight;
             }
         });
     }
@@ -878,15 +877,15 @@ window.addEventListener('DOMContentLoaded', function () {
         const root = document.getElementById('model-canvas-root');
         if (!root) return;
 
-    let renderer, scene, camera, mixer, clock, animId;
-    // interactive camera movement state (moved to top-level so animate() can access)
-    let faceTargetGlobal = null;      // THREE.Vector3 the camera should look at (model centroid / face)
-    let baseCameraPos = null;         // original camera world position (centered)
-    let targetCameraPos = null;       // desired world position (updated from mouse)
-    let MAX_SHIFT_X = 0;              // max shift along camera local X (world units)
-    let MAX_SHIFT_Z = 0;              // max shift along camera local Z (world units)
-    let camPlaneHelper = null;        // visual helper attached to camera
-    let lastPointer = { x: 0, y: 0 }; // normalized pointer (-1..1)
+        let renderer, scene, camera, mixer, clock, animId;
+        // interactive camera movement state (moved to top-level so animate() can access)
+        let faceTargetGlobal = null;      // THREE.Vector3 the camera should look at (model centroid / face)
+        let baseCameraPos = null;         // original camera world position (centered)
+        let targetCameraPos = null;       // desired world position (updated from mouse)
+        let MAX_SHIFT_X = 0;              // max shift along camera local X (world units)
+        let MAX_SHIFT_Z = 0;              // max shift along camera local Z (world units)
+        let camPlaneHelper = null;        // visual helper attached to camera
+        let lastPointer = { x: 0, y: 0 }; // normalized pointer (-1..1)
 
         async function initThree() {
             try {
@@ -1008,7 +1007,7 @@ window.addEventListener('DOMContentLoaded', function () {
                         obj.animations.forEach((clip) => mixer.clipAction(clip).play());
                     }
 
-                        // center and add to scene
+                    // center and add to scene
                     const center = new THREE.Vector3();
                     box.getCenter(center);
                     // move object so its center is at origin
@@ -1025,7 +1024,7 @@ window.addEventListener('DOMContentLoaded', function () {
                     // place camera on the -Y side so it looks toward +Y (faceTarget)
                     // apply a small negative-Z offset so the camera is moved slightly downwards
                     // move camera further down (increase multiplier to shift more along -Z)
-                    const Z_OFFSET = 0 ; // was 0.12; adjust in 0.05..0.5 range as needed
+                    const Z_OFFSET = 0; // was 0.12; adjust in 0.05..0.5 range as needed
                     camera.position.set(faceTarget.x, faceTarget.y - camDistance, faceTarget.z - Z_OFFSET);
                     // set up vector so the view 'up' is along +Z (prevents roll when looking along -Y)
                     camera.up.set(0, 0, 1);
@@ -1059,8 +1058,8 @@ window.addEventListener('DOMContentLoaded', function () {
                         camPlaneHelper = new THREE.Group();
                         const matX = new THREE.LineBasicMaterial({ color: 0xff4444 });
                         const matZ = new THREE.LineBasicMaterial({ color: 0x4444ff });
-                        const geoX = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-MAX_SHIFT_X,0,0), new THREE.Vector3(MAX_SHIFT_X,0,0)]);
-                        const geoZ = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0,0,-MAX_SHIFT_Z), new THREE.Vector3(0,0,MAX_SHIFT_Z)]);
+                        const geoX = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-MAX_SHIFT_X, 0, 0), new THREE.Vector3(MAX_SHIFT_X, 0, 0)]);
+                        const geoZ = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, 0, -MAX_SHIFT_Z), new THREE.Vector3(0, 0, MAX_SHIFT_Z)]);
                         const lineX = new THREE.Line(geoX, matX);
                         const lineZ = new THREE.Line(geoZ, matZ);
                         camPlaneHelper.add(lineX); camPlaneHelper.add(lineZ);
@@ -1153,7 +1152,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
         io.observe(root);
 
-    // camera config panel removed per user request
+        // camera config panel removed per user request
     })();
 
     // ---- Sidebar hover expand/collapse ----
