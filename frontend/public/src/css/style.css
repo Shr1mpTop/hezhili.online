@@ -369,30 +369,7 @@ body {
     pointer-events: none;
 }
 
-/* 响应式 Hero 标题设计 */
-
-/* 超小屏幕 (手机竖屏) */
-
-
-/* 小屏幕 (手机横屏/小平板) */
-
-
-/* 中等屏幕 (平板/小桌面) */
-
-
-/* 大屏幕 (桌面) */
-
-
-/* 超大屏幕 (大桌面/4K) */
-
-
-/* 超宽屏幕 (21:9 等比例) */
-
-
-/* 垂直屏幕优化 (竖屏平板等) */
-
-
-/* 横屏但高度较小的设备 (如横屏手机) */
+/* 响应式设计将在后续版本中实现 */
 
 
 /* 打字机光标样式 */
@@ -919,35 +896,6 @@ body {
 }
 
 /* 针对触摸设备的优化 */
-
-
-
-
-body {
-    font-size: 16px;
-
-    width: 100vw;
-    height: auto;
-    padding-top: 16px;
-    box-shadow: none;
-    background: #075004;
-    color: #fff;
-}
-
-.sidebar h2 {
-    font-size: 1.1em;
-    margin-bottom: 16px;
-}
-
-.sidebar ul li {
-    padding: 10px 12px;
-    font-size: 1em;
-}
-
-.main-content {
-    padding: 16px 8px;
-    min-height: 50vh;
-}
 
 .chatbox {
     position: fixed;
