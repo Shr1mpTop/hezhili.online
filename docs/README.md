@@ -222,32 +222,51 @@ python3 backend/scripts/init_db.py
 #### 5. 启动开发环境（推荐方式）
 ```bash
 # 启动完整的开发环境（后端+前端）
-./scripts/dev/dev.sh start
+./start_dev.sh start
 
-# 或者使用兼容的旧命令
-./start_dev.sh
+# 或者使用脚本目录中的版本
+./scripts/dev/dev.sh start
 ```
 服务启动后：
 - 后端API: `http://localhost:5001`
 - 前端页面: `http://localhost:8080`
 - 管理页面: `http://localhost:8080/pages/admin.html`
 
-#### 6. 单独启动服务（可选）
-```bash
-# 仅启动后端
-./scripts/dev/dev.sh start  # 然后手动停止前端部分
-
-# 仅启动前端
-python3 start_frontend.py
-```
-
-### 开发环境管理
+#### 6. 开发环境管理
 
 新的统一脚本提供完整的开发环境管理功能：
 
 ```bash
 # 查看所有可用命令
-./scripts/dev/dev.sh help
+./start_dev.sh help
+
+# 启动服务
+./start_dev.sh start
+
+# 停止服务
+./start_dev.sh stop
+
+# 重启服务
+./start_dev.sh restart
+
+# 查看服务状态
+./start_dev.sh status
+
+# 测试API
+./start_dev.sh test
+```
+
+#### 7. 单独启动服务（可选）
+```bash
+# 仅启动后端
+./scripts/dev/start_dev.sh
+
+# 仅启动前端
+python3 start_frontend.py
+
+# 仅停止服务
+./stop_dev.sh stop
+```
 
 # 启动服务
 ./scripts/dev/dev.sh start
