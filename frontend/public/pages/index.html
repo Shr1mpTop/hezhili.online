@@ -5,15 +5,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Zhili He</title>
-    <link rel="stylesheet" href="../src/css/style.css">
+    <link id="theme-stylesheet" rel="stylesheet" href="../src/css/style.css">
     <!-- Load animate.css asynchronously to avoid render-blocking -->
     <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" as="style"
         onload="this.rel='stylesheet'">
     <noscript>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
     </noscript>
-        <!-- Import map so modules that use bare specifier "three" resolve to the CDN ESM bundle -->
-        <script type="importmap">
+    <!-- Import map so modules that use bare specifier "three" resolve to the CDN ESM bundle -->
+    <script type="importmap">
         {
             "imports": {
                 "three": "https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.module.js"
@@ -21,7 +21,8 @@
         }
         </script>
     <!-- Desktop-only visual enhancements: preload then swap to stylesheet onload to avoid blocking mobile first paint -->
-    <link rel="preload" href="../src/css/desktop-extras.css" as="style" media="(min-width: 1200px)" onload="this.rel='stylesheet'">
+    <link rel="preload" href="../src/css/desktop-extras.css" as="style" media="(min-width: 1200px)"
+        onload="this.rel='stylesheet'">
     <noscript>
         <link rel="stylesheet" href="../src/css/desktop-extras.css">
     </noscript>
@@ -33,9 +34,9 @@
     <button id="rain-control" title="pause/play">
         ⏸️
     </button>
-    <!-- 移动端聊天切换按钮 -->
-    <button id="mobile-chat-toggle" class="mobile-chat-toggle" title="切换聊天">
-        💬
+    <!-- 主题切换按钮 -->
+    <button id="theme-toggle" title="切换主题">
+        🌙
     </button>
     <div class="sidebar">
         <h2>导航</h2>

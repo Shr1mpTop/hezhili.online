@@ -1,3 +1,86 @@
+// 主题切换功能
+(function themeSwitcher() {
+    const themeToggle = document.getElementById('theme-toggle');
+    if (!themeToggle) return;
+
+    // 获取当前主题（默认为light）
+    let currentTheme = localStorage.getItem('theme') || 'light';
+
+    // 主题配置
+    const themes = {
+        light: {
+            css: '../src/css/style.css',
+            icon: '☀️'
+        },
+        dark: {
+            css: '../src/css/dark-theme.css',
+            icon: '🌙'
+        }
+    };
+
+    // 切换主题函数
+    function switchTheme(theme) {
+        const themeLink = document.getElementById('theme-stylesheet');
+
+        if (themeLink) {
+            themeLink.href = themes[theme].css;
+        }
+
+        // 更新按钮图标
+        themeToggle.textContent = themes[theme].icon;
+
+        // 更新按钮标题
+        themeToggle.title = theme === 'light' ? '切换到深色主题' : '切换到浅色主题';
+
+        // 保存主题设置
+        localStorage.setItem('theme', theme);
+        currentTheme = theme;
+
+        console.log(`Theme switched to: ${theme}`);
+    }
+
+    // 初始化主题
+    function initTheme() {
+        // 获取现有的主题样式链接，如果没有则创建一个
+        let themeLink = document.getElementById('theme-stylesheet');
+        if (!themeLink) {
+            // 如果没有找到ID为theme-stylesheet的链接，查找现有的样式链接
+            const existingLinks = document.querySelectorAll('link[rel="stylesheet"]');
+            for (let link of existingLinks) {
+                if (link.href.includes('style.css')) {
+                    link.id = 'theme-stylesheet';
+                    themeLink = link;
+                    break;
+                }
+            }
+
+            // 如果还是没找到，创建一个新的
+            if (!themeLink) {
+                themeLink = document.createElement('link');
+                themeLink.id = 'theme-stylesheet';
+                themeLink.rel = 'stylesheet';
+                themeLink.type = 'text/css';
+                themeLink.href = themes[currentTheme].css;
+                document.head.appendChild(themeLink);
+            }
+        }
+
+        // 应用当前主题
+        switchTheme(currentTheme);
+    }
+
+    // 绑定点击事件
+    themeToggle.addEventListener('click', function () {
+        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+        switchTheme(newTheme);
+    });
+
+    // 初始化
+    initTheme();
+
+    console.log('Theme switcher initialized');
+})();
+
 // 示例：点击侧边栏菜单高亮
 const sidebarItems = document.querySelectorAll('.sidebar ul li');
 sidebarItems.forEach(item => {
@@ -86,70 +169,6 @@ window.addEventListener('DOMContentLoaded', function () {
                 chatMessages.appendChild(noticeDiv);
                 // ensure the notice is visible
                 chatMessages.scrollTop = chatMessages.scrollHeight;
-            }
-        });
-    }
-
-    // 移动端聊天框切换功能
-    const mobileChatToggle = document.getElementById('mobile-chat-toggle');
-    const chatbox = document.querySelector('.chatbox');
-
-    if (mobileChatToggle && chatbox) {
-        let isChatVisible = false;
-
-        // 初始化移动端聊天框状态
-        function initMobileChatState() {
-            if (window.innerWidth <= 768) {
-                chatbox.classList.add('mobile-hidden');
-                chatbox.classList.remove('mobile-visible');
-                isChatVisible = false;
-                mobileChatToggle.textContent = '💬';
-                mobileChatToggle.classList.remove('active');
-            } else {
-                chatbox.classList.remove('mobile-hidden', 'mobile-visible');
-            }
-        }
-
-        // 切换聊天框显示/隐藏
-        mobileChatToggle.addEventListener('click', function () {
-            if (window.innerWidth <= 768) {
-                isChatVisible = !isChatVisible;
-
-                if (isChatVisible) {
-                    chatbox.classList.remove('mobile-hidden');
-                    chatbox.classList.add('mobile-visible');
-                    mobileChatToggle.textContent = '✕';
-                    mobileChatToggle.classList.add('active');
-                    // 聚焦到输入框
-                    setTimeout(() => {
-                        const chatInput = chatbox.querySelector('.chat-input');
-                        if (chatInput) chatInput.focus();
-                    }, 300);
-                } else {
-                    chatbox.classList.remove('mobile-visible');
-                    chatbox.classList.add('mobile-hidden');
-                    mobileChatToggle.textContent = '💬';
-                    mobileChatToggle.classList.remove('active');
-                }
-            }
-        });
-
-        // 初始化状态
-        initMobileChatState();
-
-        // 监听窗口大小变化
-        window.addEventListener('resize', initMobileChatState);
-
-        // 点击聊天框外部时在移动端隐藏聊天框
-        document.addEventListener('click', function (e) {
-            if (window.innerWidth <= 768 && isChatVisible) {
-                if (!chatbox.contains(e.target) && e.target !== mobileChatToggle) {
-                    isChatVisible = false;
-                    chatbox.classList.remove('mobile-visible');
-                    chatbox.classList.add('mobile-hidden');
-                    mobileChatToggle.textContent = '💬';
-                    mobileChatToggle.classList.remove('active');
-                }
             }
         });
     }
