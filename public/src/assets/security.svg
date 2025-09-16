@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" width="240" height="240" aria-hidden="true">
+  <rect width="240" height="240" fill="none" />
+  <defs>
+    <!-- stronger fine diagonal lines pattern (two layers) -->
+    <pattern id="fineLines1" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <rect width="6" height="6" fill="none" />
+  <!-- 更密主线：进一步缩小 pattern 大小并增强主线以提升重复频率 -->
+  <path d="M0 3 C1.5 0.3 4.5 5.7 6 3" fill="none" stroke="#0b6623" stroke-width="1.05" stroke-linecap="round" opacity="0.36" />
+  <!-- 偏移副线：弱一些以避免噪声 -->
+  <path d="M0 3.1 C1.6 2.4 4.4 3.6 6 3.1" fill="none" stroke="#0b6623" stroke-width="0.65" stroke-linecap="round" opacity="0.10" />
+    </pattern>
+    <pattern id="fineLines2" width="16" height="16" patternUnits="userSpaceOnUse" patternTransform="rotate(-45)">
+      <rect width="16" height="16" fill="none" />
+  <!-- 更稀主线：扩大 pattern 大小并降低主线强度，使方向上看起来更稀疏 -->
+  <path d="M0 8 C4 18 12 -2 16 8" fill="none" stroke="#0b6623" stroke-width="0.7" stroke-linecap="round" opacity="0.10" />
+  <!-- 副线：颜色更弱，仅作轻微层次增强 -->
+  <path d="M0 8.5 C4.5 16 11.5 0 16 8.5" fill="none" stroke="#0b6623" stroke-width="0.55" stroke-linecap="round" opacity="0.07" />
+    </pattern>
+  </defs>
+
+  <!-- two overlapping pattern rectangles create a delicate guilloche-like texture -->
+  <rect width="240" height="240" fill="url(#fineLines1)" opacity="0.98" />
+  <rect width="240" height="240" fill="url(#fineLines2)" opacity="0.86" />
+</svg>
