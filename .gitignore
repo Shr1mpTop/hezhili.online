@@ -17,3 +17,6 @@ Thumbs.db
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+# Ignore vue-app node_modules and backup git metadata
+vue-app/node_modules/
+vue-app/.git_backup/
