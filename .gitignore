@@ -1,22 +1,24 @@
-# SSL证书文件
-certs/
-
-# Vue应用构建产物（在CI/CD中构建）
-vue-app/dist/
-
-# 系统文件
-.DS_Store
-Thumbs.db
-
-# 编辑器
-.vscode/
-.idea/
-
-# 日志文件
+# Logs
+logs
 *.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-# Ignore vue-app node_modules and backup git metadata
-vue-app/node_modules/
-vue-app/.git_backup/
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

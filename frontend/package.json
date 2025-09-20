@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@rollup/rollup-linux-x64-gnu": "^4.52.0",
     "motion-v": "^1.7.1",
     "vue": "^3.4.0"
   },
