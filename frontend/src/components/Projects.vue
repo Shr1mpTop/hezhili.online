@@ -96,16 +96,18 @@ onUnmounted(() => {
             <div class="spacer-between"></div>
 
             <!-- 项目卡片（可点击，跳转到对应 URL） -->
-            <a
-                v-for="(project, index) in projects"
-                :key="project.id"
-                :href="project.url || '/'"
-                class="project-card project-link"
-                :class="{ visible: cardVisibilities[index] }"
-                :style="{
-                    transitionDelay: `${index * 0.2}s`
-                }"
-            >
+      <a
+        v-for="(project, index) in projects"
+        :key="project.id"
+        :href="project.url || '/'"
+        class="project-card project-link"
+        target="_blank"
+        rel="noopener noreferrer"
+        :class="{ visible: cardVisibilities[index] }"
+        :style="{
+          transitionDelay: `${index * 0.2}s`
+        }"
+      >
                 <div class="project-image">
                     {{ project.image }}
                 </div>

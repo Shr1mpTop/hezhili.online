@@ -145,3 +145,15 @@
   line-height: 1.6;
   margin: 0;
 }
+
+/* 链接样式：去掉下划线并使链接成为块级元素，继承卡片样式 */
+.project-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.project-link:focus,
+.project-link:active {
+  outline: none;
+}
