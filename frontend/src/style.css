@@ -29,6 +29,26 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   transition: background-color 0.3s, color 0.3s;
+  
+  /* 隐藏滚动条但保持滚动功能 */
+  overflow-x: hidden;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+/* 隐藏 WebKit 浏览器的滚动条 */
+body::-webkit-scrollbar {
+  display: none;
+}
+
+/* 同样处理html元素 */
+html {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+html::-webkit-scrollbar {
+  display: none;
 }
 
 h1 {

@@ -9,19 +9,19 @@
 
     <!-- 展开时的菜单 -->
     <ul v-if="!isCollapsed" class="menu expanded-menu">
-      <li class="menu-item">
+      <li class="menu-item" @click="navigateTo('home')">
         <img src="/home-icon.svg" alt="主页" class="menu-icon" />
         <span class="menu-text">主页</span>
       </li>
-      <li class="menu-item">
+      <li class="menu-item" @click="navigateTo('projects')">
         <img src="/projects-icon.svg" alt="项目" class="menu-icon" />
         <span class="menu-text">项目</span>
       </li>
-      <li class="menu-item">
+      <li class="menu-item" @click="navigateTo('profile')">
         <img src="/profile-icon.svg" alt="个人简介" class="menu-icon" />
         <span class="menu-text">个人简介</span>
       </li>
-      <li class="menu-item">
+      <li class="menu-item" @click="navigateTo('contact')">
         <img src="/contact-icon.svg" alt="联系" class="menu-icon" />
         <span class="menu-text">联系</span>
       </li>
@@ -29,16 +29,16 @@
 
     <!-- 收缩时的图标菜单 -->
     <ul v-else class="menu collapsed-menu">
-      <li class="menu-item collapsed-item" title="主页">
+      <li class="menu-item collapsed-item" title="主页" @click="navigateTo('home')">
         <img src="/home-icon.svg" alt="主页" class="menu-icon collapsed-icon" />
       </li>
-      <li class="menu-item collapsed-item" title="项目">
+      <li class="menu-item collapsed-item" title="项目" @click="navigateTo('projects')">
         <img src="/projects-icon.svg" alt="项目" class="menu-icon collapsed-icon" />
       </li>
-      <li class="menu-item collapsed-item" title="个人简介">
+      <li class="menu-item collapsed-item" title="个人简介" @click="navigateTo('profile')">
         <img src="/profile-icon.svg" alt="个人简介" class="menu-icon collapsed-icon" />
       </li>
-      <li class="menu-item collapsed-item" title="联系">
+      <li class="menu-item collapsed-item" title="联系" @click="navigateTo('contact')">
         <img src="/contact-icon.svg" alt="联系" class="menu-icon collapsed-icon" />
       </li>
     </ul>
@@ -55,12 +55,19 @@ export default {
   components: {
     Button
   },
-  setup() {
+  emits: ['navigate'],
+  setup(props, { emit }) {
     const { isCollapsed, toggleSidebar } = useSidebar()
+
+    const navigateTo = (view) => {
+      console.log('侧边栏点击:', view)
+      emit('navigate', view)
+    }
 
     return {
       isCollapsed,
-      toggleSidebar
+      toggleSidebar,
+      navigateTo
     }
   }
 }

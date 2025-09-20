@@ -9,11 +9,13 @@
   margin-left: 200px;
   padding: 20px;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   background-color: rgba(0, 0, 0, 0.1);
   transition: margin-left 0.3s, background-color 0.3s;
   min-height: 100vh;
+  text-align: center;
 }
 
 [data-sidebar-collapsed="true"] .main-content {
@@ -28,3 +30,5 @@
   font-weight: bold;
   text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
 }
+
+

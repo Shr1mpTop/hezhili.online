@@ -1,0 +1,147 @@
+/* Projects Page Styles */
+.projects-page {
+  background: transparent;
+  position: relative;
+  transition: padding-left 0.3s ease;
+  
+  /* 隐藏滚动条但保持滚动功能 */
+  overflow-x: hidden;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+/* 隐藏 WebKit 浏览器的滚动条 */
+.projects-page::-webkit-scrollbar {
+  display: none;
+}
+
+
+.spacer {
+  height: 18vh;
+}
+
+/* 标题和卡片之间的空div */
+.spacer-between {
+  height: 30vh;
+}
+
+/* 项目网格区域 */
+.projects-grid {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 200px; /* 增加项目之间的间距 */
+  max-width: 100%; /* 让网格占满整个宽度 */
+  width: 100%;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* 标题区域 - 现在在正常文档流中 */
+.projects-header {
+  text-align: center;
+  margin-bottom: 60px;
+  transition: opacity 0.3s ease;
+}
+
+.projects-header h1 {
+  font-size: 4rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+  text-shadow: 0 0 30px rgba(0, 255, 0, 0.8), 0 0 60px rgba(0, 255, 0, 0.4);
+  background: linear-gradient(45deg, #00ff00, #00ff88);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: #00ff00;
+}
+
+/* 滑动提示 */
+.scroll-hint {
+  margin-top: 40px;
+  animation: bounce 2s infinite;
+}
+
+.scroll-hint span {
+  color: #00ff00;
+  font-size: 1rem;
+  text-shadow: 0 0 10px rgba(0, 255, 0, 0.6);
+  opacity: 0.8;
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-5px);
+  }
+}
+
+/* 项目卡片 */
+.project-card {
+  width: 100%; /* 宽度100% - 沾满整个宽度 */
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  padding: 40px; /* 内边距 */
+  text-align: center;
+  transition: all 0.6s ease;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(100px) scale(0.8);
+}
+
+.project-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(0, 255, 0, 0.1), rgba(0, 255, 255, 0.1));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.project-card:hover {
+  transform: translateY(-10px) scale(1.02);
+  box-shadow:
+    0 20px 40px rgba(0, 255, 0, 0.2),
+    0 0 0 1px rgba(0, 255, 0, 0.3);
+}
+
+.project-card:hover::before {
+  opacity: 1;
+}
+
+.project-card.visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.project-image {
+  font-size: 4rem;
+  margin-bottom: 20px;
+  display: block;
+}
+
+.project-content h3 {
+  color: #00ff00;
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+  text-shadow: 0 0 10px rgba(0, 255, 0, 0.6);
+}
+
+.project-content p {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 1rem;
+  line-height: 1.6;
+  margin: 0;
+}
