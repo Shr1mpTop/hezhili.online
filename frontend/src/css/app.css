@@ -1,0 +1,36 @@
+.app {
+  height: 100vh;
+  background-color: var(--bg-color);
+  transition: background-color 0.3s;
+  position: relative;
+}
+
+.main-content {
+  margin-left: 200px;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--bg-color);
+  transition: margin-left 0.3s, background-color 0.3s;
+  min-height: 100vh;
+}
+
+[data-sidebar-collapsed="true"] .main-content {
+  margin-left: 50px;
+}
+
+.main-content h1 {
+  text-align: center;
+  color: var(--text-color);
+  transition: color 0.3s;
+  font-size: 6em;
+  font-weight: bold;
+}
+
+.theme-toggle-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+}

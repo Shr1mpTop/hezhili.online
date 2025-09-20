@@ -1,0 +1,43 @@
+.sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 200px;
+  background-color: var(--sidebar-bg);
+  color: var(--sidebar-text);
+  padding: 10px;
+  transition: width 0.3s, background-color 0.3s, color 0.3s;
+  height: 100vh;
+  z-index: 100;
+  border-right: 1px solid rgba(0, 0, 0, 0.2);
+  box-shadow: 3px 0 8px rgba(0, 0, 0, 0.4);
+}
+
+.sidebar.collapsed {
+  width: 50px;
+}
+
+.toggle-btn {
+  position: absolute;
+  right: -25px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.menu {
+  list-style: none;
+  padding: 0;
+  margin-top: 50px;
+}
+
+.menu li {
+  padding: 10px 0;
+  cursor: pointer;
+  color: var(--sidebar-text);
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.menu li:hover {
+  background-color: var(--button-bg);
+  color: var(--button-text);
+}
