@@ -1,23 +1,12 @@
 /* 浅绿主题 (Light) */
 :root {
   --bg-color: #e8f5e8;
-  --text-color: #2e7d32;
+  --text-color: #d6fc9a;
   --sidebar-bg: #c8e6c9;
-  --sidebar-text: #1b5e20;
+  --sidebar-text: #d6fc9a;
   --button-bg: #4caf50;
-  --button-text: #ffffff;
+  --button-text: #d6fc9a;
   --button-hover: #45a049;
-}
-
-/* 墨绿主题 (Dark) */
-[data-theme="dark"] {
-  --bg-color: #1b5e20;
-  --text-color: #c8e6c9;
-  --sidebar-bg: #2e7d32;
-  --sidebar-text: #e8f5e8;
-  --button-bg: #66bb6a;
-  --button-text: #1b5e20;
-  --button-hover: #4caf50;
 }
 
 * {

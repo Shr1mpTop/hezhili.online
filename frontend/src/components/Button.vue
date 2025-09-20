@@ -15,11 +15,11 @@ export default {
 </script>
 
 <style scoped>
-.reusable-btn {
+.my-btn {
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  background-color: var(--bg-color);
+  background-color: rgba(0, 0, 0, 0.2);
   color: var(--text-color);
   cursor: pointer;
   display: flex;
@@ -29,11 +29,14 @@ export default {
   font-family: inherit;
   font-size: 16px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(0, 255, 0, 0.3);
+  backdrop-filter: blur(2px);
 }
 
-.reusable-btn:hover {
-  background-color: var(--button-bg);
-  color: var(--button-text);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+.my-btn:hover {
+  background-color: rgba(0, 255, 0, 0.2);
+  color: #0f0;
+  box-shadow: 0 4px 8px rgba(0, 255, 0, 0.3);
+  border-color: rgba(0, 255, 0, 0.6);
 }
 </style>

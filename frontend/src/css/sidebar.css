@@ -3,14 +3,15 @@
   left: 0;
   top: 0;
   width: 200px;
-  background-color: var(--sidebar-bg);
+  background-color: rgba(0, 0, 0, 0.3);
   color: var(--sidebar-text);
-  padding: 10px;
+  padding: 10px 5px; /* 减少左右padding，从10px改为5px */
   transition: width 0.3s, background-color 0.3s, color 0.3s;
   height: 100vh;
   z-index: 100;
-  border-right: 1px solid rgba(0, 0, 0, 0.2);
+  border-right: 1px solid rgba(0, 255, 0, 0.3);
   box-shadow: 3px 0 8px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(1px);
 }
 
 .sidebar.collapsed {
@@ -24,20 +25,91 @@
   transform: translateY(-50%);
 }
 
+.my-btn {
+  position: absolute;
+  right: -25px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 101;
+}
+
 .menu {
   list-style: none;
   padding: 0;
   margin-top: 50px;
 }
 
-.menu li {
-  padding: 10px 0;
+.menu-item {
+  padding: 12px 8px; /* 减少左右padding，从15px改为8px */
   cursor: pointer;
   color: var(--sidebar-text);
   transition: background-color 0.3s, color 0.3s;
+  border-radius: 5px;
+  margin: 5px 10px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.menu-icon {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  filter: brightness(0) invert(1); /* 让图标变白 */
+  transition: all 0.3s ease; /* 添加过渡效果 */
+  object-fit: contain;
+}
+
+.collapsed-icon {
+  width: 24px !important;
+  height: 24px !important;
+  margin: 0 auto;
+  display: block;
+  object-fit: contain;
+  transition: all 0.3s ease; /* 添加过渡效果 */
+}
+
+.menu-text {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.collapsed-item {
+  justify-content: center;
+  padding: 12px; /* 保持正方形padding，垂直居中 */
+  position: relative;
+  margin: 2px 0; /* 只设置垂直margin，移除水平margin */
+  width: calc(100% - 4px); /* 确保占满可用宽度 */
+  box-sizing: border-box;
+}
+
+.collapsed-item:hover::after {
+  content: attr(title);
+  position: absolute;
+  left: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  white-space: nowrap;
+  z-index: 1000;
+  margin-left: 10px;
 }
 
 .menu li:hover {
-  background-color: var(--button-bg);
-  color: var(--button-text);
+  background-color: rgba(0, 255, 0, 0.2);
+  color: #0f0;
+  border-radius: 8px; /* 增加圆角，让形状更正方形 */
+  box-shadow: 0 0 15px rgba(0, 255, 0, 0.4); /* 添加绿色发光效果 */
+  transform: scale(1.05); /* 轻微放大，增强选中感 */
+  transition: all 0.2s ease; /* 流畅过渡 */
+}
+
+.menu li:hover .menu-icon {
+  filter: brightness(0) invert(0); /* 悬停时图标变绿 */
 }

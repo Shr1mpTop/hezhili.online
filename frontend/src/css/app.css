@@ -1,6 +1,6 @@
 .app {
   height: 100vh;
-  background-color: var(--bg-color);
+  background-color: transparent;
   transition: background-color 0.3s;
   position: relative;
 }
@@ -11,7 +11,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: var(--bg-color);
+  background-color: rgba(0, 0, 0, 0.1);
   transition: margin-left 0.3s, background-color 0.3s;
   min-height: 100vh;
 }
@@ -26,11 +26,5 @@
   transition: color 0.3s;
   font-size: 6em;
   font-weight: bold;
-}
-
-.theme-toggle-btn {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  z-index: 1000;
+  text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
 }
