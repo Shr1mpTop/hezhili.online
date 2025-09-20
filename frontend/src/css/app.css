@@ -31,4 +31,20 @@
   text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
 }
 
+.home-ascii{
+  font-family: 'Courier New', Consolas, Monaco, monospace;
+  color: #9fffbf;
+  text-align: center;
+  margin: 8px 0 12px 0;
+  white-space: pre;
+  font-size: 12px;
+  filter: drop-shadow(0 0 14px rgba(0,255,127,0.25));
+}
+
+@media (max-width: 900px){
+  .home-ascii{font-size:10px}
+}
+
+
+
 

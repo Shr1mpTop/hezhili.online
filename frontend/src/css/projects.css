@@ -157,3 +157,16 @@
 .project-link:active {
   outline: none;
 }
+
+/* 内部导航按钮样式 */
+.link-btn {
+  background: transparent;
+  border: none;
+  color: #a8ffb3;
+  font: inherit;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: underline dotted rgba(168,255,179,0.4);
+}
+
+.link-btn:focus { outline: none; }

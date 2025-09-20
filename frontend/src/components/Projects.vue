@@ -1,9 +1,25 @@
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, defineEmits } from 'vue'
 import { useSidebar } from '../composables/useSidebar'
 import '../css/projects.css'
 
 const { isSidebarOpen } = useSidebar()
+
+const emit = defineEmits(['navigate'])
+
+const isExternal = (url) => {
+  if (!url) return false
+  return url.startsWith('http')
+}
+
+const projectInternalKey = (url) => {
+  // map internal paths to view keys used in App.vue
+  if (!url) return 'home'
+  if (url === '/' ) return 'home'
+  if (url.startsWith('/about')) return 'profile'
+  if (url.startsWith('/blog')) return 'projects' // fallback
+  return 'home'
+}
 
 // 项目数据
 const projects = [
@@ -96,26 +112,29 @@ onUnmounted(() => {
             <div class="spacer-between"></div>
 
             <!-- 项目卡片（可点击，跳转到对应 URL） -->
-      <a
+      <div
         v-for="(project, index) in projects"
         :key="project.id"
-        :href="project.url || '/'"
         class="project-card project-link"
-        target="_blank"
-        rel="noopener noreferrer"
         :class="{ visible: cardVisibilities[index] }"
-        :style="{
-          transitionDelay: `${index * 0.2}s`
-        }"
+        :style="{ transitionDelay: `${index * 0.2}s` }"
       >
-                <div class="project-image">
-                    {{ project.image }}
-                </div>
-                <div class="project-content">
-                    <h3>{{ project.title }}</h3>
-                    <p>{{ project.description }}</p>
-                </div>
+        <div class="project-image">{{ project.image }}</div>
+        <div class="project-content">
+          <h3>
+            <a
+              v-if="isExternal(project.url)"
+              :href="project.url"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {{ project.title }}
             </a>
+            <button v-else class="link-btn" @click="$emit('navigate', projectInternalKey(project.url))">{{ project.title }}</button>
+          </h3>
+          <p>{{ project.description }}</p>
+        </div>
+      </div>
         </div>
     </div>
 </template>
