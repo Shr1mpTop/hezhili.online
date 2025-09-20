@@ -1,11 +1,11 @@
 module.exports = {
   apps: [
     {
-      name: 'frontend-preview',
-      // 使用 npm script: preview (vite preview)
-      script: 'npm',
-      args: 'run preview',
-      cwd: './frontend',
+      name: 'hezhili.online',
+
+        script: 'npm',
+        args: 'serve -s dist -l 5173',
+        cwd: './frontend',
       watch: false,
       env: {
         NODE_ENV: 'production',
