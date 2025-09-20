@@ -5,7 +5,7 @@ import '../css/projects.css'
 
 const { isSidebarOpen } = useSidebar()
 
-// 项目数据 - 暂时使用占位内容
+// 项目数据
 const projects = [
   {
     id: 1,
@@ -15,8 +15,8 @@ const projects = [
   },
   {
     id: 2,
-    title: '个人项目集',
-    description: '',
+    title: 'Twikk',
+    description: '一个类 Twitter 的社交平台示例，支持发送短帖（推文）、评论、点赞和社区功能的演示项目，可以使用metamask钱包进行绑定或者登录',
     image: '📁'
   },
   {
