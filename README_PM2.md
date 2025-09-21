@@ -8,7 +8,14 @@ npm install
 npm run build
 ```
 
-- 使用 `vite preview` 启动（ecosystem 配置，默认端口 5173）：
+- 启动后端（确保 MongoDB 运行）：
+
+```bash
+cd backend
+npm install
+```
+
+- 使用 PM2 启动前后端（ecosystem 配置，前端默认端口 5173，后端端口 3001）：
 
 ```bash
 # 在项目根目录
@@ -28,12 +35,21 @@ npx pm2 start ecosystem.config.cjs
 - 查看日志：
 
 ```bash
-pm2 logs frontend-preview
+pm2 logs hezhili.online-frontend
+pm2 logs hezhili.online-backend
 ```
 
 - 停止/删除进程：
 
 ```bash
-pm2 stop frontend-preview
-pm2 delete frontend-preview
+pm2 stop hezhili.online-frontend
+pm2 stop hezhili.online-backend
+pm2 delete hezhili.online-frontend
+pm2 delete hezhili.online-backend
+```
+
+- 一键部署脚本：
+
+```bash
+./deploy_pm2.sh
 ```

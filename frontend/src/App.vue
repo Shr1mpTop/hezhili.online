@@ -26,7 +26,7 @@
       <About v-else-if="currentView === 'profile'" />
 
       <!-- 技术博客页面 -->
-      <Blog v-else-if="currentView === 'blog'" />
+      <Blog v-else-if="currentView === 'blog'" @navigate="handleNavigate" />
 
       <!-- 博客详情页面 -->
       <PostDetail v-else-if="currentView === 'blog-detail'" :post="selectedPost" @navigate="handleNavigate" />

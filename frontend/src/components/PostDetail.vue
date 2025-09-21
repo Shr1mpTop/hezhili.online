@@ -16,8 +16,7 @@
               <span class="post-tags">{{ post.tags.join(', ') }}</span>
             </div>
             <div class="post-body">
-              <p>{{ post.content || post.excerpt }}</p>
-              <!-- 这里可以扩展为markdown渲染 -->
+              <div v-html="renderedContent" class="markdown-content"></div>
             </div>
           </div>
           
@@ -59,7 +58,9 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
+import MarkdownIt from 'markdown-it'
+import hljs from 'highlight.js'
 
 const props = defineProps({
   post: {
@@ -84,13 +85,34 @@ const hasLiked = ref(false)
 const comments = ref([])
 const newComment = ref('')
 
+// 初始化markdown渲染器
+const md = new MarkdownIt({
+  html: true,
+  linkify: true,
+  typographer: true,
+  highlight: function (str, lang) {
+    if (lang && hljs.getLanguage(lang)) {
+      try {
+        return hljs.highlight(str, { language: lang }).value
+      } catch (__) {}
+    }
+    return '' // use external default escaping
+  }
+})
+
+// 渲染markdown内容
+const renderedContent = computed(() => {
+  const content = props.post.content || props.post.excerpt || ''
+  return md.render(content)
+})
+
 const goBack = () => {
   emit('navigate', 'blog')
 }
 
 const toggleLike = async () => {
   try {
-    const response = await fetch(`http://localhost:3000/api/posts/${props.post._id || props.post.id}/like`, {
+    const response = await fetch(`http://localhost:3002/api/posts/${props.post._id || props.post.id}/like`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ userId: 'guest' }) // Simple user ID
@@ -131,7 +153,7 @@ const addComment = async () => {
   if (!newComment.value.trim()) return
   
   try {
-    const response = await fetch(`http://localhost:3000/api/posts/${props.post._id || props.post.id}/comments`, {
+    const response = await fetch(`http://localhost:3002/api/posts/${props.post._id || props.post.id}/comments`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -175,7 +197,7 @@ const addComment = async () => {
 onMounted(async () => {
   try {
     // Fetch likes
-    const likeResponse = await fetch(`http://localhost:3000/api/posts/${props.post._id || props.post.id}`)
+    const likeResponse = await fetch(`http://localhost:3002/api/posts/${props.post._id || props.post.id}`)
     if (likeResponse.ok) {
       const postData = await likeResponse.json()
       likes.value = postData.likes || 0
@@ -183,7 +205,7 @@ onMounted(async () => {
     }
     
     // Fetch comments
-    const commentResponse = await fetch(`http://localhost:3000/api/posts/${props.post._id || props.post.id}/comments`)
+    const commentResponse = await fetch(`http://localhost:3002/api/posts/${props.post._id || props.post.id}/comments`)
     if (commentResponse.ok) {
       comments.value = await commentResponse.json()
     } else {
