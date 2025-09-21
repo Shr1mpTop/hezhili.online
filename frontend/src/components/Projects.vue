@@ -1,11 +1,30 @@
 <script setup>
-import { ref, onMounted, onUnmounted, defineEmits } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import { useSidebar } from '../composables/useSidebar'
 import '../css/projects.css'
 
 const { isSidebarOpen } = useSidebar()
 
 const emit = defineEmits(['navigate'])
+
+const toast = ref(null)
+const toastVisible = ref(false)
+
+const showToast = (text, ms = 1400) => {
+  toast.value = text
+  toastVisible.value = true
+  try { window.__lastNavigate = text } catch(e){}
+  setTimeout(() => (toastVisible.value = false), ms)
+}
+
+const handleCardClick = (project) => {
+  console.log('handleCardClick called for', project.title, 'url:', project.url, 'isExternal:', isExternal(project.url))
+  if (isExternal(project.url)) {
+    window.open(project.url, '_blank')
+  } else {
+    emit('navigate', projectInternalKey(project.url))
+  }
+}
 
 const isExternal = (url) => {
   if (!url) return false
@@ -17,7 +36,7 @@ const projectInternalKey = (url) => {
   if (!url) return 'home'
   if (url === '/' ) return 'home'
   if (url.startsWith('/about')) return 'profile'
-  if (url.startsWith('/blog')) return 'projects' // fallback
+  if (url.startsWith('/blog')) return 'blog'
   return 'home'
 }
 
@@ -118,23 +137,18 @@ onUnmounted(() => {
         class="project-card project-link"
         :class="{ visible: cardVisibilities[index] }"
         :style="{ transitionDelay: `${index * 0.2}s` }"
+        @click="handleCardClick(project)"
       >
         <div class="project-image">{{ project.image }}</div>
         <div class="project-content">
-          <h3>
-            <a
-              v-if="isExternal(project.url)"
-              :href="project.url"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {{ project.title }}
-            </a>
-            <button v-else class="link-btn" @click="$emit('navigate', projectInternalKey(project.url))">{{ project.title }}</button>
-          </h3>
+            <h3>{{ project.title }}</h3>
           <p>{{ project.description }}</p>
         </div>
       </div>
         </div>
+    </div>
+    <!-- toast container -->
+    <div class="toast-container" v-if="toast">
+      <div class="toast" :data-show="toastVisible">{{ toast }}</div>
     </div>
 </template>

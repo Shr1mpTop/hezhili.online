@@ -14,12 +14,16 @@
         <span class="menu-text">主页</span>
       </li>
       <li class="menu-item" @click="navigateTo('projects')">
-        <img src="/projects-icon.svg" alt="项目" class="menu-icon" />
-        <span class="menu-text">项目</span>
+        <img src="/projects-icon.svg" alt="导航" class="menu-icon" />
+        <span class="menu-text">导航</span>
       </li>
       <li class="menu-item" @click="navigateTo('profile')">
         <img src="/profile-icon.svg" alt="个人简介" class="menu-icon" />
         <span class="menu-text">个人简介</span>
+      </li>
+      <li class="menu-item" @click="navigateTo('blog')">
+        <img src="/blog-icon.svg" alt="技术博客" class="menu-icon" />
+        <span class="menu-text">技术博客</span>
       </li>
       <li class="menu-item" @click="navigateTo('contact')">
         <img src="/contact-icon.svg" alt="联系" class="menu-icon" />
@@ -32,11 +36,14 @@
       <li class="menu-item collapsed-item" title="主页" @click="navigateTo('home')">
         <img src="/home-icon.svg" alt="主页" class="menu-icon collapsed-icon" />
       </li>
-      <li class="menu-item collapsed-item" title="项目" @click="navigateTo('projects')">
-        <img src="/projects-icon.svg" alt="项目" class="menu-icon collapsed-icon" />
+      <li class="menu-item collapsed-item" title="导航" @click="navigateTo('projects')">
+        <img src="/projects-icon.svg" alt="导航" class="menu-icon collapsed-icon" />
       </li>
       <li class="menu-item collapsed-item" title="个人简介" @click="navigateTo('profile')">
         <img src="/profile-icon.svg" alt="个人简介" class="menu-icon collapsed-icon" />
+      </li>
+      <li class="menu-item collapsed-item" title="技术博客" @click="navigateTo('blog')">
+        <img src="/blog-icon.svg" alt="技术博客" class="menu-icon collapsed-icon" />
       </li>
       <li class="menu-item collapsed-item" title="联系" @click="navigateTo('contact')">
         <img src="/contact-icon.svg" alt="联系" class="menu-icon collapsed-icon" />

@@ -109,6 +109,10 @@
         </div>
       </div>
     </div>
+    <!-- toast container -->
+    <div class="toast-container" v-if="toast">
+      <div class="toast" :data-show="toastVisible">{{ toast }}</div>
+    </div>
   </div>
 </template>
 
@@ -132,10 +136,11 @@ const repos = {
 
 const copyResume = async () => {
   try {
-    await navigator.clipboard.writeText(window.location.origin + '/HeZhili_CV.pdf')
-    alert('已复制简历链接到剪贴板')
+    const resumeUrl = new URL('HeZhili_CV.pdf', window.location.origin + (import.meta.env.BASE_URL || '/')).href
+    await navigator.clipboard.writeText(resumeUrl)
+    showToast('已复制简历链接到剪贴板')
   } catch (e) {
-    alert('复制失败，请手动下载：/HeZhili_CV.pdf')
+    showToast('复制失败，请手动下载：/HeZhili_CV.pdf')
   }
 }
 
@@ -145,4 +150,14 @@ const cpp = ref(85)
 const csharp = ref(85)
 const goLang = ref(40)
 const tools = ref(75)
+
+// toast for notifications
+const toast = ref(null)
+const toastVisible = ref(false)
+
+const showToast = (text, ms = 1400) => {
+  toast.value = text
+  toastVisible.value = true
+  setTimeout(() => (toastVisible.value = false), ms)
+}
 </script>
