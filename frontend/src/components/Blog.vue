@@ -56,7 +56,7 @@ const loading = ref(true)
 
 const fetchPosts = async () => {
   try {
-    const response = await fetch('http://localhost:3002/api/posts')
+    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/posts`)
     if (response.ok) {
       posts.value = await response.json()
     } else {
