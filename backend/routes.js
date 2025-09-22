@@ -15,6 +15,29 @@ router.get('/posts', async (req, res) => {
   }
 });
 
+// Create new post
+router.post('/posts', async (req, res) => {
+  try {
+    const { title, content, excerpt, tags } = req.body;
+    
+    if (!title || !content) {
+      return res.status(400).json({ error: 'Title and content are required' });
+    }
+    
+    const post = new Post({
+      title,
+      content, // Markdown content
+      excerpt: excerpt || content.substring(0, 200) + '...',
+      tags: tags || []
+    });
+    
+    await post.save();
+    res.status(201).json(post);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // Get single post
 router.get('/posts/:id', async (req, res) => {
   try {
@@ -79,6 +102,10 @@ router.post('/posts/:id/comments', async (req, res) => {
 // Seed initial data
 router.post('/seed', async (req, res) => {
   try {
+    // Clear existing data first
+    await Post.deleteMany({});
+    await Comment.deleteMany({});
+    
     const posts = [
       {
         title: 'Vue 3 Composition API 最佳实践',

@@ -71,7 +71,7 @@
   border-right: 1px solid rgba(0,255,127,0.1);
   padding-right: 24px;
   max-height: 70vh;
-  overflow: hidden; /* 隐藏滚动条 */
+  overflow-y: auto; /* 允许垂直滚动 */
 }
 
 .back-btn {

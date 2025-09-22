@@ -11,8 +11,21 @@ const PORT = process.env.PORT || 3002;
 connectDB();
 
 // Middleware
-app.use(cors());
-app.use(express.json());
+app.use(cors({
+  origin: true,
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+app.use(express.json({ charset: 'utf-8' }));
+
+// Set comprehensive UTF-8 headers for all responses
+app.use((req, res, next) => {
+  res.setHeader('Content-Type', 'application/json; charset=utf-8');
+  res.setHeader('Accept-Charset', 'utf-8');
+  res.setHeader('Content-Language', 'zh-CN');
+  next();
+});
 
 // Routes
 app.use('/api', routes);
