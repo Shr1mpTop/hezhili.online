@@ -33,7 +33,7 @@
 
       <!-- 联系页面 -->
       <div v-else-if="currentView === 'contact'">
-        <h1>联系我</h1>
+        <h1>不准联系我</h1>
       </div>
     </main>
   </div>
