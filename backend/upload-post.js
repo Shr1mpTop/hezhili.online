@@ -60,7 +60,8 @@ async function parseMD(filePath) {
     title,
     content: body,
     excerpt,
-    tags: frontmatter.tags || []
+    tags: frontmatter.tags || [],
+    date: new Date(new Date().getTime() + 8 * 60 * 60 * 1000) // UTC+8
   };
 }
 
