@@ -34,5 +34,20 @@
     "likedBy": [],
     "date": "2025-10-02T01:38:00.000Z",
     "__v": 0
+  },
+  {
+    "_id": "68dd6a70491fd101c4bbeae9",
+    "title": "示例博客文章",
+    "content": "# 示例博客文章\r\n\r\n这是文章的内容。\r\n\r\n你可以使用Markdown语法来编写你的博客文章。\r\n\r\n## 子标题\r\n\r\n- 列表项1\r\n- 列表项2\r\n\r\n```javascript\r\nconsole.log('Hello World');\r\n```\r\n\r\n享受写作吧！",
+    "excerpt": "这是一个示例博客文章的摘要，用于演示上传脚本的功能。",
+    "tags": [
+      "示例",
+      "博客",
+      "教程"
+    ],
+    "likes": 0,
+    "likedBy": [],
+    "date": "2025-10-01T17:52:48.926Z",
+    "__v": 0
   }
 ]
