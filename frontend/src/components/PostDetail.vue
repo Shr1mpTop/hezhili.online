@@ -112,7 +112,7 @@ const goBack = () => {
 
 const toggleLike = async () => {
   try {
-    const response = await fetch(`http://localhost:3002/api/posts/${props.post._id || props.post.id}/like`, {
+    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/posts/${props.post._id || props.post.id}/like`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ userId: 'guest' }) // Simple user ID
@@ -153,7 +153,7 @@ const addComment = async () => {
   if (!newComment.value.trim()) return
   
   try {
-    const response = await fetch(`http://localhost:3002/api/posts/${props.post._id || props.post.id}/comments`, {
+    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/posts/${props.post._id || props.post.id}/comments`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -197,7 +197,7 @@ const addComment = async () => {
 onMounted(async () => {
   try {
     // Fetch likes
-    const likeResponse = await fetch(`http://localhost:3002/api/posts/${props.post._id || props.post.id}`)
+    const likeResponse = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/posts/${props.post._id || props.post.id}`)
     if (likeResponse.ok) {
       const postData = await likeResponse.json()
       likes.value = postData.likes || 0
@@ -205,7 +205,7 @@ onMounted(async () => {
     }
     
     // Fetch comments
-    const commentResponse = await fetch(`http://localhost:3002/api/posts/${props.post._id || props.post.id}/comments`)
+    const commentResponse = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/posts/${props.post._id || props.post.id}/comments`)
     if (commentResponse.ok) {
       comments.value = await commentResponse.json()
     } else {

@@ -1,0 +1,53 @@
+[
+  {
+    "_id": "68d1970a85c9c76b655a0c8d",
+    "title": "Test",
+    "content": "## 标题\n哈基米加密器是一个充满创意的文字加密工具，由开发者Warma10032创建。这个项目源于一个有趣的想法：将普通的文字转换为只有\"哈\"、\"基\"、\"米\"三个字的\"曼波语\"。\n\n项目地址：[GitHub - hajimi-encoder](https://github.com/Warma10032/hajimi-encoder)\n\n在线体验：[app.xiaobaozi.cn](https://app.xiaobaozi.cn/)\n\n```javascript\n// 字符到三进制字符串的转换\nfunction charToTrinaryString(char) {\n    let unicode_val = char.charCodeAt(0);\n    let trinary_str = \"\";\n    while (unicode_val > 0) {\n        let remainder = unicode_val % 3;\n        trinary_str = remainder + trinary_str;\n        unicode_val = Math.floor(unicode_val / 3);\n    }\n    return trinary_str;\n}\n```\n![PLA Army soldiers in force-on-force training exercise - Photos - 中国军网（英文版）](https://tse2.mm.bing.net/th/id/OIP.SeNNlWpXfz37mLdxqNqhHAHaE8?rs=1&pid=ImgDetMain&o=7&rm=3)",
+    "excerpt": "介绍一个有趣的文字加密工具哈基米加密器，它可以将普通文字转换为哈基米三进制编码，结合多种加密技术，适合学习和娱乐使用。",
+    "tags": [
+      "加密工具",
+      "JavaScript",
+      "开源项目",
+      "算法",
+      "前端开发"
+    ],
+    "likes": 1,
+    "likedBy": [
+      "guest"
+    ],
+    "date": "2025-09-22T18:35:54.208Z",
+    "__v": 1
+  },
+  {
+    "_id": "68dd6855554bdc88ad282cfa",
+    "title": "pic2html：将图片转换为彩色ASCII艺术的Go工具",
+    "content": "## 项目背景\n\npic2html是一个用Go语言实现的工具，它可以将图片转换为彩色的ASCII艺术。这个项目是经典的pic2html脚本的Go版本重写，原始版本来自text-image.com网站。\n\n项目地址：[GitHub - pic2html](https://github.com/darkgray1981/pic2html)\n\n示例网站：[http://www.muri.se/dev/go/pic2html/](http://www.muri.se/dev/go/pic2html/)\n\n## 技术实现\n\n### 核心原理\n\npic2html的工作原理是将图片的像素转换为彩色的文本字符，使用HTML的`<pre>`和`<b>`标签来创建彩色ASCII艺术。每个字符的颜色通过内联样式精确匹配原始图片的颜色。\n\n### Go语言实现\n\n项目主要用Go语言编写，包含以下核心文件：\n\n- `pic2html.go`：主程序文件\n- `tools.go`：工具函数\n- `index.html`：Web界面\n- `data/`：数据文件夹\n\n### 构建和部署\n\n```bash\n# 构建CGI程序\ngo build -o pic2html.cgi\n\n# 部署到Web服务器\n# 将index.html、pic2html.cgi和data文件夹上传到服务器\n# 确保CGI功能已启用\n```\n\n## 技术特色\n\n### 颜色处理\n\n项目使用精确的颜色匹配算法，将图片的RGB值转换为HTML颜色代码：\n\n```go\n// 颜色转换示例\ncolor := fmt.Sprintf(\"#%02x%02x%02x\", r, g, b)\n```\n\n### ASCII字符选择\n\n根据图片的亮度和对比度选择合适的ASCII字符，常用的字符包括：`@#S%?*+;:,. `\n\n### Web集成\n\n作为CGI程序，可以直接在Web服务器上运行，提供在线图片转换服务。\n\n## 使用方法\n\n1. **本地构建**：使用`go build`命令编译程序\n2. **服务器部署**：将文件上传到支持CGI的Web服务器\n3. **访问界面**：通过浏览器访问index.html\n4. **上传图片**：选择图片文件进行转换\n5. **获取结果**：获得彩色的HTML ASCII艺术\n\n## 项目优势\n\n### 性能优势\n\n- **Go语言**：编译型语言，运行速度快\n- **内存效率**：Go的垃圾回收和内存管理优化\n- **并发处理**：支持多图片同时处理\n\n### 兼容性\n\n- **跨平台**：Go支持Windows、Linux、macOS\n- **Web标准**：使用标准HTML和CSS\n- **浏览器兼容**：支持所有现代浏览器\n\n### 易于部署\n\n- **单一二进制**：编译后只有一个可执行文件\n- **无依赖**：不需要额外的运行时环境\n- **CGI标准**：兼容所有支持CGI的Web服务器\n\n## 应用场景\n\n### Web开发\n\n- **艺术展示**：在网站上展示图片的文本版本\n- **低带宽环境**：在网络条件差时显示文本艺术\n- **创意设计**：用于网页的装饰性元素\n\n### 教育用途\n\n- **编程教学**：展示图像处理算法\n- **算法学习**：理解颜色空间转换\n- **Go语言学习**：实际的Go项目示例\n\n### 娱乐应用\n\n- **艺术创作**：将个人照片转换为ASCII艺术\n- **社交分享**：在社交媒体上分享彩色文本图片\n- **游戏开发**：用于游戏中的特殊效果\n\n## 技术亮点\n\n### 图像处理算法\n\n项目实现了高效的图像处理算法：\n\n1. **像素采样**：智能选择代表性像素\n2. **颜色量化**：将24位颜色转换为Web安全色\n3. **字符映射**：根据亮度选择最佳ASCII字符\n4. **布局优化**：保持图片的宽高比\n\n### 代码质量\n\n- **清晰架构**：模块化设计，易于维护\n- **错误处理**：完善的错误处理机制\n- **性能优化**：高效的内存使用\n- **注释完整**：详细的代码注释\n\n## 社区影响\n\n作为GitHub上的开源项目，pic2html获得了18个star和8个fork，显示了它在开发者社区中的受欢迎程度。这个项目不仅提供了实用的工具，还为学习图像处理和Go语言编程提供了宝贵的资源。\n\n## 总结\n\npic2html是一个简单而强大的工具，它将复杂的图像处理技术与Go语言的高性能结合，创造出令人印象深刻的彩色ASCII艺术。\n\n无论是作为学习项目还是实际工具，pic2html都展示了开源软件的力量：用几百行代码就能创造出如此有趣和实用的功能。\n\n如果你对图像处理、Go语言编程或ASCII艺术感兴趣，不妨试试pic2html，将你的图片转换为彩色的文本世界吧！",
+    "excerpt": "介绍pic2html项目，一个用Go语言实现的将图片转换为彩色ASCII艺术的工具，展示了图像处理和Web开发的完美结合。",
+    "tags": [
+      "Go",
+      "图片处理",
+      "ASCII艺术",
+      "CGI",
+      "Web开发"
+    ],
+    "likes": 0,
+    "likedBy": [],
+    "date": "2025-10-02T01:38:00.000Z",
+    "__v": 0
+  },
+  {
+    "_id": "68dd6a70491fd101c4bbeae9",
+    "title": "示例博客文章",
+    "content": "# 示例博客文章\r\n\r\n这是文章的内容。\r\n\r\n你可以使用Markdown语法来编写你的博客文章。\r\n\r\n## 子标题\r\n\r\n- 列表项1\r\n- 列表项2\r\n\r\n```javascript\r\nconsole.log('Hello World');\r\n```\r\n\r\n享受写作吧！",
+    "excerpt": "这是一个示例博客文章的摘要，用于演示上传脚本的功能。",
+    "tags": [
+      "示例",
+      "博客",
+      "教程"
+    ],
+    "likes": 0,
+    "likedBy": [],
+    "date": "2025-10-01T17:52:48.926Z",
+    "__v": 0
+  }
+]
