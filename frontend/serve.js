@@ -11,6 +11,11 @@ const PORT = process.env.PORT || 5173;
 // Serve static files from dist
 app.use(express.static(path.join(__dirname, 'dist')));
 
+// Route for English CV
+app.get('/hezhili_cv_english', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dist', 'HeZhili_CV__English.pdf'));
+});
+
 // Fallback to index.html for SPA
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'dist', 'index.html'));
