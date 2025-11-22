@@ -5,6 +5,30 @@ const router = express.Router();
 const Post = require('./models/Post');
 const Comment = require('./models/Comment');
 
+const BUFFOTTE_REPORT_URL = 'https://buffotte.hezhili.online/report';
+
+router.get('/buffotte/report', async (req, res) => {
+  try {
+    const response = await fetch(BUFFOTTE_REPORT_URL, {
+      headers: { Accept: 'application/json' }
+    });
+
+    if (!response.ok) {
+      return res.status(response.status).json({
+        error: `Buffotte report upstream returned ${response.status}`
+      });
+    }
+
+    const payload = await response.json();
+    const data = payload.data || payload;
+
+    res.json({ status: 'success', data });
+  } catch (error) {
+    console.error('Failed to proxy Buffotte report:', error);
+    res.status(502).json({ error: '无法获取 Buffotte 报告，请稍后再试。' });
+  }
+});
+
 // Get all posts
 router.get('/posts', async (req, res) => {
   try {

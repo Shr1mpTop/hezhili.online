@@ -22,6 +22,9 @@
   <!-- 项目页面 -->
   <Projects v-else-if="currentView === 'projects'" @navigate="handleNavigate" />
 
+      <!-- Buffotte 报告 -->
+      <BuffotteReport v-else-if="currentView === 'buffotte'" />
+
       <!-- 个人简介页面 -->
       <About v-else-if="currentView === 'profile'" />
 
@@ -46,6 +49,7 @@ import Sidebar from './components/Sidebar.vue'
 import Button from './components/Button.vue'
 import MatrixBackground from './components/MatrixBackground.vue'
 import Projects from './components/Projects.vue'
+import BuffotteReport from './components/BuffotteReport.vue'
 import About from './components/About.vue'
 import Blog from './components/Blog.vue'
 import PostDetail from './components/PostDetail.vue'
@@ -56,8 +60,9 @@ export default {
     Sidebar,
     Button,
     MatrixBackground,
-    Projects
-    , About,
+    Projects,
+    BuffotteReport,
+    About,
     Blog,
     PostDetail
   },

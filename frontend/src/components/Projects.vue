@@ -36,6 +36,7 @@ const projectInternalKey = (url) => {
   if (!url) return 'home'
   if (url === '/' ) return 'home'
   if (url.startsWith('/about')) return 'profile'
+  if (url.startsWith('/buffotte')) return 'buffotte'
   if (url.startsWith('/blog')) return 'blog'
   return 'home'
 }
@@ -55,6 +56,13 @@ const projects = [
     description: '一个类 Twitter 的社交平台示例，支持发送短帖（推文）、评论、点赞和社区功能的演示项目，可以使用 metamask 钱包进行绑定或登录',
     url: 'https://twikk.hezhili.online',
     image: '📁'
+  },
+  {
+    id: 5,
+    title: 'Buffotte报告',
+    description: '聚合 BUFF 市场 AI 风控与策略报告，点击后在站内解析并渲染 https://buffotte.hezhili.online/report 的最新内容。',
+    url: '/buffotte',
+    image: '📊'
   },
   {
     id: 3,

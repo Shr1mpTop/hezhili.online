@@ -1,0 +1,211 @@
+.buffotte-page {
+  min-height: 100vh;
+  padding: 40px 30px;
+  transition: padding-left 0.3s ease;
+}
+
+.buffotte-wrapper {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 32px;
+  border-radius: 20px;
+  border: 1px solid rgba(0, 255, 160, 0.25);
+  background: rgba(0, 20, 10, 0.55);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 30px 60px rgba(0, 255, 120, 0.12);
+  color: #dfffe9;
+}
+
+.buffotte-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 28px;
+}
+
+.header-text h1 {
+  font-size: 2.2rem;
+  margin: 0 0 10px;
+  color: #7cfab3;
+  text-shadow: 0 0 18px rgba(0, 255, 180, 0.35);
+}
+
+.header-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 18px;
+  margin: 0;
+  font-size: 0.95rem;
+  color: rgba(223, 255, 233, 0.78);
+}
+
+.buffotte-refresh {
+  border: 1px solid rgba(0, 255, 170, 0.4);
+  background: rgba(0, 60, 40, 0.55);
+  color: #9bffd1;
+  padding: 10px 20px;
+  border-radius: 999px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.buffotte-refresh:hover:not(:disabled) {
+  background: rgba(0, 255, 170, 0.12);
+  box-shadow: 0 10px 25px rgba(0, 255, 140, 0.25);
+}
+
+.buffotte-refresh:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.buffotte-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 260px;
+  gap: 16px;
+  color: rgba(223, 255, 233, 0.85);
+  text-align: center;
+}
+
+.buffotte-error {
+  color: #ffb7b7;
+}
+
+.spinner {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 4px solid rgba(0, 255, 170, 0.2);
+  border-top-color: rgba(0, 255, 170, 0.75);
+  animation: buffotte-spin 0.9s linear infinite;
+}
+
+@keyframes buffotte-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.buffotte-summary {
+  margin-bottom: 26px;
+  padding-bottom: 18px;
+  border-bottom: 1px dashed rgba(0, 255, 160, 0.25);
+}
+
+.summary-title {
+  margin: 0 0 12px;
+  font-size: 1.6rem;
+  color: #a5ffcd;
+}
+
+.summary-meta {
+  margin: 0;
+  padding-left: 18px;
+  color: rgba(223, 255, 233, 0.74);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.buffotte-attachments {
+  margin-bottom: 26px;
+}
+
+.buffotte-attachments h3 {
+  margin: 0 0 12px;
+  color: #8afdc6;
+}
+
+.buffotte-attachments ul {
+  margin: 0;
+  padding-left: 18px;
+  list-style: disc;
+  color: rgba(223, 255, 233, 0.8);
+}
+
+.buffotte-attachments a {
+  color: #90ffe4;
+  text-decoration: none;
+}
+
+.buffotte-attachments a:hover {
+  text-decoration: underline;
+}
+
+.buffotte-markdown {
+  line-height: 1.75;
+  color: rgba(240, 255, 244, 0.92);
+  font-size: 1rem;
+}
+
+.buffotte-markdown h1,
+.buffotte-markdown h2,
+.buffotte-markdown h3 {
+  color: #9bffd6;
+  margin-top: 28px;
+  margin-bottom: 14px;
+}
+
+.buffotte-markdown h1 {
+  font-size: 1.9rem;
+}
+
+.buffotte-markdown h2 {
+  font-size: 1.6rem;
+}
+
+.buffotte-markdown h3 {
+  font-size: 1.3rem;
+}
+
+.buffotte-markdown p {
+  margin: 0 0 16px;
+}
+
+.buffotte-markdown ul,
+.buffotte-markdown ol {
+  padding-left: 22px;
+  margin: 0 0 16px;
+}
+
+.buffotte-markdown blockquote {
+  margin: 18px 0;
+  padding: 14px 18px;
+  border-left: 3px solid rgba(0, 255, 170, 0.5);
+  background: rgba(0, 40, 20, 0.5);
+}
+
+.buffotte-markdown pre {
+  background: rgba(5, 20, 15, 0.85);
+  padding: 14px 18px;
+  border-radius: 12px;
+  overflow-x: auto;
+  border: 1px solid rgba(0, 255, 170, 0.2);
+}
+
+.buffotte-markdown code {
+  font-family: 'Fira Code', 'JetBrains Mono', monospace;
+}
+
+@media (max-width: 768px) {
+  .buffotte-page {
+    padding: 20px 16px;
+  }
+
+  .buffotte-wrapper {
+    padding: 24px;
+  }
+
+  .buffotte-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .header-text h1 {
+    font-size: 1.8rem;
+  }
+}
