@@ -33,7 +33,8 @@
 
       <!-- 联系页面 -->
       <div v-else-if="currentView === 'contact'">
-        <h1>不准联系我</h1>
+        <h1>Audentes fortuna iuvat</h1>
+        <h2>"命运眷顾勇敢之人"</h2>
       </div>
     </main>
   </div>

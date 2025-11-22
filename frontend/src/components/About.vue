@@ -147,7 +147,7 @@ const email = 'HEZH0014@e.ntu.edu.sg'
 const phone = '+8615982296295'
 const website = 'https://www.hezhili.online' // Your live portfolio site
 const github = 'https://github.com/Shr1mpTop'
-const contributions = 229 // Placeholder, update with your actual contribution count
+const contributions = 548 // Placeholder, update with your actual contribution count
 
 // --- Updated GitHub Repositories ---
 const repos = {
