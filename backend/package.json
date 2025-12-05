@@ -8,7 +8,7 @@
     "dev": "nodemon server.js"
   },
   "dependencies": {
-    "@alicloud/dm20151123": "^1.0.0",
+    "@alicloud/dm20151123": "^1.7.2",
     "@alicloud/openapi-client": "^0.4.0",
     "@alicloud/tea-util": "^1.4.0",
     "cors": "^2.8.5",
