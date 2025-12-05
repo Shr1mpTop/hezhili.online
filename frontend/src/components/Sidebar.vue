@@ -25,6 +25,10 @@
         <img src="/blog-icon.svg" alt="技术博客" class="menu-icon" />
         <span class="menu-text">技术博客</span>
       </li>
+      <li class="menu-item" @click="openExternal('https://bufftracker.hezhili.online/')">
+        <img src="/buff-tracker-icon.svg" alt="Buff Tracker" class="menu-icon" />
+        <span class="menu-text">Buff Tracker</span>
+      </li>
       <li class="menu-item" @click="navigateTo('contact')">
         <img src="/contact-icon.svg" alt="联系" class="menu-icon" />
         <span class="menu-text">联系</span>
@@ -44,6 +48,9 @@
       </li>
       <li class="menu-item collapsed-item" title="技术博客" @click="navigateTo('blog')">
         <img src="/blog-icon.svg" alt="技术博客" class="menu-icon collapsed-icon" />
+      </li>
+      <li class="menu-item collapsed-item" title="Buff Tracker" @click="openExternal('https://bufftracker.hezhili.online/')">
+        <img src="/buff-tracker-icon.svg" alt="Buff Tracker" class="menu-icon collapsed-icon" />
       </li>
       <li class="menu-item collapsed-item" title="联系" @click="navigateTo('contact')">
         <img src="/contact-icon.svg" alt="联系" class="menu-icon collapsed-icon" />
@@ -71,10 +78,15 @@ export default {
       emit('navigate', view)
     }
 
+    const openExternal = (url) => {
+      window.open(url, '_blank')
+    }
+
     return {
       isCollapsed,
       toggleSidebar,
-      navigateTo
+      navigateTo,
+      openExternal
     }
   }
 }

@@ -58,6 +58,13 @@ const projects = [
     image: '📁'
   },
   {
+    id: 6,
+    title: 'Buff Tracker',
+    description: 'CS2饰品价格追踪工具，基于FastAPI构建的RESTful微服务，支持实时价格查询、模糊搜索饰品，提供完整的API文档和Docker部署方案',
+    url: 'https://bufftracker.hezhili.online/',
+    image: '📈'
+  },
+  {
     id: 5,
     title: 'Buffotte报告',
     description: '聚合 BUFF 市场 AI 风控与策略报告，点击后在站内解析并渲染 https://buffotte.hezhili.online/report 的最新内容。',
