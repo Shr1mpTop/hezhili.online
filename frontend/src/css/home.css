@@ -1,0 +1,629 @@
+/* Home Page - Geek Style Terminal */
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&display=swap');
+
+.home-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  font-family: 'Fira Code', monospace;
+  position: relative;
+  overflow: hidden;
+}
+
+/* 终端容器 */
+.terminal-container {
+  width: min(1300px, 92%);
+  background: rgba(10, 10, 10, 0.95);
+  border: 1px solid #00ff88;
+  border-radius: 12px;
+  box-shadow: 
+    0 0 40px rgba(0, 255, 136, 0.15),
+    0 0 80px rgba(0, 255, 136, 0.08),
+    inset 0 0 60px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  animation: terminalAppear 0.8s ease-out;
+  z-index: 1;
+}
+
+@keyframes terminalAppear {
+  0% {
+    opacity: 0;
+    transform: scale(0.95) translateY(20px);
+    box-shadow: 0 0 0 rgba(0, 255, 136, 0);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    box-shadow: 
+      0 0 40px rgba(0, 255, 136, 0.15),
+      0 0 80px rgba(0, 255, 136, 0.08);
+  }
+}
+
+/* 终端头部 */
+.terminal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: linear-gradient(180deg, #2d2d2d 0%, #1a1a1a 100%);
+  border-bottom: 1px solid #333;
+}
+
+.terminal-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.term-btn {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.term-btn.close {
+  background: linear-gradient(135deg, #ff6058 0%, #ff3b30 100%);
+  box-shadow: 0 0 8px rgba(255, 95, 86, 0.4);
+}
+
+.term-btn.minimize {
+  background: linear-gradient(135deg, #ffbd2e 0%, #f5a623 100%);
+  box-shadow: 0 0 8px rgba(255, 189, 46, 0.4);
+}
+
+.term-btn.maximize {
+  background: linear-gradient(135deg, #28cd41 0%, #1db954 100%);
+  box-shadow: 0 0 8px rgba(39, 202, 64, 0.4);
+}
+
+.terminal-title {
+  color: #888;
+  font-size: 13px;
+  letter-spacing: 0.5px;
+}
+
+.terminal-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #00ff88;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  background: #00ff88;
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+  box-shadow: 0 0 10px #00ff88;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 5px #00ff88; }
+  50% { opacity: 0.6; box-shadow: 0 0 20px #00ff88; }
+}
+
+/* 终端内容 */
+.terminal-body {
+  padding: 24px;
+  min-height: 450px;
+  position: relative;
+  background: 
+    linear-gradient(rgba(0, 255, 136, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 255, 136, 0.02) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+/* 扫描线效果 */
+.terminal-body::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.1),
+    rgba(0, 0, 0, 0.1) 1px,
+    transparent 1px,
+    transparent 2px
+  );
+  pointer-events: none;
+  opacity: 0.4;
+}
+
+/* 启动序列 */
+.boot-sequence {
+  font-size: 14px;
+  line-height: 1.7;
+  margin-bottom: 24px;
+}
+
+.boot-line {
+  color: #8fffb3;
+  opacity: 1;
+  animation: lineSlide 0.2s ease-out;
+}
+
+.boot-line.success {
+  color: #00ff88;
+  text-shadow: 0 0 8px rgba(0, 255, 136, 0.4);
+}
+
+@keyframes lineSlide {
+  0% { opacity: 0; transform: translateX(-10px); }
+  100% { opacity: 1; transform: translateX(0); }
+}
+
+/* ASCII 艺术 */
+.ascii-section {
+  text-align: center;
+  margin: 30px 0;
+  position: relative;
+}
+
+.ascii-art {
+  font-family: 'Fira Code', monospace;
+  font-size: 18px;
+  line-height: 1.15;
+  color: #00ff88;
+  text-shadow: 
+    0 0 10px rgba(0, 255, 136, 0.5),
+    0 0 20px rgba(0, 255, 136, 0.3),
+    0 0 40px rgba(0, 255, 136, 0.2);
+  margin: 0;
+  display: inline-block;
+  animation: glow 3s ease-in-out infinite alternate;
+}
+
+@keyframes glow {
+  0% {
+    text-shadow: 
+      0 0 10px rgba(0, 255, 136, 0.5),
+      0 0 20px rgba(0, 255, 136, 0.3);
+  }
+  100% {
+    text-shadow: 
+      0 0 15px rgba(0, 255, 136, 0.7),
+      0 0 30px rgba(0, 255, 136, 0.5),
+      0 0 50px rgba(0, 255, 136, 0.3);
+  }
+}
+
+/* Glitch 效果 */
+.ascii-section.glitch .ascii-art {
+  animation: glitchText 0.1s linear;
+}
+
+@keyframes glitchText {
+  0% { transform: translate(0); filter: hue-rotate(0deg); }
+  20% { transform: translate(-2px, 2px); filter: hue-rotate(90deg); }
+  40% { transform: translate(2px, -2px); filter: hue-rotate(180deg); }
+  60% { transform: translate(-2px, -2px); filter: hue-rotate(270deg); }
+  80% { transform: translate(2px, 2px); filter: hue-rotate(360deg); }
+  100% { transform: translate(0); filter: hue-rotate(0deg); }
+}
+
+.ascii-subtitle {
+  margin-top: 20px;
+  font-size: 16px;
+  color: #00bfff;
+}
+
+.bracket {
+  color: #ff6b6b;
+  font-weight: 600;
+}
+
+.role {
+  color: #00bfff;
+  margin: 0 12px;
+  letter-spacing: 1px;
+}
+
+.separator {
+  color: #666;
+  margin: 0 6px;
+}
+
+/* 座右铭区域 */
+.motto-section {
+  text-align: center;
+  margin: 40px 0;
+}
+
+.motto-container {
+  display: inline-flex;
+  align-items: center;
+  font-size: 28px;
+  color: #ffd700;
+  text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+}
+
+.motto-prompt {
+  color: #00ff88;
+  margin-right: 12px;
+  font-weight: 600;
+  font-size: 32px;
+}
+
+.motto-text {
+  font-style: italic;
+  font-weight: 500;
+  letter-spacing: 2px;
+}
+
+.cursor {
+  color: #00ff88;
+  font-weight: bold;
+  margin-left: 2px;
+}
+
+.cursor.blink {
+  animation: cursorBlink 0.8s infinite;
+}
+
+@keyframes cursorBlink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+.motto-translation {
+  margin-top: 16px;
+  font-size: 18px;
+}
+
+.comment-prefix {
+  color: #6a9955;
+  margin-right: 10px;
+  font-size: 16px;
+}
+
+.translation-text {
+  color: #6a9955;
+  font-style: italic;
+  letter-spacing: 3px;
+}
+
+/* 装饰性代码块 */
+.decorative-code {
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(0, 255, 136, 0.2);
+  border-radius: 8px;
+  padding: 20px 28px;
+  margin: 35px auto;
+  max-width: 520px;
+  text-align: left;
+  font-size: 15px;
+}
+
+.code-line {
+  line-height: 2;
+}
+
+.code-line.indent {
+  padding-left: 24px;
+}
+
+.keyword {
+  color: #c586c0;
+}
+
+.variable {
+  color: #9cdcfe;
+}
+
+.property {
+  color: #9cdcfe;
+}
+
+.string {
+  color: #ce9178;
+}
+
+.brace {
+  color: #ffd700;
+}
+
+/* 导航提示 */
+.nav-hint {
+  text-align: center;
+  margin-top: 30px;
+  color: #666;
+  font-size: 12px;
+  animation: fadeInUp 0.5s ease;
+}
+
+.hint-icon {
+  color: #00ff88;
+  margin: 0 10px;
+  animation: bounce 2s infinite;
+}
+
+.hint-text {
+  letter-spacing: 1px;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(3px); }
+}
+
+@keyframes fadeInUp {
+  0% { opacity: 0; transform: translateY(10px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* 角落装饰 */
+.corner-decoration {
+  position: fixed;
+  font-size: 24px;
+  color: rgba(0, 255, 136, 0.15);
+  font-family: 'Fira Code', monospace;
+  pointer-events: none;
+  animation: cornerFloat 6s ease-in-out infinite;
+}
+
+.top-left {
+  top: 20px;
+  left: 20px;
+  animation-delay: 0s;
+}
+
+.top-right {
+  top: 20px;
+  right: 20px;
+  animation-delay: 1.5s;
+}
+
+.bottom-left {
+  bottom: 20px;
+  left: 20px;
+  animation-delay: 3s;
+}
+
+.bottom-right {
+  bottom: 20px;
+  right: 20px;
+  animation-delay: 4.5s;
+}
+
+@keyframes cornerFloat {
+  0%, 100% { opacity: 0.15; transform: scale(1); }
+  50% { opacity: 0.25; transform: scale(1.1); }
+}
+
+/* 过渡动画 */
+.ascii-fade-enter-active {
+  transition: all 0.6s ease;
+}
+.ascii-fade-enter-from {
+  opacity: 0;
+  transform: scale(0.9);
+}
+
+.motto-fade-enter-active {
+  transition: all 0.5s ease;
+}
+.motto-fade-enter-from {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.subtitle-fade-enter-active {
+  transition: all 0.4s ease;
+}
+.subtitle-fade-enter-from {
+  opacity: 0;
+}
+
+.code-fade-enter-active {
+  transition: all 0.6s ease 0.2s;
+}
+.code-fade-enter-from {
+  opacity: 0;
+  transform: translateY(15px);
+}
+
+.nav-fade-enter-active {
+  transition: all 0.5s ease 0.4s;
+}
+.nav-fade-enter-from {
+  opacity: 0;
+}
+
+/* 响应式 */
+@media (max-width: 768px) {
+  .ascii-art {
+    font-size: 8px;
+  }
+  
+  .motto-container {
+    font-size: 16px;
+  }
+  
+  .decorative-code {
+    font-size: 11px;
+    padding: 12px 16px;
+  }
+  
+  .corner-decoration {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .ascii-art {
+    font-size: 6px;
+  }
+  
+  .ascii-subtitle {
+    font-size: 10px;
+  }
+  
+  .role {
+    display: block;
+    margin: 5px 0;
+  }
+  
+  .separator {
+    display: none;
+  }
+}
+
+/* 两侧装饰面板 */
+.side-panel {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 20px 15px;
+  font-family: 'Fira Code', monospace;
+  z-index: 0;
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+}
+
+.side-panel:hover {
+  opacity: 1;
+}
+
+.left-panel {
+  left: 30px;
+}
+
+.right-panel {
+  right: 30px;
+}
+
+/* 左侧 HTML 代码装饰 */
+.side-decoration {
+  color: #00ff88;
+  font-size: 13px;
+  line-height: 1.8;
+  text-shadow: 0 0 10px rgba(0, 255, 136, 0.4);
+  margin-bottom: 25px;
+}
+
+.side-decoration .deco-line {
+  opacity: 0.6;
+  transition: opacity 0.2s ease;
+}
+
+.side-decoration .deco-line:hover {
+  opacity: 1;
+}
+
+.side-decoration .indent {
+  padding-left: 15px;
+}
+
+.side-decoration .indent2 {
+  padding-left: 30px;
+}
+
+/* 二进制流动画 */
+.binary-stream {
+  font-size: 11px;
+  color: #4ade80;
+  opacity: 0.4;
+  line-height: 1.6;
+  animation: binaryPulse 3s ease-in-out infinite;
+}
+
+@keyframes binaryPulse {
+  0%, 100% {
+    opacity: 0.3;
+    text-shadow: 0 0 5px rgba(74, 222, 128, 0.2);
+  }
+  50% {
+    opacity: 0.6;
+    text-shadow: 0 0 15px rgba(74, 222, 128, 0.5);
+  }
+}
+
+/* 右侧技术栈图标 */
+.tech-icons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 25px;
+}
+
+.tech-icon {
+  font-size: 12px;
+  color: #a0a0a0;
+  padding: 6px 12px;
+  background: rgba(30, 30, 30, 0.6);
+  border: 1px solid #333;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  cursor: default;
+}
+
+.tech-icon:hover {
+  color: #00ff88;
+  border-color: #00ff88;
+  background: rgba(0, 255, 136, 0.08);
+  transform: translateX(-5px);
+  box-shadow: 0 0 15px rgba(0, 255, 136, 0.2);
+}
+
+/* 统计数据块 */
+.stats-block {
+  padding: 15px;
+  background: rgba(15, 15, 15, 0.8);
+  border: 1px solid #2a2a2a;
+  border-radius: 8px;
+}
+
+.stat-line {
+  font-size: 11px;
+  color: #666;
+  margin-bottom: 8px;
+}
+
+.stat-line:last-child {
+  margin-bottom: 0;
+}
+
+.stat-value {
+  color: #00ff88;
+  font-weight: 600;
+  text-shadow: 0 0 8px rgba(0, 255, 136, 0.4);
+}
+
+/* 侧边面板过渡动画 */
+.side-fade-enter-active {
+  transition: all 0.8s ease 0.5s;
+}
+
+.side-fade-enter-from {
+  opacity: 0;
+  transform: translateY(-50%) scale(0.9);
+}
+
+.side-fade-enter-to {
+  opacity: 0.7;
+  transform: translateY(-50%) scale(1);
+}
+
+/* 响应式隐藏侧边面板 */
+@media (max-width: 1400px) {
+  .side-panel {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .side-panel {
+    display: none;
+  }
+}

@@ -1,8 +1,10 @@
 /* Integrated Matrix-style console blog page */
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&display=swap');
+
 .blog-page {
   min-height: 100vh;
   background: transparent;
-  font-family: 'Source Code Pro', Consolas, Monaco, 'Courier New', monospace;
+  font-family: 'Fira Code', 'Source Code Pro', Consolas, Monaco, monospace;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -16,38 +18,206 @@
   content: '';
   position: absolute;
   inset: 0;
-  background-image: linear-gradient(rgba(0,255,127,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(0,255,127,0.02) 1px, transparent 1px);
-  background-size: 40px 40px, 40px 40px;
+  background-image: linear-gradient(rgba(0,255,136,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(0,255,136,0.02) 1px, transparent 1px);
+  background-size: 20px 20px;
   pointer-events: none;
 }
 
-.console.integrated {
-  width: min(1100px, 96%);
-  background: linear-gradient(180deg, rgba(0,0,0,0.1), rgba(0,0,0,0.08));
-  border: 1px solid rgba(0,255,127,0.06);
-  box-shadow: 0 30px 80px rgba(0,255,127,0.02);
-  border-radius: 8px;
-  overflow: hidden;
-  backdrop-filter: blur(6px) saturate(1.15);
+/* ===== 启动序列动画样式 ===== */
+.boot-sequence {
+  padding: 20px 24px;
+  min-height: 350px;
+  font-size: 13px;
+  line-height: 1.6;
 }
 
+.terminal-line {
+  opacity: 1;
+  color: #8fffb3;
+  animation: lineAppear 0.3s ease-out;
+}
+
+.terminal-line.success-line {
+  color: #00ff88;
+  text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+}
+
+.terminal-line.info-line {
+  color: #00bfff;
+  text-shadow: 0 0 10px rgba(0, 191, 255, 0.5);
+}
+
+.line-content {
+  display: inline-block;
+}
+
+.boot-cursor {
+  display: inline-block;
+  color: #00ff88;
+  font-weight: bold;
+  animation: cursorBlink 0.8s infinite;
+  text-shadow: 0 0 10px #00ff88;
+  margin-left: 4px;
+}
+
+@keyframes lineAppear {
+  0% { opacity: 0; transform: translateX(-10px); }
+  100% { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes cursorBlink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+/* 内容淡入动画 */
+.content-fade-enter-active {
+  transition: all 0.6s ease;
+}
+.content-fade-leave-active {
+  transition: all 0.3s ease;
+}
+.content-fade-enter-from {
+  opacity: 0;
+  transform: translateY(20px);
+}
+.content-fade-leave-to {
+  opacity: 0;
+}
+
+/* ===== 原有样式 ===== */
+
+.console.integrated {
+  width: min(1100px, 96%);
+  min-height: 450px;
+  background: #0a0a0a;
+  border: 1px solid #00ff88;
+  box-shadow: 
+    0 0 30px rgba(0, 255, 136, 0.1),
+    0 0 60px rgba(0, 255, 136, 0.05),
+    inset 0 0 80px rgba(0, 0, 0, 0.5);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* Console Header - 控制台效果 */
 .console-header {
-  background: rgba(0,0,0,0.3);
-  padding: 12px 18px;
-  border-bottom: 1px solid rgba(0,255,127,0.1);
+  background: linear-gradient(180deg, #2d2d2d 0%, #1a1a1a 100%);
+  padding: 10px 16px;
+  border-bottom: 1px solid #333;
   font-size: 14px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  position: relative;
+}
+
+/* 左上角三个按钮 */
+.header-left {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  z-index: 2;
+}
+
+.dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.dot::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  transition: opacity 0.2s;
+  font-size: 10px;
+  font-weight: bold;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.dot:hover::before {
+  opacity: 1;
+}
+
+.dot.red {
+  background: linear-gradient(135deg, #ff6058 0%, #ff3b30 100%);
+  box-shadow: 0 0 8px rgba(255, 95, 86, 0.4);
+}
+.dot.red::before { content: '×'; }
+.dot.red:hover {
+  background: linear-gradient(135deg, #ff7b74 0%, #ff5349 100%);
+  box-shadow: 0 0 12px rgba(255, 95, 86, 0.6);
+}
+
+.dot.yellow {
+  background: linear-gradient(135deg, #ffbd2e 0%, #f5a623 100%);
+  box-shadow: 0 0 8px rgba(255, 189, 46, 0.4);
+}
+.dot.yellow::before { content: '−'; }
+.dot.yellow:hover {
+  background: linear-gradient(135deg, #ffc94d 0%, #f7b733 100%);
+  box-shadow: 0 0 12px rgba(255, 189, 46, 0.6);
+}
+
+.dot.green {
+  background: linear-gradient(135deg, #28cd41 0%, #1db954 100%);
+  box-shadow: 0 0 8px rgba(39, 202, 64, 0.4);
+}
+.dot.green::before { content: '+'; }
+.dot.green:hover {
+  background: linear-gradient(135deg, #3ed95a 0%, #2ed573 100%);
+  box-shadow: 0 0 12px rgba(39, 202, 64, 0.6);
+}
+
+/* 终端标题 */
+.title {
+  font-weight: 500;
+  color: #888;
+  margin-left: 12px;
+  font-size: 13px;
+  letter-spacing: 0.5px;
+}
+
+/* 状态指示 */
+.header-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #00ff88;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.status-indicator {
+  width: 8px;
+  height: 8px;
+  background: #00ff88;
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+  box-shadow: 0 0 10px #00ff88;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 5px #00ff88; transform: scale(1); }
+  50% { opacity: 0.6; box-shadow: 0 0 15px #00ff88, 0 0 25px #00ff88; transform: scale(1.1); }
 }
 
 .console-prompt {
-  color: #00ff41;
+  color: #00ff88;
 }
 
 .console-cursor {
-  color: #00ff41;
+  color: #00ff88;
   animation: blink 1s infinite;
+  text-shadow: 0 0 10px #00ff88;
 }
 
 @keyframes blink {
@@ -60,6 +230,30 @@
   max-height: 70vh;
   overflow-y: auto;
   overflow-x: hidden;
+  position: relative;
+  background: 
+    linear-gradient(rgba(0, 255, 136, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 255, 136, 0.02) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+/* Scanline Effect */
+.console-content::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.1),
+    rgba(0, 0, 0, 0.1) 1px,
+    transparent 1px,
+    transparent 2px
+  );
+  pointer-events: none;
+  opacity: 0.3;
 }
 
 /* Custom scrollbar styling for terminal theme */
@@ -97,9 +291,10 @@
 }
 
 .panel h2 {
-  color: #00ff41;
+  color: #00ff88;
   margin-bottom: 12px;
   font-size: 18px;
+  text-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
 }
 
 .panel p {
@@ -112,30 +307,35 @@
 }
 
 .blog-post {
-  border: 1px solid rgba(0,255,127,0.2);
+  border: 1px solid rgba(0,255,136,0.3);
   border-radius: 8px;
   padding: 16px;
   margin-bottom: 16px;
-  background: rgba(0,0,0,0.2);
+  background: rgba(0,0,0,0.4);
   transition: all 0.3s ease;
+  position: relative;
 }
 
 .blog-post:hover {
-  border-color: rgba(0,255,127,0.4);
-  box-shadow: 0 4px 12px rgba(0,255,127,0.1);
+  border-color: #00ff88;
+  box-shadow: 
+    0 4px 20px rgba(0,255,136,0.15),
+    inset 0 0 30px rgba(0, 255, 136, 0.03);
+  transform: translateY(-2px);
 }
 
 .blog-post h3 {
-  color: #00ff41;
+  color: #00ff88;
   margin-bottom: 8px;
   font-size: 16px;
+  text-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
 }
 
 .post-meta {
   display: flex;
   justify-content: space-between;
   font-size: 12px;
-  color: #8fffb3;
+  color: #888;
   margin-bottom: 12px;
 }
 
@@ -144,30 +344,35 @@
 }
 
 .post-tags {
+  color: #00ff88;
   opacity: 0.7;
 }
 
 .post-excerpt {
   line-height: 1.5;
   margin-bottom: 12px;
-  color: #bfffcc;
+  color: #aaa;
 }
 
 .read-more-btn {
-  background: rgba(0,255,127,0.1);
-  border: 1px solid rgba(0,255,127,0.3);
-  color: #00ff41;
-  padding: 6px 12px;
+  background: rgba(0,255,136,0.1);
+  border: 1px solid rgba(0,255,136,0.4);
+  color: #00ff88;
+  padding: 8px 16px;
   border-radius: 4px;
   cursor: pointer;
-  font-family: 'Source Code Pro', monospace;
+  font-family: 'Fira Code', monospace;
   font-size: 12px;
   transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .read-more-btn:hover {
-  background: rgba(0,255,127,0.2);
-  border-color: rgba(0,255,127,0.5);
+  background: rgba(0,255,136,0.2);
+  border-color: #00ff88;
+  box-shadow: 0 0 15px rgba(0, 255, 136, 0.3);
+  transform: translateY(-1px);
 }
 
 /* toast styles */
@@ -179,13 +384,15 @@
 }
 
 .toast {
-  background: rgba(0,0,0,0.8);
-  color: #00ff41;
+  background: rgba(10, 10, 10, 0.95);
+  color: #00ff88;
   padding: 12px 18px;
   border-radius: 4px;
-  border: 1px solid rgba(0,255,127,0.3);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-  font-family: 'Source Code Pro', monospace;
+  border: 1px solid rgba(0,255,136,0.4);
+  box-shadow: 
+    0 4px 20px rgba(0,0,0,0.5),
+    0 0 20px rgba(0, 255, 136, 0.1);
+  font-family: 'Fira Code', monospace;
   font-size: 14px;
   opacity: 0;
   transform: translateY(-10px);
@@ -195,4 +402,29 @@
 .toast[data-show="true"] {
   opacity: 1;
   transform: translateY(0);
+}
+
+/* Scrollbar styling */
+.console-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.console-content::-webkit-scrollbar-track {
+  background: rgba(0,0,0,0.3);
+  border-radius: 4px;
+}
+
+.console-content::-webkit-scrollbar-thumb {
+  background: rgba(0,255,136,0.4);
+  border-radius: 4px;
+  border: 1px solid rgba(0,255,136,0.2);
+}
+
+.console-content::-webkit-scrollbar-thumb:hover {
+  background: rgba(0,255,136,0.6);
+}
+
+.console-content {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0,255,136,0.4) rgba(0,0,0,0.3);
 }

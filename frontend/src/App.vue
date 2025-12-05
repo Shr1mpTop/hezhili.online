@@ -4,20 +4,7 @@
     <Sidebar @navigate="handleNavigate" />
     <main class="main-content">
       <!-- 主页内容 -->
-      <div v-if="currentView === 'home'">
-        <pre class="home-ascii">
- █████                          █████       ███  ████   ███                               ████   ███                     
-░░███                          ░░███       ░░░  ░░███  ░░░                               ░░███  ░░░                      
- ░███████    ██████   █████████ ░███████   ████  ░███  ████            ██████  ████████   ░███  ████  ████████    ██████ 
- ░███░░███  ███░░███ ░█░░░░███  ░███░░███ ░░███  ░███ ░░███           ███░░███░░███░░███  ░███ ░░███ ░░███░░███  ███░░███
- ░███ ░███ ░███████  ░   ███░   ░███ ░███  ░███  ░███  ░███          ░███ ░███ ░███ ░███  ░███  ░███  ░███ ░███ ░███████ 
- ░███ ░███ ░███░░░     ███░   █ ░███ ░███  ░███  ░███  ░███          ░███ ░███ ░███ ░███  ░███  ░███  ░███ ░███ ░███░░░  
- ████ █████░░██████   █████████ ████ █████ █████ █████ █████    ██   ░░██████  ████ █████ █████ █████ ████ █████░░██████ 
-░░░░ ░░░░░  ░░░░░░   ░░░░░░░░░ ░░░░ ░░░░░ ░░░░░ ░░░░░ ░░░░░    ░░     ░░░░░░  ░░░░ ░░░░░ ░░░░░ ░░░░░ ░░░░ ░░░░░  ░░░░░░  
-                                                                                                                         
-                                                                                                                         
-                                                                                                                         </pre>
-      </div>
+      <Home v-if="currentView === 'home'" />
 
   <!-- 项目页面 -->
   <Projects v-else-if="currentView === 'projects'" @navigate="handleNavigate" />
@@ -45,6 +32,7 @@ import { ref } from 'vue'
 import Sidebar from './components/Sidebar.vue'
 import Button from './components/Button.vue'
 import MatrixBackground from './components/MatrixBackground.vue'
+import Home from './components/Home.vue'
 import Projects from './components/Projects.vue'
 import BuffotteReport from './components/BuffotteReport.vue'
 import About from './components/About.vue'
@@ -58,6 +46,7 @@ export default {
     Sidebar,
     Button,
     MatrixBackground,
+    Home,
     Projects,
     BuffotteReport,
     About,

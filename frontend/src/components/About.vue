@@ -6,11 +6,30 @@
           <span class="dot red"></span>
           <span class="dot yellow"></span>
           <span class="dot green"></span>
+          <div class="title">hezhili@portfolio: ~</div>
         </div>
-        <div class="title">hezhili@portfolio: ~</div>
+        <div class="header-status">
+          <span class="status-indicator"></span>
+          <span>ACTIVE</span>
+        </div>
       </div>
 
-      <div class="console-grid">
+      <!-- 启动序列区域 -->
+      <div class="boot-sequence" v-if="!showContent">
+        <div 
+          v-for="(line, index) in terminalLines" 
+          :key="index" 
+          class="terminal-line"
+          :class="{ 'success-line': line.type === 'success', 'info-line': line.type === 'info' }"
+        >
+          <span v-if="line.text" class="line-content">{{ line.text }}</span>
+        </div>
+        <span class="boot-cursor" v-if="!showContent">_</span>
+      </div>
+
+      <!-- 主内容区域 -->
+      <transition name="content-fade">
+        <div v-if="showContent" class="console-grid">
         <!-- Left Panel: Education & Contact -->
         <section class="panel overview">
           <h2>Education & Contact</h2>
@@ -122,14 +141,18 @@
           </div>
         </section>
       </div>
+      </transition>
 
-      <div class="console-footer">
-        <div class="footer-actions">
-          <button class="cmd-btn" @click="copyResume">复制简历链接</button>
-          <a class="cmd-btn" :href="github" target="_blank">打开 GitHub</a>
-          <a class="cmd-btn" :href="website" target="_blank">访问网站</a>
+      <transition name="footer-fade">
+        <div v-if="showContent" class="console-footer">
+          <div class="footer-actions">
+            <a class="cmd-btn" :href="resumeCN" target="_blank">简历</a>
+            <a class="cmd-btn" :href="resumeEN" target="_blank">Resume</a>
+            <a class="cmd-btn" :href="github" target="_blank">打开 GitHub</a>
+            <a class="cmd-btn" :href="website" target="_blank">访问网站</a>
+          </div>
         </div>
-      </div>
+      </transition>
     </div>
     <!-- Toast container -->
     <div class="toast-container" v-if="toast">
@@ -139,8 +162,43 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import '../css/about.css'
+
+// --- 终端启动动画 ---
+const terminalLines = ref([])
+const showContent = ref(false)
+
+const bootSequence = [
+  { text: '> Initializing system...', delay: 200 },
+  { text: '> Loading kernel modules...', delay: 150 },
+  { text: '[OK] Memory allocation complete', delay: 100, type: 'success' },
+  { text: '[OK] Network interface detected', delay: 100, type: 'success' },
+  { text: '> Authenticating user credentials...', delay: 200 },
+  { text: '[OK] User authenticated: hezhili', delay: 150, type: 'success' },
+  { text: '', delay: 50 },
+  { text: '╔═══════════════════════════════════════════════════════════════╗', delay: 30 },
+  { text: '║                                                               ║', delay: 30 },
+  { text: '║   █▀█ █▀█ █▀█ █▀▀ █ █   █▀▀   █   █▀█ ▄▀█ █▀▄ █▀▀ █▀▄       ║', delay: 30 },
+  { text: '║   █▀▀ █▀▄ █▄█ █▀  █ █▄▄ ██▄   █▄▄ █▄█ █▀█ █▄▀ ██▄ █▄▀       ║', delay: 30 },
+  { text: '║                                                               ║', delay: 30 },
+  { text: '╚═══════════════════════════════════════════════════════════════╝', delay: 30 },
+  { text: '', delay: 100 },
+  { text: '[INFO] Loading personal profile...', delay: 150, type: 'info' },
+  { text: '[INFO] Fetching GitHub activity...', delay: 100, type: 'info' },
+  { text: '[OK] All modules loaded successfully', delay: 150, type: 'success' },
+  { text: '', delay: 100 },
+  { text: '> Welcome to He Zhili\'s Portfolio Terminal', delay: 200 },
+]
+
+onMounted(async () => {
+  for (const line of bootSequence) {
+    await new Promise(resolve => setTimeout(resolve, line.delay))
+    terminalLines.value.push(line)
+  }
+  await new Promise(resolve => setTimeout(resolve, 400))
+  showContent.value = true
+})
 
 // --- Updated Information ---
 const email = 'HEZH0014@e.ntu.edu.sg'
@@ -148,6 +206,10 @@ const phone = '+8615982296295'
 const website = 'https://www.hezhili.online' // Your live portfolio site
 const github = 'https://github.com/Shr1mpTop'
 const contributions = 548 // Placeholder, update with your actual contribution count
+
+// --- 简历链接 ---
+const resumeCN = '/HeZhili_CV.pdf'
+const resumeEN = '/HeZhili_CV__English.pdf'
 
 // --- Updated GitHub Repositories ---
 const repos = {
@@ -168,17 +230,6 @@ const tools = ref(60)       // 熟练使用多种框架和工具
 // --- Toast Notification Logic ---
 const toast = ref(null)
 const toastVisible = ref(false)
-
-const copyResume = async () => {
-  try {
-    // Make sure the PDF file name matches what you have in your project's public folder
-    const resumeUrl = new URL('HeZhili_CV.pdf', window.location.origin + (import.meta.env.BASE_URL || '/')).href
-    await navigator.clipboard.writeText(resumeUrl)
-    showToast('已复制简历链接到剪贴板')
-  } catch (e) {
-    showToast('复制失败，请手动下载简历')
-  }
-}
 
 const showToast = (text, ms = 1400) => {
   toast.value = text

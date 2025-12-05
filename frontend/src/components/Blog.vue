@@ -2,28 +2,53 @@
   <div class="blog-page">
     <div class="console integrated">
       <div class="console-header">
-        <span class="console-prompt">hezhili@portfolio: ~/blog</span>
-        <span class="console-cursor">_</span>
+        <div class="header-left">
+          <span class="dot red"></span>
+          <span class="dot yellow"></span>
+          <span class="dot green"></span>
+          <div class="title">hezhili@portfolio: ~/blog</div>
+        </div>
+        <div class="header-status">
+          <span class="status-indicator"></span>
+          <span>ONLINE</span>
+        </div>
       </div>
-      <div class="console-content">
-        <div class="panel">
-          <h2>技术博客</h2>
-          <p>分享我的技术学习心得、开发经验和行业洞察。</p>
-          
-          <div class="blog-posts">
-            <div v-if="loading" class="loading">加载中...</div>
-            <div v-for="post in posts" :key="post._id || post.id" class="blog-post">
-              <h3>{{ post.title }}</h3>
-              <div class="post-meta">
-                <span class="post-date">{{ post.date }}</span>
-                <span class="post-tags">{{ post.tags.join(', ') }}</span>
+
+      <!-- 启动序列 -->
+      <div class="boot-sequence" v-if="!showContent">
+        <div 
+          v-for="(line, index) in terminalLines" 
+          :key="index" 
+          class="terminal-line"
+          :class="{ 'success-line': line.type === 'success', 'info-line': line.type === 'info' }"
+        >
+          <span v-if="line.text" class="line-content">{{ line.text }}</span>
+        </div>
+        <span class="boot-cursor" v-if="!showContent">_</span>
+      </div>
+
+      <!-- 主内容 -->
+      <transition name="content-fade">
+        <div v-if="showContent" class="console-content">
+          <div class="panel">
+            <h2>技术博客</h2>
+            <p>分享我的技术学习心得、开发经验和行业洞察。</p>
+            
+            <div class="blog-posts">
+              <div v-if="loading" class="loading">加载中...</div>
+              <div v-for="post in posts" :key="post._id || post.id" class="blog-post">
+                <h3>{{ post.title }}</h3>
+                <div class="post-meta">
+                  <span class="post-date">{{ post.date }}</span>
+                  <span class="post-tags">{{ post.tags.join(', ') }}</span>
+                </div>
+                <p class="post-excerpt">{{ post.excerpt }}</p>
+                <button class="read-more-btn" @click="viewPost(post)">阅读更多</button>
               </div>
-              <p class="post-excerpt">{{ post.excerpt }}</p>
-              <button class="read-more-btn" @click="viewPost(post)">阅读更多</button>
             </div>
           </div>
         </div>
-      </div>
+      </transition>
     </div>
     
     <!-- toast container -->
@@ -35,8 +60,30 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import '../css/blog.css'
 
 const emit = defineEmits(['navigate'])
+
+// 终端启动动画
+const terminalLines = ref([])
+const showContent = ref(false)
+
+const bootSequence = [
+  { text: '> Connecting to blog server...', delay: 200 },
+  { text: '[OK] Connection established', delay: 150, type: 'success' },
+  { text: '> Fetching latest posts...', delay: 200 },
+  { text: '[INFO] Parsing markdown content...', delay: 100, type: 'info' },
+  { text: '[OK] Database synchronized', delay: 150, type: 'success' },
+  { text: '', delay: 50 },
+  { text: '╔═════════════════════════════════════════════╗', delay: 30 },
+  { text: '║                                             ║', delay: 30 },
+  { text: '║   █▄▄ █   █▀█ █▀▀   █▀ █▄█ █▀ ▀█▀ █▀▀ █▀▄▀█ ║', delay: 30 },
+  { text: '║   █▄█ █▄▄ █▄█ █▄█   ▄█ ░█░ ▄█ ░█░ ██▄ █░▀░█ ║', delay: 30 },
+  { text: '║                                             ║', delay: 30 },
+  { text: '╚═════════════════════════════════════════════╝', delay: 30 },
+  { text: '', delay: 100 },
+  { text: '[OK] Ready to display content', delay: 150, type: 'success' },
+]
 
 const toast = ref(null)
 const toastVisible = ref(false)
@@ -90,7 +137,16 @@ const fetchPosts = async () => {
   }
 }
 
-onMounted(() => {
+onMounted(async () => {
+  // 启动动画
+  for (const line of bootSequence) {
+    await new Promise(resolve => setTimeout(resolve, line.delay))
+    terminalLines.value.push(line)
+  }
+  await new Promise(resolve => setTimeout(resolve, 300))
+  showContent.value = true
+  
+  // 获取博客数据
   fetchPosts()
 })
 </script>
