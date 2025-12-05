@@ -35,10 +35,7 @@
       <PostDetail v-else-if="currentView === 'blog-detail'" :post="selectedPost" @navigate="handleNavigate" />
 
       <!-- 联系页面 -->
-      <div v-else-if="currentView === 'contact'">
-        <h1>Audentes fortuna iuvat</h1>
-        <h2>"命运眷顾勇敢之人"</h2>
-      </div>
+      <Contact v-else-if="currentView === 'contact'" />
     </main>
   </div>
 </template>
@@ -53,6 +50,7 @@ import BuffotteReport from './components/BuffotteReport.vue'
 import About from './components/About.vue'
 import Blog from './components/Blog.vue'
 import PostDetail from './components/PostDetail.vue'
+import Contact from './components/Contact.vue'
 import './css/app.css'
 
 export default {
@@ -64,7 +62,8 @@ export default {
     BuffotteReport,
     About,
     Blog,
-    PostDetail
+    PostDetail,
+    Contact
   },
   setup() {
     const currentView = ref('home')

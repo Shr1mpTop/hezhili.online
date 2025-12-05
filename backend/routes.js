@@ -4,8 +4,67 @@ const router = express.Router();
 // Import models (assuming they are defined elsewhere)
 const Post = require('./models/Post');
 const Comment = require('./models/Comment');
+const EmailService = require('./email-service');
 
 const BUFFOTTE_REPORT_URL = 'https://buffotte.hezhili.online/report';
+
+// ============ 联系反馈邮件 API ============
+
+// 发送反馈邮件
+router.post('/contact/feedback', async (req, res) => {
+  try {
+    const { feedback, email } = req.body;
+    
+    if (!feedback || feedback.trim().length === 0) {
+      return res.status(400).json({ 
+        success: false, 
+        error: '反馈内容不能为空' 
+      });
+    }
+    
+    if (feedback.length > 5000) {
+      return res.status(400).json({ 
+        success: false, 
+        error: '反馈内容过长，请控制在5000字以内' 
+      });
+    }
+    
+    const emailService = new EmailService();
+    const userEmail = email && email.trim() ? email.trim() : null;
+    
+    // 发送反馈给作者
+    await emailService.sendFeedbackToAuthor(feedback, userEmail || '匿名用户');
+    
+    // 如果用户提供了邮箱，发送确认邮件
+    if (userEmail) {
+      // 简单的邮箱格式验证
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (emailRegex.test(userEmail)) {
+        try {
+          await emailService.sendConfirmationToUser(userEmail, feedback);
+        } catch (confirmError) {
+          console.error('发送确认邮件失败:', confirmError);
+          // 不影响主流程，只记录错误
+        }
+      }
+    }
+    
+    res.json({ 
+      success: true, 
+      message: '反馈已成功发送，感谢您的意见！',
+      confirmationSent: !!userEmail
+    });
+    
+  } catch (error) {
+    console.error('发送反馈邮件失败:', error);
+    res.status(500).json({ 
+      success: false, 
+      error: '发送失败，请稍后再试' 
+    });
+  }
+});
+
+// ============ Buffotte Report API ============
 
 router.get('/buffotte/report', async (req, res) => {
   try {
