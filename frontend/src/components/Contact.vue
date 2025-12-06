@@ -15,7 +15,7 @@ const errorMessage = ref('')
 const terminalLines = ref([])
 const showForm = ref(false)
 
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3002'
+const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3002'
 
 // 终端启动动画
 const bootSequence = [
