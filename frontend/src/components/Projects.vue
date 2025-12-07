@@ -36,7 +36,6 @@ const projectInternalKey = (url) => {
   if (!url) return 'home'
   if (url === '/' ) return 'home'
   if (url.startsWith('/about')) return 'profile'
-  if (url.startsWith('/buffotte')) return 'buffotte'
   if (url.startsWith('/blog')) return 'blog'
   return 'home'
 }
@@ -59,17 +58,17 @@ const projects = [
   },
   {
     id: 6,
-    title: 'Buff Tracker',
-    description: 'CS2饰品价格追踪工具，基于FastAPI构建的RESTful微服务，支持实时价格查询、模糊搜索饰品，提供完整的API文档和Docker部署方案',
-    url: 'https://bufftracker.hezhili.online/',
-    image: '📈'
+    title: 'Buffotte',
+    description: 'BUFF市场AI风控与策略分析工具，提供实时市场数据分析、风险评估报告和投资策略建议',
+    url: 'https://buffotte.hezhili.online/',
+    image: '📊'
   },
   {
-    id: 5,
-    title: 'Buffotte报告',
-    description: '聚合 BUFF 市场 AI 风控与策略报告，点击后在站内解析并渲染 https://buffotte.hezhili.online/report 的最新内容。',
-    url: '/buffotte',
-    image: '📊'
+    id: 7,
+    title: 'Bufftracker',
+    description: 'BUFF市场数据跟踪与分析平台，提供实时价格监控、市场趋势分析和投资组合管理工具',
+    url: 'https://bufftracker.hezhili.online/',
+    image: '📈'
   },
   {
     id: 3,
