@@ -25,9 +25,9 @@
         <img src="/blog-icon.svg" alt="技术博客" class="menu-icon" />
         <span class="menu-text">技术博客</span>
       </li>
-      <li class="menu-item" @click="openExternal('https://bufftracker.hezhili.online/')">
-        <img src="/buff-tracker-icon.svg" alt="Buff Tracker" class="menu-icon" />
-        <span class="menu-text">Buff Tracker</span>
+      <li class="menu-item" @click="openExternal('https://buffotte.hezhili.online/')">
+        <img src="/buff-tracker-icon.svg" alt="Buffotte" class="menu-icon" />
+        <span class="menu-text">Buffotte</span>
       </li>
       <li class="menu-item" @click="navigateTo('contact')">
         <img src="/contact-icon.svg" alt="联系" class="menu-icon" />
@@ -49,8 +49,8 @@
       <li class="menu-item collapsed-item" title="技术博客" @click="navigateTo('blog')">
         <img src="/blog-icon.svg" alt="技术博客" class="menu-icon collapsed-icon" />
       </li>
-      <li class="menu-item collapsed-item" title="Buff Tracker" @click="openExternal('https://bufftracker.hezhili.online/')">
-        <img src="/buff-tracker-icon.svg" alt="Buff Tracker" class="menu-icon collapsed-icon" />
+      <li class="menu-item collapsed-item" title="Buffotte" @click="openExternal('https://buffotte.hezhili.online/')">
+        <img src="/buff-tracker-icon.svg" alt="Buffotte" class="menu-icon collapsed-icon" />
       </li>
       <li class="menu-item collapsed-item" title="联系" @click="navigateTo('contact')">
         <img src="/contact-icon.svg" alt="联系" class="menu-icon collapsed-icon" />
