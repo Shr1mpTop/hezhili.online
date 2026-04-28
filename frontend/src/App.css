@@ -1,11 +1,13 @@
 .app {
   position: relative;
+  width: 100%;
   min-height: 100vh;
   overflow-x: hidden;
 }
 
 .main-content {
-  margin-left: 250px; /* Sidebar width */
+  margin-left: 250px;
+  width: calc(100% - 250px);
   padding: 20px;
   min-height: 100vh;
   background: rgba(0, 0, 0, 0.9);
@@ -15,6 +17,7 @@
 @media (max-width: 768px) {
   .main-content {
     margin-left: 0;
+    width: 100%;
     padding: 10px;
   }
 }
