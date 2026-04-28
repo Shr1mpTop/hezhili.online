@@ -1,0 +1,20 @@
+.app {
+  position: relative;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.main-content {
+  margin-left: 250px; /* Sidebar width */
+  padding: 20px;
+  min-height: 100vh;
+  background: rgba(0, 0, 0, 0.9);
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .main-content {
+    margin-left: 0;
+    padding: 10px;
+  }
+}
