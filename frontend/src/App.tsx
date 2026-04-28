@@ -3,20 +3,15 @@ import Sidebar from "./components/Sidebar";
 import MatrixBackground from "./components/MatrixBackground";
 import Home from "./components/Home";
 import Projects from "./components/Projects";
-import BuffotteReport from "./components/BuffotteReport";
-import About from "./components/About";
-import Blog from "./components/Blog";
-import PostDetail from "./components/PostDetail";
 import Contact from "./components/Contact";
 import "./App.css";
 
 function App() {
   const [currentView, setCurrentView] = useState("home");
-  const [selectedPost, setSelectedPost] = useState(null);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
-  const handleNavigate = (view: string, post?: any) => {
+  const handleNavigate = (view: string) => {
     setCurrentView(view);
-    if (post) setSelectedPost(post);
   };
 
   const renderView = () => {
@@ -24,15 +19,7 @@ function App() {
       case "home":
         return <Home />;
       case "projects":
-        return <Projects onNavigate={handleNavigate} />;
-      case "buffotte":
-        return <BuffotteReport />;
-      case "profile":
-        return <About />;
-      case "blog":
-        return <Blog onNavigate={handleNavigate} />;
-      case "blog-detail":
-        return <PostDetail post={selectedPost} onNavigate={handleNavigate} />;
+        return <Projects />;
       case "contact":
         return <Contact />;
       default:
@@ -41,9 +28,18 @@ function App() {
   };
 
   return (
-    <div className="app">
+    <div
+      className="app"
+      style={{
+        ["--sidebar-width" as string]: sidebarCollapsed ? "50px" : "200px",
+      }}
+    >
       <MatrixBackground />
-      <Sidebar onNavigate={handleNavigate} />
+      <Sidebar
+        activeView={currentView}
+        onNavigate={handleNavigate}
+        onCollapsedChange={setSidebarCollapsed}
+      />
       <main className="main-content">{renderView()}</main>
     </div>
   );
