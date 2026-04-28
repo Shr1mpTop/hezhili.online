@@ -1,0 +1,39 @@
+:root {
+  /* Background */
+  --bg-primary: #050709;
+  --bg-section: rgba(5, 7, 9, 0.35);
+
+  /* Text */
+  --text-primary: #f0f0f0;
+  --text-secondary: #a0a8b0;
+  --text-muted: #6b7280;
+
+  /* Accents */
+  --accent-gold: #c8a86e;
+  --accent-warm: #e8a04a;
+  --accent-cool: #5b8fb9;
+  --accent-green: #4fffba;
+  --accent-red: #ff6b6b;
+
+  /* Chapter colors */
+  --ch1-bg: #0a0a1a;
+  --ch2-bg: #0d1a2e;
+  --ch3-bg: #1a100a;
+  --ch4-bg: #0a1a1a;
+  --ch5-bg: #120a1e;
+  --ch6-bg: #1a1a0a;
+
+  /* Typography */
+  --font-display: 'Cormorant Garamond', 'Georgia', serif;
+  --font-body: 'Inter', 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+
+  /* Spacing */
+  --section-padding: 80px 0;
+
+  /* Glass */
+  --glass-bg: rgba(255, 255, 255, 0.04);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-border-hover: rgba(255, 255, 255, 0.2);
+  --glass-blur: 12px;
+}

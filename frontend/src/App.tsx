@@ -1,46 +1,78 @@
-import { useState } from "react";
-import Sidebar from "./components/Sidebar";
-import MatrixBackground from "./components/MatrixBackground";
-import Home from "./components/Home";
-import Projects from "./components/Projects";
-import Contact from "./components/Contact";
+import { useState, useCallback, lazy, Suspense } from "react";
+import { useScrollProgress } from "./hooks/useScrollProgress";
+import { getChapterIndex } from "./utils/cameraPath";
+import ScrollContainer from "./components/Overlay/ScrollContainer";
+import FloatingNav from "./components/Overlay/FloatingNav";
+import OriginSection from "./components/Overlay/chapters/OriginSection";
+import GenesisSection from "./components/Overlay/chapters/GenesisSection";
+import ForgeSection from "./components/Overlay/chapters/ForgeSection";
+import CreationsSection from "./components/Overlay/chapters/CreationsSection";
+import JourneySection from "./components/Overlay/chapters/JourneySection";
+import ConnectSection from "./components/Overlay/chapters/ConnectSection";
 import "./App.css";
 
+const ExperienceCanvas = lazy(
+  () => import("./components/Experience/ExperienceCanvas"),
+);
+const BlogPanel = lazy(
+  () => import("./components/Overlay/panels/BlogPanel"),
+);
+const PostDetailPanel = lazy(
+  () => import("./components/Overlay/panels/PostDetailPanel"),
+);
+const BuffottePanel = lazy(
+  () => import("./components/Overlay/panels/BuffottePanel"),
+);
+
 function App() {
-  const [currentView, setCurrentView] = useState("home");
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const scrollProgress = useScrollProgress();
+  const activeChapter = getChapterIndex(scrollProgress);
 
-  const handleNavigate = (view: string) => {
-    setCurrentView(view);
-  };
+  const [blogOpen, setBlogOpen] = useState(false);
+  const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
+  const [buffotteOpen, setBuffotteOpen] = useState(false);
 
-  const renderView = () => {
-    switch (currentView) {
-      case "home":
-        return <Home />;
-      case "projects":
-        return <Projects />;
-      case "contact":
-        return <Contact />;
-      default:
-        return <Home />;
-    }
-  };
+  const handleBlogOpen = useCallback(() => setBlogOpen(true), []);
+  const handleBuffotteOpen = useCallback(() => setBuffotteOpen(true), []);
+
+  const handleSelectPost = useCallback((id: string) => {
+    setSelectedPostId(id);
+    setBlogOpen(false);
+  }, []);
 
   return (
-    <div
-      className="app"
-      style={{
-        ["--sidebar-width" as string]: sidebarCollapsed ? "50px" : "200px",
-      }}
-    >
-      <MatrixBackground />
-      <Sidebar
-        activeView={currentView}
-        onNavigate={handleNavigate}
-        onCollapsedChange={setSidebarCollapsed}
+    <div className="app">
+      <Suspense fallback={null}>
+        <ExperienceCanvas scrollProgress={scrollProgress} />
+      </Suspense>
+      <FloatingNav
+        activeChapter={activeChapter}
+        onBlogOpen={handleBlogOpen}
+        onBuffotteOpen={handleBuffotteOpen}
       />
-      <main className="main-content">{renderView()}</main>
+      <ScrollContainer>
+        <OriginSection />
+        <GenesisSection />
+        <ForgeSection />
+        <CreationsSection />
+        <JourneySection />
+        <ConnectSection />
+      </ScrollContainer>
+      <Suspense fallback={null}>
+        <BlogPanel
+          isOpen={blogOpen}
+          onClose={() => setBlogOpen(false)}
+          onSelectPost={handleSelectPost}
+        />
+        <PostDetailPanel
+          postId={selectedPostId}
+          onClose={() => setSelectedPostId(null)}
+        />
+        <BuffottePanel
+          isOpen={buffotteOpen}
+          onClose={() => setBuffotteOpen(false)}
+        />
+      </Suspense>
     </div>
   );
 }
