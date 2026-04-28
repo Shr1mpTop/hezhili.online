@@ -47,7 +47,9 @@ function Projects() {
       setLoading(true);
       setError(null);
       try {
-        const response = await fetch("https://api.github.com/users/Shr1mpTop/repos?per_page=100&sort=updated");
+        const response = await fetch(
+          "https://api.github.com/users/Shr1mpTop/repos?per_page=100&sort=updated",
+        );
         if (!response.ok) {
           throw new Error(`GitHub API 请求失败: ${response.status}`);
         }
@@ -57,7 +59,8 @@ function Projects() {
           .sort(
             (a, b) =>
               b.stargazers_count - a.stargazers_count ||
-              new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime(),
+              new Date(b.updated_at).getTime() -
+                new Date(a.updated_at).getTime(),
           );
         setRepos(usefulRepos);
       } catch (err: any) {
@@ -98,7 +101,8 @@ function Projects() {
         <p className="eyebrow">Shr1mpTop / Portfolio Modules</p>
         <h1>Projects That Actually Ship</h1>
         <p className="hero-subtitle">
-          已重构为 GitHub 动态项目墙，自动同步你的公开仓库，不再维护丑陋的硬编码卡片。
+          已重构为 GitHub
+          动态项目墙，自动同步你的公开仓库，不再维护丑陋的硬编码卡片。
         </p>
 
         <div className="hero-stats">
@@ -171,14 +175,22 @@ function Projects() {
                 <p>{repo.description || "暂无仓库描述。"}</p>
                 <div className="repo-meta">
                   <span>{repo.language || "Unknown"}</span>
-                  <span>{new Date(repo.updated_at).toLocaleDateString("zh-CN")}</span>
+                  <span>
+                    {new Date(repo.updated_at).toLocaleDateString("zh-CN")}
+                  </span>
                 </div>
                 <div className="repo-actions">
-                  <button type="button" onClick={() => openInNewTab(repo.html_url)}>
+                  <button
+                    type="button"
+                    onClick={() => openInNewTab(repo.html_url)}
+                  >
                     Source
                   </button>
                   {repo.homepage && (
-                    <button type="button" onClick={() => openInNewTab(repo.homepage as string)}>
+                    <button
+                      type="button"
+                      onClick={() => openInNewTab(repo.homepage as string)}
+                    >
                       Demo
                     </button>
                   )}
@@ -191,7 +203,12 @@ function Projects() {
 
       <section className="projects-cta">
         <p>想看更多代码细节？直接访问你的 GitHub 主页。</p>
-        <button type="button" onClick={() => openInNewTab("https://github.com/Shr1mpTop")}>Open GitHub Profile</button>
+        <button
+          type="button"
+          onClick={() => openInNewTab("https://github.com/Shr1mpTop")}
+        >
+          Open GitHub Profile
+        </button>
       </section>
       <div className="ambient-shape shape-a"></div>
       <div className="ambient-shape shape-b"></div>

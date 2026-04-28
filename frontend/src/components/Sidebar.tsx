@@ -62,10 +62,18 @@ function Sidebar({ activeView, onNavigate, onCollapsedChange }: SidebarProps) {
 
       {!isCollapsed && (
         <div className="sidebar-footer">
-          <a href="https://github.com/Shr1mpTop" target="_blank" rel="noopener noreferrer">
+          <a
+            href="https://github.com/Shr1mpTop"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             GitHub
           </a>
-          <a href="https://bufftracker.hezhili.online/" target="_blank" rel="noopener noreferrer">
+          <a
+            href="https://bufftracker.hezhili.online/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             Buff Tracker
           </a>
         </div>
