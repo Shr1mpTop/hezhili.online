@@ -18,8 +18,16 @@ export default function BuffottePanel({ isOpen, onClose }: Props) {
       setError(null);
       try {
         const res = await fetch("/api/buffotte/report");
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
-        setContent(data.report || data.content || "No report available.");
+        const report = data.data;
+        if (typeof report === "string" && report.trim()) {
+          setContent(report);
+        } else if (report && typeof report === "object") {
+          setContent(JSON.stringify(report, null, 2));
+        } else {
+          setContent("No report available.");
+        }
       } catch {
         setError("Failed to load Buffotte report");
       } finally {

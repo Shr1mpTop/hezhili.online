@@ -11,6 +11,7 @@ export default function PostDetailPanel({ postId, onClose }: Props) {
   const [post, setPost] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [commentText, setCommentText] = useState("");
+  const [commentError, setCommentError] = useState("");
   const [commentAuthor, setCommentAuthor] = useState("");
   const [comments, setComments] = useState<any[]>([]);
   const [liked, setLiked] = useState(false);
@@ -45,10 +46,10 @@ export default function PostDetailPanel({ postId, onClose }: Props) {
       const res = await fetch(`/api/posts/${postId}/like`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ user_id: "anonymous" }),
+        body: JSON.stringify({ userId: "anonymous" }),
       });
       const data = await res.json();
-      setLiked(data.liked);
+      setLiked(data.hasLiked);
       setLikes(data.likes);
     } catch {}
   };
@@ -56,8 +57,12 @@ export default function PostDetailPanel({ postId, onClose }: Props) {
   const handleComment = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!postId || !commentText.trim()) return;
+    if (commentText.length > 2000) {
+      setCommentError("评论最长 2000 字");
+      return;
+    }
     try {
-      await fetch(`/api/posts/${postId}/comments`, {
+      const res = await fetch(`/api/posts/${postId}/comments`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -65,10 +70,20 @@ export default function PostDetailPanel({ postId, onClose }: Props) {
           content: commentText.trim(),
         }),
       });
+      if (!res.ok) {
+        const body = await res.json().catch(() => null);
+        const msg =
+          body?.detail?.[0]?.msg || body?.detail || `提交失败（${res.status}）`;
+        setCommentError(typeof msg === "string" ? msg : JSON.stringify(msg));
+        return;
+      }
+      setCommentError("");
       setCommentText("");
       const cRes = await fetch(`/api/posts/${postId}/comments`);
       setComments(await cRes.json());
-    } catch {}
+    } catch {
+      setCommentError("网络错误，请重试");
+    }
   };
 
   const isOpen = !!postId;
@@ -88,7 +103,7 @@ export default function PostDetailPanel({ postId, onClose }: Props) {
             <>
               <h1 className="post-title">{post.title}</h1>
               <div className="post-meta">
-                <span>{new Date(post.created_at).toLocaleDateString("zh-CN")}</span>
+                <span>{new Date(post.date).toLocaleDateString("zh-CN")}</span>
                 <button type="button" onClick={handleLike}>
                   {liked ? "♥" : "♡"} {likes}
                 </button>
@@ -123,7 +138,11 @@ export default function PostDetailPanel({ postId, onClose }: Props) {
                     onChange={(e) => setCommentText(e.target.value)}
                     placeholder="Write a comment..."
                     rows={3}
+                    maxLength={2000}
                   />
+                  {commentError && (
+                    <p className="comment-error">{commentError}</p>
+                  )}
                   <button type="submit">Submit</button>
                 </form>
               </div>

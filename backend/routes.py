@@ -95,7 +95,12 @@ async def create_post(post_data: dict, request: Request):
 async def get_post(post_id: str, request: Request):
     db = get_database(request)
     from bson import ObjectId
-    post = await db.posts.find_one({"_id": ObjectId(post_id)})
+    from bson.errors import InvalidId
+    try:
+        object_id = ObjectId(post_id)
+    except InvalidId:
+        raise HTTPException(status_code=400, detail="Invalid post id")
+    post = await db.posts.find_one({"_id": object_id})
     if not post:
         raise HTTPException(status_code=404, detail="Post not found")
     return PostModel(**post)
@@ -104,9 +109,14 @@ async def get_post(post_id: str, request: Request):
 async def like_post(post_id: str, like_data: dict, request: Request):
     db = get_database(request)
     from bson import ObjectId
+    from bson.errors import InvalidId
+    try:
+        object_id = ObjectId(post_id)
+    except InvalidId:
+        raise HTTPException(status_code=400, detail="Invalid post id")
     user_id = like_data.get("userId", request.client.host)
 
-    post = await db.posts.find_one({"_id": ObjectId(post_id)})
+    post = await db.posts.find_one({"_id": object_id})
     if not post:
         raise HTTPException(status_code=404, detail="Post not found")
 
@@ -116,7 +126,7 @@ async def like_post(post_id: str, like_data: dict, request: Request):
         liked_by.remove(user_id)
         likes = len(liked_by)
         await db.posts.update_one(
-            {"_id": ObjectId(post_id)},
+            {"_id": object_id},
             {"$set": {"liked_by": liked_by, "likes": likes}}
         )
         has_liked = False
@@ -125,7 +135,7 @@ async def like_post(post_id: str, like_data: dict, request: Request):
         liked_by.append(user_id)
         likes = len(liked_by)
         await db.posts.update_one(
-            {"_id": ObjectId(post_id)},
+            {"_id": object_id},
             {"$set": {"liked_by": liked_by, "likes": likes}}
         )
         has_liked = True
@@ -146,8 +156,10 @@ async def add_comment(post_id: str, comment_data: dict, request: Request):
     author = comment_data.get("author", "Anonymous")
     content = comment_data.get("content")
 
-    if not content:
+    if not isinstance(content, str) or not content:
         raise HTTPException(status_code=400, detail="Comment content is required")
+    if len(content) > 2000:
+        raise HTTPException(status_code=422, detail="Comment content too long, max 2000 characters")
 
     db = get_database(request)
     comment_doc = {

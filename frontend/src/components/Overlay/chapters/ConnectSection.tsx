@@ -51,7 +51,7 @@ export default function ConnectSection() {
         setEmail("");
         setIsAnonymous(true);
       } else {
-        setErrorMessage(result.error || "Transmission failed");
+        setErrorMessage(result.detail || "Transmission failed");
         setShowError(true);
         setTimeout(() => setShowError(false), 3000);
       }

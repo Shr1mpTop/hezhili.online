@@ -8,7 +8,7 @@ type Post = {
   tags?: string[];
   likes: number;
   liked_by: string[];
-  created_at: string;
+  date: string;
 };
 
 interface Props {
@@ -64,7 +64,7 @@ export default function BlogPanel({ isOpen, onClose, onSelectPost }: Props) {
                 <p>{post.excerpt || post.content.slice(0, 120) + "..."}</p>
                 <div className="blog-meta">
                   <span>♥ {post.likes}</span>
-                  <span>{new Date(post.created_at).toLocaleDateString("zh-CN")}</span>
+                  <span>{new Date(post.date).toLocaleDateString("zh-CN")}</span>
                 </div>
               </article>
             ))}
