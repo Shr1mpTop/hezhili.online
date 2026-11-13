@@ -185,7 +185,8 @@ uv run uvicorn backend.main:app --reload --host 0.0.0.0 --port 8000
 - 项目支持PM2的进程管理和自动重启
 - 前端代理API请求到后端端口8000
 
-这个项目是一个完整的个人网站解决方案，包含博客、项目展示、联系方式等典型个人网站功能，已重构为现代化的React + FastAPI技术栈。
+这个项目是一个完整的个人网站解决方案，包含博客、项目展示、联系方式等典型个人网站功能。
+
 │ └── package.json
 ├── frontend/ # 前端代码
 │ ├── src/
@@ -297,3 +298,36 @@ npm run dev  # 使用nodemon热重载
 - 项目支持PM2的进程管理和自动重启
 
 这个项目是一个完整的个人网站解决方案，包含博客、项目展示、联系方式等典型个人网站功能。
+
+## 合约测试（离线）· DEV-011
+
+后端 8 个路由有了一套**可离线跑**的 contract 测试（`tests/test_api_contract.py`，36 用例）：
+Mongo 用 mongomock-motor 内存库、SMTP 熔断+假件、Buffotte 上游假 transport——不碰真实
+Mongo/SMTP/外网，也不读 `.env`。环境与注入细节见 `tests/README_contract.md`。
+
+```powershell
+# 一条命令跑（独立 dev 环境，不污染运行用 .venv）
+.venv-dev\Scripts\python.exe -m pytest tests\test_api_contract.py -q
+```
+
+### 已锁定的 contract 修复（commit 5222c62，7 处）
+
+| # | 断裂点 | 修复后契约 | 锁定用例 |
+|---|---|---|---|
+| 1 | 博客日期 `created_at`→`date` | 文章/评论字段名是 `date`（ISO 字符串），列表按 `date` 降序，无 `created_at` | `TestGetPosts::test_list_shape_and_sort_by_date_desc` 等 |
+| 2 | 点赞 `user_id`+`liked`→`userId`+`hasLiked` | 请求带 `userId`，响应 `{"likes": N, "hasLiked": bool}`，值落 `liked_by` | `TestLikePost::*` |
+| 3 | BuffottePanel 读 `{status,data}` 包装 | `/api/buffotte/report` 返回 `{"status":"success","data":…}`（上游 `data` 键取内层/透传） | `TestBuffotteReport::*` |
+| 4 | 评论 2000 字上限 422 | `content` >2000 → `422 {"detail": "Comment content too long, max 2000 characters"}`；恰好 2000 → 200 | `TestComments::test_comment_over_2000_chars_returns_422` / `…_exactly_2000_chars_ok` |
+| 5 | ObjectId InvalidId→400 | 坏 id → `400 {"detail": "Invalid post id"}`（GET /posts/{id} 与 like 两处；GET comments 不解析 id，返回 200 `[]`——现行为已注明锁定） | `TestGetPostById::test_invalid_objectid_returns_400` 等 |
+| 6 | 评论失败 UX（2000 字前端上限/失败提示/失败不清空） | 后端侧对应契约：超限 422 + 错误结构 `{"detail": …}` 恒定，前端可据此提示 | `TestComments::*` + 各错误结构断言 |
+| 7 | 反馈邮件链路 | 路由逻辑与发信解耦可测：200 时 spy 记录 author（+确认信），校验失败不发信，发信炸→500 兜底 | `TestContactFeedback::*` |
+
+错误响应结构统一为 HTTPException 的 `{"detail": …}`（422 校验错误为 `{"detail": […]}`），
+全部用例逐条断言状态码 + 结构。
+
+### 附带发现（第 8 处断裂，已修）
+
+`backend/models.py` 的 `PyObjectId` 在仓库自锁的 pydantic 2.13.3 下必崩（v1 式
+`__get_validators__` 被 v2 shim 以 `(value, info)` 调用）→ 所有文章/评论路由 500。
+已最小修复为 pydantic v2 原生 core schema（行为不变，v1 钩子保留）。分析见
+`tests/README_contract.md`。

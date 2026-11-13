@@ -26,4 +26,11 @@ dist-ssr
 frontend/.env
 backend/.env
 
+# 独立测试环境（不影响运行用 .venv）
+.venv-dev/
+
+# 测试产物（backend/__pycache__ 的 .pyc 历史上被误提交为 tracked，本次不动）
+__pycache__/
+.pytest_cache/
+
 
