@@ -31,7 +31,9 @@ jobs:
     - name: Build
       run: |
         cd frontend
-        npm run build
+        # Pages 站在项目子路径 https://shr1mptop.github.io/hezhili.online/ 下，
+        # 必须 --base 否则 /assets/* 404；PM2 生产构建不受影响（仍用默认 base=/）
+        npm run build -- --base=/hezhili.online/
         
     - name: Setup Pages
       if: github.ref == 'refs/heads/main'
@@ -53,7 +55,8 @@ jobs:
 # Production deployment of hezhili.online is done with PM2 (see deploy_pm2.sh +
 # ecosystem.config.cjs on the host); the Pages steps here only matter if Pages is enabled
 # for this repo.
-# 需要在仓库设置中启用 GitHub Pages 并设置为使用 GitHub Actions
+# 2026-11-18: Pages build_type 已通过 API 切为 "workflow"（原 legacy 分支部署与 deploy-pages
+# 互斥，导致本 workflow 的 Deploy 步骤必挂、而动态 pages build 却绿——双跑误导）。
 permissions:
   contents: read
   pages: write
