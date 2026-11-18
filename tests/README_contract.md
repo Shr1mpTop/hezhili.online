@@ -1,5 +1,7 @@
 # 合约测试（离线）· DEV-011
 
+> 📍 本手册归属：《手册总目录》（E:\github\手册总目录.md，相对路径 ../手册总目录.md）｜ 总手册：《运维手册》（E:\github\运维手册.md）。**改动本手册后必须同步更新《手册总目录》对应条目。**
+
 锁住 commit `5222c62`（前后端 contract 断裂修复 7 处）对应的 API 行为 + 8 个路由的基础形状。
 **全程离线**：Mongo 用 mongomock-motor 内存库，SMTP 熔断，Buffotte 上游用假 transport。
 不需要真实 Mongo / 真实 SMTP / 外网，也不会发一封邮件。
@@ -76,3 +78,7 @@ but 3 were given` → **GET/POST /posts、comments 等所有构造 PostModel/Com
 最小修复：给 `PyObjectId` 加 pydantic v2 原生 `__get_pydantic_core_schema__`
 （`with_info_plain_validator_function` + `to_string_ser_schema`），保留原 v1 钩子不动。
 序列化行为不变（`_id` 仍是 24 位 hex 字符串、`by_alias` 输出）。本套合约测试即回归网。
+
+---
+
+> ✅ 最后核验：2026-11-18（手册治理代理对照《运维手册》§0/§2/§13.125 当前真实状态逐项核验；统一索引见《手册总目录》）

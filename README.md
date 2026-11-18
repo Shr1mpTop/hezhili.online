@@ -1,5 +1,7 @@
 # hezhili.online 项目架构概述
 
+> 📍 本手册归属：《手册总目录》（E:\github\手册总目录.md，相对路径 ../手册总目录.md）｜ 总手册：《运维手册》（E:\github\运维手册.md）。**改动本手册后必须同步更新《手册总目录》对应条目。**
+
 ## 项目简介
 
 这是一个个人网站项目，包含前端展示页面和后端API服务。网站采用前后端分离架构，前端使用React构建单页应用，后端使用FastAPI提供API服务。项目使用uv进行Python包管理。
@@ -10,12 +12,13 @@
 
 - **框架**: React 18 + TypeScript
 - **构建工具**: Vite
-- **路由**: React Router DOM
-- **主要依赖**:
+- **路由**: 无路由库（单页滚动章节式导航，见 `components/Overlay/FloatingNav.tsx` + `hooks/useScrollProgress.ts`）
+- **主要依赖**（以 `frontend/package.json` 为准）:
   - `axios`: HTTP客户端
   - `marked`: Markdown渲染
   - `highlight.js`: 代码语法高亮
-  - `framer-motion`: 动画效果
+  - `gsap`（含 ScrollTrigger）: 滚动与过渡动画
+  - `three` / `@react-three/fiber` / `@react-three/drei` / `@react-three/postprocessing`: 3D 场景与后期处理
 - **部署**: 使用Vite preview在生产环境提供静态文件服务
 
 ### 后端 (backend/)
@@ -60,15 +63,18 @@ hezhili.online/
 │   ├── src/
 │   │   ├── App.tsx            # 主应用组件
 │   │   ├── main.tsx           # React应用入口
-│   │   ├── components/        # React组件
-│   │   │   ├── Sidebar.tsx    # 侧边栏导航
-│   │   │   ├── Home.tsx       # 首页
-│   │   │   ├── Blog.tsx       # 博客列表
-│   │   │   ├── PostDetail.tsx # 博客详情
-│   │   │   └── ...            # 其他页面组件
-│   ├── vite.config.ts         # Vite配置
+│   │   ├── components/
+│   │   │   ├── Experience/    # three/r3f 3D 场景（Canvas、镜头路径、6 个章节、shaders/）
+│   │   │   ├── Overlay/       # DOM 覆盖层：ScrollContainer、FloatingNav、6 个 Section
+│   │   │   │   └── panels/    # BlogPanel / PostDetailPanel / BuffottePanel
+│   │   │   └── shared/        # GlassCard / ProjectCard / SkillBar / AnimatedText
+│   │   ├── hooks/             # useScrollProgress / useMediaQuery / useReducedMotion
+│   │   ├── utils/             # cameraPath / colors
+│   │   └── styles/            # variables.css 等
+│   ├── vite.config.ts         # Vite配置（/api 代理到 localhost:8000）
 │   ├── package.json           # npm依赖
 │   └── index.html             # HTML模板
+├── tests/                     # 离线 contract 测试（conftest.py + test_api_contract.py，36 用例）
 └── posts/                     # 博客文章(Markdown)
     ├── example.md             # 示例文章
     └── buffotte-blog.md       # 实际文章
@@ -78,11 +84,11 @@ hezhili.online/
 
 ### 前端功能
 
-- **单页应用(SPA)**: React Router风格的页面切换
+- **单页应用(SPA)**: 无路由库，滚动驱动的章节式切换（`Overlay/ScrollContainer.tsx` + `FloatingNav.tsx`）
 - **响应式设计**: 适配不同屏幕尺寸
 - **博客系统**: Markdown文章渲染，支持代码高亮
 - **联系表单**: 用户反馈提交
-- **动画效果**: 使用Framer Motion库的过渡动画
+- **动画效果**: GSAP（ScrollTrigger）驱动过渡动画 + three/r3f 3D 场景
 
 ### 后端API
 
@@ -187,6 +193,14 @@ uv run uvicorn backend.main:app --reload --host 0.0.0.0 --port 8000
 
 这个项目是一个完整的个人网站解决方案，包含博客、项目展示、联系方式等典型个人网站功能。
 
+---
+
+> ⚠️ **以下至文末"合约测试"之前的内容 = 已废弃的历史存档（Vue + Express/Mongoose 时代）**，原样保留仅供参考，**不要照此操作**。
+> 当时前端是 Vue（`App.vue`）、后端是 Node（`backend/routes.js`、nodemon 热重载、后端端口 **3002**）、邮件用 `AK_ID`/`AK_SECRET`。
+> 现状（2026-11-18 核验）：前端 **React 18 + Vite**（`frontend/src/*.tsx`，无 `Sidebar/Home/Blog/PostDetail` 页组件）；后端 **FastAPI**（`backend/{main,models,routes}.py`，端口 **8000**，见 `ecosystem.config.cjs`）；邮件走阿里云 SMTP 环境变量。
+> 仓库里**已无** `backend/routes.js` 与 `backend/package.json`，仅剩遗留的 `backend/email-service.js` 和无主 `backend/node_modules/`，因此本节"后端开发 `npm install` / `npm run dev`"已不可用。
+> 本节的"主要功能/部署流程/注意事项"与上文正文重复且冲突，**一律以上文正文为准**。
+
 │ └── package.json
 ├── frontend/ # 前端代码
 │ ├── src/
@@ -208,7 +222,7 @@ uv run uvicorn backend.main:app --reload --host 0.0.0.0 --port 8000
 
 ````
 
-## 主要功能
+## 主要功能（历史存档·已废弃，见上门警示；现状以上文为准）
 
 ### 前端功能
 
@@ -331,3 +345,7 @@ Mongo/SMTP/外网，也不读 `.env`。环境与注入细节见 `tests/README_co
 `__get_validators__` 被 v2 shim 以 `(value, info)` 调用）→ 所有文章/评论路由 500。
 已最小修复为 pydantic v2 原生 core schema（行为不变，v1 钩子保留）。分析见
 `tests/README_contract.md`。
+
+---
+
+> ✅ 最后核验：2026-11-18（手册治理代理对照《运维手册》§0/§2/§13.125 当前真实状态逐项核验；统一索引见《手册总目录》）
